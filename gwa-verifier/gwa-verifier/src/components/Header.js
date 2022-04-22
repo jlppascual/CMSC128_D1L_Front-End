@@ -6,7 +6,6 @@
 
 import React from 'react';
 import Dp from '../images/dp_default.jpg';
-import Caret from '../images/caret.svg';
 import '../css/header.css'
 
 class Header extends React.Component{
@@ -28,9 +27,15 @@ class Header extends React.Component{
                 <ul className={'header-right'}>
                     <span className={'header-user'}>{ this.state.userType }</span>
                     <img src = {Dp} className={'header-dp'}/>
-                    <img src = {Caret} className={'header-caret'}/>
+                    {//<a href='#'><img src = {Caret} className={'header-caret'}/></a>
+                    }
+                    <a href='#'>
+                        <svg width="24" height="19" className={'header-caret'}>
+                            <path d = "M 6 2 L 14 2 M 10 8 L 14 2 L 6 2"></path>
+                        </svg>
+                    </a>
                 </ul>
-                 
+                
             </div>
         );
     }
