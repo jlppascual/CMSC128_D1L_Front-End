@@ -1,13 +1,16 @@
 .header-main {
     display: flex;
     box-sizing: border-box;
-    justify-content: space-between;
     background-color: #8D1436;
+    justify-content: space-between;
     color: white;
+    height: 60px;
+    align-items: center;
 }
 
 .header-right{
-    padding: 10px
+    padding: 10px;
+    padding-right: 20px;
 }
 
 .header-user{
@@ -30,4 +33,30 @@
 
 .header-caret:hover{
     fill: gray;
+    cursor: pointer;
+}
+
+.header-dropdown{
+    position: absolute;
+    width: 100px;
+    top: 50px;
+    background-color: rgb(222, 222, 222);
+    border: 0.5px solid gray;
+    transform: translateX(33%);
+}
+
+.header-dropitem{
+    font-size: 10px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    transition: background 100ms;
+    padding: 2px;
+    padding-left: 25px;
+    text-decoration: none;
+    color: black;
+}
+
+.header-dropitem:hover{
+    background-color: gray;
 }
