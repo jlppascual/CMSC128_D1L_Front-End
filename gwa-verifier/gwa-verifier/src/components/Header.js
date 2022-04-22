@@ -6,7 +6,7 @@
 
 import React from 'react';
 import Dp from '../images/dp_default.jpg';
-import Caret from '../images/drop_down.svg';
+import Caret from '../images/caret.svg';
 import '../css/header.css'
 
 class Header extends React.Component{
@@ -24,7 +24,7 @@ class Header extends React.Component{
     render(){
         return(
             <div className={'header-main'}>
-                <h1>GWA Verifier</h1>
+                <h1 className={'header-name'}>GWA Verifier</h1>
                 <ul className={'header-right'}>
                     <span className={'header-user'}>{ this.state.userType }</span>
                     <img src = {Dp} className={'header-dp'}/>
