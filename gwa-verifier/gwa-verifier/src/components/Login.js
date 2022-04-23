@@ -1,6 +1,6 @@
 import React from 'react';
-import UPLB from './images/UPLB.png'
-import './css/login.css'
+import UPLB from '../images/uplb.png'
+import '../css/login.css'
 
 function Login(){
     return(
