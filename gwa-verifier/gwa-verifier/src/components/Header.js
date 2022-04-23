@@ -28,8 +28,6 @@ class Header extends React.Component{
                 <ul className={'header-right'}>
                     <span className={'header-user'}>{ this.state.userType }</span>
                     <img src = {Dp} className={'header-dp'}/>
-                    {//<a href='#'><img src = {Caret} className={'header-caret'}/></a>
-                    }
                     <Dropdown>
                         <div className={'header-dropdown'}>
                             <Link to = '/' className={'header-dropitem'}>
