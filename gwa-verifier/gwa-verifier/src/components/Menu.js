@@ -20,14 +20,14 @@ function Menubar(){
     const showSidebar = () => setSidebar(!sidebar);
     return(
         <IconContext.Provider value={{ color: 'black' }}>
-            <div className={'navbar'}>
+            <div className={'menu-navbar'}>
                 <Link to='#' className={'menu-bars'}>
                     <FaBars className={'menu-icon'} onClick={showSidebar}/>
                 </Link>
             </div>
-            <nav className={sidebar ? 'nav-menu active' : 'nav-menu'}>
-                <ul className={'nav-menu-items'} onClick={showSidebar}>
-                    <li className={'navbar-toggle'}>
+            <nav className={sidebar ? 'menu-side active' : 'menu-side'}>
+                <ul onClick={showSidebar}>
+                    <li className={'menu-navbar-toggle'}>
                         <Link to='#' className={'menu-bars'}>
                             <AiOutlineClose className={'menu-icon'}/>
                         </Link>
