@@ -12,7 +12,7 @@ function Login(){
                 
         </div>
         <div classname='Body'>
-            <Link to='/add-student'><button>add student</button></Link>
+            <Link to='/home'><button>login</button></Link>
         </div>
     </div> 
     )
