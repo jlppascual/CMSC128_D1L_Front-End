@@ -2,6 +2,8 @@
  * author: Jem, Thomas
  */
 import React from 'react';
+import Header from './Header';
+import Footer from './Footer';
 
 class Add_Student_Page extends React.Component{
     constructor(props){
@@ -89,19 +91,24 @@ class Add_Student_Page extends React.Component{
 
     render(){
         return(
-
-            <form>
-                <h1>Add Student Page</h1>
-                <input type='file' accept='.csv' id='csvFile' onChange={this.setCSVFile}
-                ></input>
-                <br/><br/>
-                <button onClick={this.submitButton}>Submit</button> 
-                <br/><br/> 
-                <textarea id='textarea' hidden={true}></textarea>  
-                {this.state.arrayData.length>0? 
-                <div>{this.state.last_name}<br/>{this.state.first_name}<br/>{this.state.middle_name}<br/>
-                {this.state.student_number}<br/>{this.state.degree_program}<br/></div>:''}            
-            </form>
+        <div>
+            <Header/>
+            <div className='add-student-body'>
+                <form>
+                    <h1>Add Student Page</h1>
+                    <input type='file' accept='.csv' id='csvFile' onChange={this.setCSVFile}
+                    ></input>
+                    <br/><br/>
+                    <button onClick={this.submitButton}>Submit</button> 
+                    <br/><br/> 
+                    <textarea id='textarea' hidden={true}></textarea>  
+                    {this.state.arrayData.length>0? 
+                    <div>{this.state.last_name}<br/>{this.state.first_name}<br/>{this.state.middle_name}<br/>
+                    {this.state.student_number}<br/>{this.state.degree_program}<br/></div>:''}            
+                </form>
+            </div>
+            <Footer/>
+        </div>
         );
     }
 }

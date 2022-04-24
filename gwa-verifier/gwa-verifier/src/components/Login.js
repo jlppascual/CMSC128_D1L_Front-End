@@ -35,13 +35,6 @@ class Login extends React.Component{
         </div> 
         )
     }
-
 }
-
-// function Login(){
-//     return(
-
-//     )
-// }
 
 export default Login;
