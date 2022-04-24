@@ -8,6 +8,7 @@ import React from 'react';
 import Header from './Header';
 import Menu from './Menu';
 
+
 class Home extends React.Component{
 
     render(){
@@ -15,6 +16,7 @@ class Home extends React.Component{
             <div>
                 <Header />
                 <Menu />
+
             </div>
         );
     }
