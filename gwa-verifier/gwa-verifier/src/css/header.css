@@ -9,19 +9,18 @@
 }
 
 .header-right{
-    padding: 10px;
     padding-right: 20px;
+    transform: translateY(7%);
 }
 
 .header-user{
     position: relative;
-    top: -7px;
+    top: -8px;
     padding: 20px;
 }
 
 .header-dp{
     border-radius: 50%;
-    height: 30px;
     width: 30px;
 }
 
@@ -39,7 +38,7 @@
 .header-dropdown{
     position: absolute;
     width: 100px;
-    top: 50px;
+    top: 40px;
     background-color: rgb(222, 222, 222);
     border: 0.5px solid gray;
     transform: translateX(33%);

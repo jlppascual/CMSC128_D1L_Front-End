@@ -6,7 +6,8 @@
 
 import React from 'react';
 import Header from './Header';
-import Footer from './Footer.js';
+import Menu from './Menu';
+
 
 class Home extends React.Component{
 
@@ -14,7 +15,8 @@ class Home extends React.Component{
         return(
             <div>
                 <Header />
-                <Footer />
+                <Menu />
+
             </div>
         );
     }
