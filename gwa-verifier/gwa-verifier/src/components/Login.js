@@ -1,35 +1,57 @@
 import React from 'react';
 import UPLB from '../images/uplb.png'
 import '../css/login.css'
-import {Link} from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 
 class Login extends React.Component{
     constructor(props){
         super(props);
         this.state={
-            username:'',
-            password:'',
+            // loginAttempts: 0,
+            redirect: false,
         }
+        this.login=this.login.bind(this);
+    }
+
+    login(e){
+        e.preventdefault();
+        
+            // uncomment when integrated with backend
+        // fetch('http:localhost:3001/api/0.1/login' ,{
+        //     method: POST, 
+        //     body: {
+        //           username: document.getElementById('username').value,
+        //           password: document.getElementById('password').value,
+        //     }
+        //  })
+        //  .then(response => response.json())
+        //  .then(body => {
+        //     // validation code
+        // })
+        
+        // placeholder action for now
+        this.setState({ redirect: true });
     }
 
     render(){
+        if (this.state.redirect) return <Navigate to={ '/home' } />
         return(
-            <div className = 'Login'> 
-            <div className='header'>
+            <div className = {'login'}> 
+            <div className= {'login-header'}>
                 <img src = {UPLB} className="uplb-logo" alt="uplb logo"/>
                 <h3 className="web-name">University of the Philippines Los Baños</h3>
                     
             </div>
-            <div classname='Body'>
+            <div className={'login-body'}>
                 <form>
-                    <fieldset id="signin-field">
+                    <fieldset>
                         Username: <input type="text" id="username" 
                         placeholder="enter your username..." 
                         /><br />
                         Password: <input type="password" id="password"
                         placeholder = "enter your password..."/>
                     </fieldset>
-                    <Link to='/home'><button>login</button></Link>
+                    <button onClick = { this.login }>login</button>
                 </form>
             </div>
         </div> 
