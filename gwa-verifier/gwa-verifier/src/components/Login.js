@@ -14,8 +14,6 @@ class Login extends React.Component{
     }
 
     login(e){
-        e.preventdefault();
-        
             // uncomment when integrated with backend
         // fetch('http:localhost:3001/api/0.1/login' ,{
         //     method: POST, 
@@ -31,6 +29,7 @@ class Login extends React.Component{
         
         // placeholder action for now
         this.setState({ redirect: true });
+        e.preventdefault();
     }
 
     render(){
