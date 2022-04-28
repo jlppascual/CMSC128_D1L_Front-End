@@ -35,7 +35,7 @@ export const SidebarData =  [
     },
     {
         title: 'View Student',
-        path: '/',
+        path: '/view-student',
         icon: <IoIcons.IoPerson />,
         cName: 'menu-side-item'
     }
