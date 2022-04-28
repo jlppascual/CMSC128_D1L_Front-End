@@ -10,7 +10,6 @@ import Menu from './Menu';
 import Footer from './Footer'
 import '../css/home.css';
 
-
 class Home extends React.Component{
 
     render(){
