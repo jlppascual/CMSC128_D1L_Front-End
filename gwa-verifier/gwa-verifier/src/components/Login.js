@@ -1,14 +1,11 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'
 
 import useStore from './hooks/authHook'
-import UPLB from '../images/UPLB.png'
+import UPLB from '../images/uplb.png'
 import '../css/login.css'
 
 // changed to function to use hooks
 const Login = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
 
     const { setUser, setIsAuthenticated } = useStore();     // from zustand store
 
@@ -18,10 +15,15 @@ const Login = () => {
     const login = (e) => {
         e.preventDefault();
 
+        const credentials = {
+            email: document.getElementById('login-username').value,
+            password: document.getElementById('login-password').value
+        }
+
         fetch('http://localhost:3001/api/0.1/auth' ,{
                 method:'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({username, password})
+                body: JSON.stringify( credentials )
             }
         )
         .then(response => response.json())
@@ -46,11 +48,11 @@ const Login = () => {
         <form>
             {/* Username field */}
             <label>Username:</label>&nbsp;
-            <input type='text' value={username} onChange={(e) => setUsername(e.target.value)} /><br/>
+            <input type='text' id='login-username' /><br/>
 
             {/* Password field */}
             <label>Password:</label>&nbsp;&nbsp;
-            <input type='password' value={password} onChange={(e) => setPassword(e.target.value)} /><br/>
+            <input type='password' id='login-password' /><br/>
 
             {/* Submit */}
             <input type="submit" value="Submit" onClick={login}/>
