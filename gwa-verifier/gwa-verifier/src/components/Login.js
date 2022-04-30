@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 
 import useStore from './hooks/authHook'
-import UPLB from '../images/uplb.png'
+import UPLB from '../images/UPLB.png'
 import '../css/login.css'
 
 // changed to function to use hooks
@@ -16,7 +16,7 @@ const Login = () => {
         e.preventDefault();
 
         const credentials = {
-            email: document.getElementById('login-username').value,
+            username: document.getElementById('login-username').value,
             password: document.getElementById('login-password').value
         }
 
