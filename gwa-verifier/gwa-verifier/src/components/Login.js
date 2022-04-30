@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 
 import useStore from './hooks/authHook'
-import UPLB from '../images/UPLB.png'
+import UPLB from '../images/uplb.png'
 import '../css/login.css'
 
 // changed to function to use hooks
