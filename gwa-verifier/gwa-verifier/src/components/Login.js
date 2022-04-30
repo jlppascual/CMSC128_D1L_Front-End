@@ -1,47 +1,63 @@
-import React from 'react';
-import UPLB from '../images/uplb.png'
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom'
+
+import useStore from './hooks/authHook'
+import UPLB from '../images/UPLB.png'
 import '../css/login.css'
-import {Link} from 'react-router-dom'
 
-class Login extends React.Component{
-    constructor(props){
-        super(props);
-        this.state={
-            username:'',
-            password:'',
-        }
-    }
+// changed to function to use hooks
+const Login = () => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
 
-    render(){
-        return(
-            <div className = 'Login'> 
-            <div className='header'>
-                <img src = {UPLB} className="uplb-logo" alt="uplb logo"/>
-                <h3 className="web-name">University of the Philippines Los Baños</h3>
-                    
-            </div>
-            <div classname='Body'>
-                <form>
-                    <fieldset id="signin-field">
-                        Username: <input type="text" id="username" 
-                        placeholder="enter your username..." 
-                        /><br />
-                        Password: <input type="password" id="password"
-                        placeholder = "enter your password..."/>
-                    </fieldset>
-                    <Link to='/home'><button>login</button></Link>
-                </form>
-            </div>
-        </div> 
+    const { setUser, setIsAuthenticated } = useStore();     // from zustand store
+
+    const navigate = useNavigate();     // hook for navigation
+    
+    // handles login action and 
+    const login = (e) => {
+        e.preventDefault();
+
+        fetch('http://localhost:3001/api/0.1/auth' ,{
+                method:'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({username, password})
+            }
         )
+        .then(response => response.json())
+        .then(body => {
+            if(!body.success) alert(body.message);
+            else{
+                setUser(body.user);
+                setIsAuthenticated(body.success);
+                navigate('/home');
+            }
+        })
     }
 
+    return(
+        <div className = {'login'}> 
+        <div className= {'login-header'}>
+            <img src = {UPLB} className="uplb-logo" alt="uplb logo"/>
+            <h3 className="web-name">University of the Philippines Los Baños</h3>
+                
+        </div>
+        <div className={'login-body'}>
+        <form>
+            {/* Username field */}
+            <label>Username:</label>&nbsp;
+            <input type='text' value={username} onChange={(e) => setUsername(e.target.value)} /><br/>
+
+            {/* Password field */}
+            <label>Password:</label>&nbsp;&nbsp;
+            <input type='password' value={password} onChange={(e) => setPassword(e.target.value)} /><br/>
+
+            {/* Submit */}
+            <input type="submit" value="Submit" onClick={login}/>
+        </form><br/>
+        </div>
+    </div> 
+    )
 }
-
-// function Login(){
-//     return(
-
-//     )
-// }
 
 export default Login;
