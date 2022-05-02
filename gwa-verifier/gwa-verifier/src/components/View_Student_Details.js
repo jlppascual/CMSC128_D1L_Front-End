@@ -23,10 +23,10 @@ class View_Student_Details extends React.Component{
             method:'GET'
         }).then(response=> {return response.json()})
         .then(json=>{
-            this.setState({student_details:json.result.output})
-            this.setState({record_details:json.result.output.record_data})
-            this.setState({term_details:json.result.output.record_data.term_data})      
-            this.setState({course_details:json.result.output.record_data.term_data.course_data})            
+            this.setState({student_details:json.result.output.record})
+            this.setState({record_details:json.result.output.record.record_data})
+            this.setState({term_details:json.result.output.record.record_data.term_data})      
+            this.setState({course_details:json.result.output.record.record_data.term_data.course_data})            
       
 
         })
@@ -36,7 +36,7 @@ class View_Student_Details extends React.Component{
         let record = this.state.record_details;
         let terms = this.state.term_details;
         // let courses = this.state.course_details;
-        console.log(terms)
+        console.log(student)
         return(
         <div>
             <Header/>
