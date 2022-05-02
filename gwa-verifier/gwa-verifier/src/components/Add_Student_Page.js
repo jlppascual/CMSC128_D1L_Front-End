@@ -10,7 +10,7 @@ class Add_Student_Page extends React.Component{
         super(props);
 
         this.state = {
-            arrayData:[],
+            arrayData:[], //catcher for the file content
             headers:[],
             term_data:[],
             courses:[],
@@ -64,7 +64,7 @@ class Add_Student_Page extends React.Component{
         await this.setState({arrayData: newArray}, function(){
             let array = this.state.arrayData;
             this.setState({student_number:array[1][4], last_name:array[2][4], first_name:array[3][4], middle_name:array[4][4],suffix:array[5][4], 
-                degree_program:array[6][4], total_units:array[7][4], gwa:array[8][4]})
+                degree_program:array[6][4], total_units:array[7][4], gwa:Number(array[8][4])})
 
         })
 
@@ -90,6 +90,7 @@ class Add_Student_Page extends React.Component{
                 let sem = array[j][7].slice(0,array[j][7].indexOf('/'));
                 let year = array[j][7].slice(array[j][7].indexOf('/')+1, array[j][7].length)
                 let no_of_units = Number(array[j][6]);
+                
                 //if course is found at the beginning of the record
                 if(courses.length <=0 && array[j][7] != ''){
                     courses.push({course_code: array[j][1], grade: array[j][2], units: array[j][3], 

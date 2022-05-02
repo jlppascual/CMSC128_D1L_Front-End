@@ -5,14 +5,14 @@ import { BsClockHistory } from 'react-icons/bs';
 export const SidebarData =  [
     {
         title: 'Add User',
-        path: '/',
+        path: '/add-user',
         icon: <IoIcons.IoPersonAdd />,
         cName: 'menu-side-item'
     },
     {
-        title: 'Delete User',
-        path: '/',
-        icon: <IoIcons.IoPersonRemove />,
+        title: 'View / Delete Users',
+        path: '/view-users',
+        icon: <IoIcons.IoPersonOutline />,
         cName: 'menu-side-item'
     },
     {
@@ -28,15 +28,15 @@ export const SidebarData =  [
         cName: 'menu-side-item'
     },
     {
-        title: 'Delete Student',
-        path: '/',
-        icon: <IoIcons.IoPersonRemove />,
+        title: 'View / Delete Student',
+        path: '/view-student',
+        icon: <IoIcons.IoPerson />,
         cName: 'menu-side-item'
     },
     {
-        title: 'View Student',
-        path: '/view-student',
-        icon: <IoIcons.IoPerson />,
+        title: 'View Logs',
+        path: '/',
+        icon: <BsClockHistory />,
         cName: 'menu-side-item'
     }
 ];
