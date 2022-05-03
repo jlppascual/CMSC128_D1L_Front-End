@@ -5,7 +5,8 @@
 import React from 'react';
 import Header from './Header';
 import Footer from './Footer';
-import {VscSettings}  from 'react-icons/vsc';
+import {BsSearch}  from 'react-icons/bs';
+import {AiFillDelete} from 'react-icons/ai';
 
 class View_Users_Page extends React.Component{
     constructor(props){
@@ -49,6 +50,21 @@ class View_Users_Page extends React.Component{
             }
         })
     }
+    onDelete(user){
+        let user_id = user.user.user_id
+        fetch('http://localhost:3001/api/0.1/user/'+ user_id,{
+            method: "DELETE",
+            headers:{
+                'Content-Type':'application/json'
+            }
+        }).then(response =>{ return response.json()})
+        .then(json=>{
+            console.log(json)
+            if(json.result.success){
+                this.componentDidMount();
+            }
+        })
+    }
 
     render(){
        return(
@@ -59,10 +75,11 @@ class View_Users_Page extends React.Component{
                    <h1> View Users </h1>
                     Search User: <input type = "text" name = "name" placeholder = "Search by Name"
                     value = {this.state.name} onChange = {this.handleUserInput} required></input>
-                    <button onClick={this.handleSubmit}><i ><VscSettings /></i></button>
+                    <button onClick={this.handleSubmit}><i ><BsSearch /></i></button>
                </form>
                     {this.state.users != [] ? this.state.users.map((user, i)=>{
-                        return <span key={i}><div className="user-tile">{i+1}. {user.username}, {user.user_role}, {user.privileges}</div></span>
+                        return <span key={i}><div className="user-tile">{i+1}. {user.username}, {user.user_role}, {user.privileges}
+                        <button onClick={()=>{this.onDelete({user})}}><AiFillDelete/></button></div></span>
                     }): ""}
                </div>
                <Footer/>

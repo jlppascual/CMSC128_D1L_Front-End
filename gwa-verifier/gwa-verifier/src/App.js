@@ -6,7 +6,7 @@ import View_Students from './components/View_Students'
 import View_Student_Details from './components/View_Student_Details'
 import Add_User from './components/Add_User_Page'
 import View_User from './components/View_Users_Page'
-import Delete_User from './components/Delete_User'
+import View_Logs from './components/View_Logs'
 
 
 function App() {
@@ -20,8 +20,7 @@ function App() {
         <Route exact path='/view-student-details/:id' element={<View_Student_Details/>}/>
         <Route path='/add-user' element={<Add_User/>}/>
         <Route path='/view-users' element={<View_User/>}/>
-        <Route path='/delete-user' element={<Delete_User/>}/>
-
+        <Route path='/view-logs' element={<View_Logs/>}/>
       </Routes>
     </BrowserRouter>
   );

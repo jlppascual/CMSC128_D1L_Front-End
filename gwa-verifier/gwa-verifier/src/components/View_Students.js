@@ -16,29 +16,40 @@
 
     const [record, setRecord] = useState();
     const [state, changeState]= useState('0');
-    const [orderValue, setOrderValue] = useState("name");
-    const [searchValue, setSearchValue] = useState("name");
+    const [orderValue, setOrderValue] = useState("");
+    const [searchValue, setSearchValue] = useState("");
+    const [viewValue, setViewValue] = useState("");
     const [input, setInput] = useState("")
-    const prev_state = useRef();
+    const prev_order_state = useRef();
+    const prev_view_state = useRef();
     const orderFilter = [
-        {label: 'order by', value:''},
         {label: 'name', value:'name'},
         {label:'gwa',value:'gwa'}
     ]
     const searchFilter = [
-        {label: 'search by', value:''},
         {label: 'name', value:'name'},
         {label:'student number',value:'student_number'}
     ]
     const viewFilter = [
-        {label: 'view by', value:''},
-        {label: 'All', value:'All'},
-        {label:'BACA',value:'BACA'}
+        {label:'ALL', value:'ALL'}, 
+        {label:'BACA', value:'BACA'}, 
+        {label:'BAPHLO', value:'BAPHLO'},
+        {label:'BASOC', value:'BASOC'},
+        {label:'BSAGCHEM', value:'BSAGCHEM'},
+        {label:'BSAMAT', value:'BSAMAT'},
+        {label:'BSAPHY', value:'BSAPHY'},
+        {label:'BSBIO', value:'BSBIO'},
+        {label:'BSCHEM', value:'BSCHEM'},
+        {label:'BSCS', value:'BSCS'},
+        {label:'BSMATH', value:'BSMATH'},
+        {label:'BSMST', value:'BSMST'},
+        {label:'BSSTAT', value:'BSSTAT'},
     ]
 
-    prev_state.current = [orderValue];
+    prev_order_state.current = [orderValue];
+    prev_view_state.current = [viewValue];
 
-
+    //if state is changed, this function will be executed
      useEffect(()=>{
         fetch("http://localhost:3001/api/0.1/student?orderby="+[orderValue],
         {
@@ -56,32 +67,85 @@
 
     },[state]);
 
+    //if orderValue changes, this function is executed
     useEffect(()=>{
-        if(prev_state.current != [orderValue]){
-            prev_state.current = [orderValue];
-            fetch("http://localhost:3001/api/0.1/student?orderby="+[orderValue],
+        if(prev_order_state.current != [orderValue]){
+            prev_order_state.current = [orderValue];
+            if(viewValue === "ALL"){
+                fetch("http://localhost:3001/api/0.1/student?orderby="+[orderValue],
+                {
+                    method: "GET"
+                })
+                .then(response => {return response.json()})
+                .then(json=>{
+                    if(json.result.success){
+                        setRecord(json.result.output)
+                    }else{
+                        setRecord(undefined)
+                    }
+                })
+            }else{
+                fetch("http://localhost:3001/api/0.1/student/degree/"+ [viewValue]+"?orderby="+[orderValue],
+                {
+                    method: "GET"
+                })
+                .then(response => {return response.json()})
+                .then(json=>{
+                    // console.log(json.result)
+                    if(json.result.success){
+                        setRecord(json.result.output)
+                    }else{
+                        setRecord(undefined)
+                    }
+                })
+            }
+
+        }
+    },[orderValue]);
+
+    //if viewValue changes, this function is executed
+    useEffect(()=>{
+        if(prev_view_state.current != [viewValue]){
+            prev_view_state.current = [viewValue];
+            if (viewValue==="ALL"){
+                fetch("http://localhost:3001/api/0.1/student?orderby="+[orderValue],
+                {
+                    method: "GET"
+                })
+                .then(response => {return response.json()})
+                .then(json=>{
+                    if(json.result.success){
+                        setRecord(json.result.output)
+                    }else{
+                        setRecord(undefined)
+                    }
+                })
+            } else{
+                fetch("http://localhost:3001/api/0.1/student/degree/"+ [viewValue],
             {
                 method: "GET"
             })
             .then(response => {return response.json()})
             .then(json=>{
+                // console.log(json.result)
                 if(json.result.success){
                     setRecord(json.result.output)
                 }else{
                     setRecord(undefined)
                 }
-            })
+            })}
         }
-    },[orderValue]);
+    },[viewValue]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        let url = '';
-        if(searchValue ==="name"){
-            url = 'http:localhost:3001/api/0.1/student/search?name='
+        let url = 'http:localhost:3001/api/0.1/student/search?name=';
+        if(searchValue === "student_number"){
+            url = 'http://localhost:3001/api/0.1/student/search?student_number='
         }else{
-            url = 'http:localhost:3001/api/0.1/student/search?student_number='
+            url = 'http://localhost:3001/api/0.1/student/search?name='
         }
+
         if(input === ""){
             fetch("http://localhost:3001/api/0.1/student?orderby="+[orderValue],
         {
@@ -96,15 +160,20 @@
                 alert(json.result.message)
             }
         })} else {
-        fetch('http://localhost:3001/api/0.1/student/search?name=' + [input])
+
+        fetch(url + [input])
         .then((response) => {return response.json()})
         .then(json => {
             if(json.result.success){
-                setRecord(json.result.output);
                 console.log(json.result.output)  // Contains the list of match users
+                if(searchValue === "student_number"){
+                    setRecord([json.result.output]);
+                }else{
+                    setRecord(json.result.output);
+                }
             }
             else{
-                console.log(json.result.message) // Message: No results found
+                alert(json.result.message) // Message: No results found
             }
         })}
     }
@@ -115,6 +184,10 @@
 
     const searchChange=(e)=>{
         setSearchValue(e.target.value);
+    }
+
+    const viewChange=(e)=>{
+        setViewValue(e.target.value);
     }
 
     const handleUserInput = (e) => {
@@ -137,11 +210,11 @@
         })
     }
 
-    const DropDown =({value,options,onChange})=>{
+    const DropDown =({value,options,onChange, type})=>{
         return(
             <label>
-                {/* {label} */}
                 <select value={value} onChange={onChange}>
+                    {type === "search"? <option value = "" disabled>search by</option>: type==="view"?  <option value = "" disabled>view by</option>: <option value = "" disabled>order by</option> }
                     {options.map((option,i)=>(
                       <option key={i} value = {option.value}>{option.label}</option>
                     ))}
@@ -158,9 +231,9 @@
                 value = {input} onChange = {handleUserInput} required></input>
                 <button onClick={handleSubmit}><i ><BsSearch /></i></button>                
             
-                <DropDown options={searchFilter} value = {searchValue} onChange={searchChange}/>
-                <DropDown options={orderFilter} value = {orderValue} onChange={orderChange}/>
-                <DropDown options={viewFilter} value = {searchValue} onChange={searchChange}/>
+                <DropDown options={searchFilter} value = {searchValue} onChange={searchChange} type={"search"}/>
+                <DropDown options={orderFilter} value = {orderValue} onChange={orderChange} type={"order"}/>
+                <DropDown options={viewFilter} value = {viewValue} onChange={viewChange} type={"view"}/>
 
                 {record != undefined? record.map((rec,i)=>{
                     return <span key={i}><div className='student-tile'>
@@ -169,7 +242,7 @@
                         </a>
                     <button onClick={()=>{onDelete({rec})}}><AiFillDelete/></button>
                     </div></span>
-                }): <div>"No students saved"</div>}
+                }): <div className="student-details">"No students saved"</div>}
 
             </div>
             <Footer/>
