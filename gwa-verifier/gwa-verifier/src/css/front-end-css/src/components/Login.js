@@ -35,7 +35,6 @@ const Login = () => {
                 navigate('/home');
             }
         })
-        // navigate('/home')
     }
 
     return(

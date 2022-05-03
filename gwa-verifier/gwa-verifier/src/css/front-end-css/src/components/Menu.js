@@ -54,8 +54,8 @@ function Menubar(){
                     })}
                     <br /> <br />
                     <div className='entity-title'>{user_title}</div>
-                    {/* {user && user.user_role == "ADMIN"?  */}
-                    { SidebarDataUser.map((item, index) => {
+                    {user && user.user_role == "ADMIN"? 
+                     SidebarDataUser.map((item, index) => {
                         user_title = "User";
                         return(
                             <li key={index} className={item.cName}>
@@ -65,8 +65,7 @@ function Menubar(){
                                 </Link>
                             </li>
                         );
-                    // {/* // }) : user_title = ""} */}
-                })}
+                    }) : user_title = ""}
                     
                 </ul>
             </nav>

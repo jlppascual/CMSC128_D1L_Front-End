@@ -1,0 +1,17 @@
+.view-student-body{
+    padding: 5px;
+    padding-left: 15px;
+    width: 70%;
+    height: 12%;
+    outline: none;
+    border:none;
+    font-family: 'Helvetica';
+    margin-top: 5%;
+    margin-bottom: 15px;
+}
+
+.student-details{
+    text-decoration: none;
+    color:black;
+    background-color: whitesmoke;
+}
