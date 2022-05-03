@@ -11,7 +11,6 @@ const Login = () => {
     const { setUser, setIsAuthenticated, user } = useStore();     // from zustand store
     const navigate = useNavigate();     // hook for navigation
     let alert_message;
-
     // handles login action and 
     const login = (e) => {
         e.preventDefault();
@@ -62,7 +61,6 @@ const Login = () => {
         </form><br/>
         </div>
         <Footer />
-
     </div> 
     )
 }
