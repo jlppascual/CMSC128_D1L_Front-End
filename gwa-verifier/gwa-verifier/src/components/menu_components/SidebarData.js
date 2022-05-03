@@ -17,7 +17,7 @@ export const SidebarDataUser =  [
     },
     {
         title: 'View Logs',
-        path: '/',
+        path: '/view-logs',
         icon: <BsClockHistory />,
         cName: 'menu-side-item'
     },
