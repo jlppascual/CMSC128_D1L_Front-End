@@ -31,15 +31,15 @@ export const SidebarDataStudent =  [
         cName: 'menu-side-item'
     },
     {
-        title: 'Delete Student',
-        path: '/',
-        icon: <IoIcons.IoPersonRemove />,
+        title: 'View / Delete Student',
+        path: '/view-student',
+        icon: <IoIcons.IoPerson />,
         cName: 'menu-side-item'
     },
     {
-        title: 'View Student',
-        path: '/view-student',
-        icon: <IoIcons.IoPerson />,
+        title: 'View Logs',
+        path: '/',
+        icon: <BsClockHistory />,
         cName: 'menu-side-item'
     }
 ];
