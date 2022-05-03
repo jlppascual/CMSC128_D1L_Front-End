@@ -1,14 +1,17 @@
 /**
  * author: Jem, Leila
  */
+
  import React, { useEffect, useState, useRef } from 'react';
  import { useNavigate } from 'react-router-dom';
  import {BsSearch}  from 'react-icons/bs';
  import {AiFillDelete} from 'react-icons/ai';
  import '../css/view_students.css'
+
  import Header from './Header';
  import Footer from './Footer';
- 
+ import View_Student_Details from './View_Student_Details'
+
  const View_Students =()=>{
 
     const [record, setRecord] = useState();
@@ -46,7 +49,7 @@
     prev_order_state.current = [orderValue];
     prev_view_state.current = [viewValue];
 
-    //if state changes, this function is executed
+    //if state is changed, this function will be executed
      useEffect(()=>{
         fetch("http://localhost:3001/api/0.1/student?orderby="+[orderValue],
         {
@@ -61,6 +64,7 @@
                 alert(json.result.message)
             }
         }) 
+
     },[state]);
 
     //if orderValue changes, this function is executed
@@ -245,5 +249,4 @@
         </div>
         );
  }
-
  export default View_Students;
