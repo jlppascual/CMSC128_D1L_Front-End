@@ -15,6 +15,8 @@
 
 .menu-icon{
     fill: #3f3f3f;
+    position: fixed;
+    top: 86px;
 }
 
 .menu-name{

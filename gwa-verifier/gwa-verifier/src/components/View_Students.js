@@ -3,16 +3,20 @@
  */
 
  import React, { useEffect, useState, useRef } from 'react';
- import { useNavigate } from 'react-router-dom';
  import {BsSearch}  from 'react-icons/bs';
  import {AiFillDelete} from 'react-icons/ai';
  import '../css/view_students.css'
 
  import Header from './Header';
  import Footer from './Footer';
+ import Menu from './Menu';
  import View_Student_Details from './View_Student_Details'
 
  const View_Students =()=>{
+
+    // const foo = [{first_name: 'foo', middle_name: 'foo', suffix: 'foo', student_number: '2019-01069',
+    // degree_program: 'BS Computer Science', gwa: '1.00'}];
+    const foo = [];
 
     const [record, setRecord] = useState();
     const [state, changeState]= useState('0');
@@ -76,6 +80,8 @@
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+
         let url = '';
         if(searchValue ==="name"){
             url = 'http:localhost:3001/api/0.1/student/search?name='
@@ -150,29 +156,37 @@
         );
     }
 
-        return(
+    return(
         <div>
-            <Header/>
+            <Header />
+            <Menu />
             <div className='view-student-body'>
-            <input type = "text" className = "input" placeholder = "Search by Name"
-                value = {input} onChange = {handleUserInput} required></input>
-                <button onClick={handleSubmit}><i ><BsSearch /></i></button>                
-            
-                <DropDown options={searchFilter} value = {searchValue} onChange={searchChange}/>
-                <DropDown options={orderFilter} value = {orderValue} onChange={orderChange}/>
-                <DropDown options={viewFilter} value = {searchValue} onChange={searchChange}/>
-
-                {record != undefined? record.map((rec,i)=>{
-                    return <span key={i}><div className='student-tile'>
-                        <a href={"/view-student-details/"+ rec.student_id} className="student-details">
-                        {i+1}. {rec.last_name}, {rec.first_name}, {rec.middle_name} {rec.suffix} {rec.student_number} {rec.degree_program} {rec.gwa} 
-                        </a>
-                    <button onClick={()=>{onDelete({rec})}}><AiFillDelete/></button>
-                    </div></span>
-                }): <div>"No students saved"</div>}
-
+                <div className='view-student-header'>
+                    <span>Student Records</span>
+                    <ul className='view-student-list'>
+                        <li><DropDown options={searchFilter} className='view-student-dropdown' value = {searchValue} onChange={searchChange}/></li>
+                        <li><DropDown options={orderFilter} className='view-student-dropdown' value = {orderValue} onChange={orderChange}/></li>
+                        <li><DropDown options={viewFilter} className='view-student-dropdown' value = {searchValue} onChange={searchChange}/></li>
+                    </ul>
+                </div>
+                <hr className='view-student-line'/>
+                <div className='view-student-search'>
+                    <input type = "text" className = 'view-student-input' placeholder = "Search by name, student number, or degree program..."
+                    value = {input} onChange = {handleUserInput} required></input>
+                    <a href='#' onClick={handleSubmit} ><BsSearch className='view-student-sicon'/></a>      
+                </div>
+                <div className='view-student-preview'>
+                    {foo != undefined? foo.map((rec,i)=>{
+                        return <span key={i}><div className='student-tile'>
+                            <a href={"/view-student-details/"+ rec.student_id} className="student-details">
+                            {i+1}. {rec.last_name}, {rec.first_name}, {rec.middle_name} {rec.suffix} {rec.student_number} {rec.degree_program} {rec.gwa} 
+                            </a>
+                        <button onClick={()=>{onDelete({rec})}}><AiFillDelete/></button>
+                        </div></span>
+                    }): <div>"No students saved"</div>}
+                </div>
             </div>
-            <Footer/>
+            <Footer />
         </div>
         );
  }
