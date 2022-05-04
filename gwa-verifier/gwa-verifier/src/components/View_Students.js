@@ -1,17 +1,14 @@
 /**
  * author: Jem, Leila
  */
-
  import React, { useEffect, useState, useRef } from 'react';
  import { useNavigate } from 'react-router-dom';
  import {BsSearch}  from 'react-icons/bs';
  import {AiFillDelete} from 'react-icons/ai';
  import '../css/view_students.css'
-
  import Header from './Header';
  import Footer from './Footer';
- import View_Student_Details from './View_Student_Details'
-
+ 
  const View_Students =()=>{
 
     const [record, setRecord] = useState();
@@ -49,7 +46,7 @@
     prev_order_state.current = [orderValue];
     prev_view_state.current = [viewValue];
 
-    //if state is changed, this function will be executed
+    //if state changes, this function is executed
      useEffect(()=>{
         fetch("http://localhost:3001/api/0.1/student?orderby="+[orderValue],
         {
@@ -64,14 +61,13 @@
                 alert(json.result.message)
             }
         }) 
-
     },[state]);
 
     //if orderValue changes, this function is executed
     useEffect(()=>{
         if(prev_order_state.current != [orderValue]){
             prev_order_state.current = [orderValue];
-            if(viewValue === "ALL"){
+            if(viewValue === "ALL" || viewValue === ""){
                 fetch("http://localhost:3001/api/0.1/student?orderby="+[orderValue],
                 {
                     method: "GET"
@@ -107,7 +103,7 @@
     useEffect(()=>{
         if(prev_view_state.current != [viewValue]){
             prev_view_state.current = [viewValue];
-            if (viewValue==="ALL"){
+            if (viewValue==="ALL" || viewValue===""){
                 fetch("http://localhost:3001/api/0.1/student?orderby="+[orderValue],
                 {
                     method: "GET"
@@ -121,7 +117,7 @@
                     }
                 })
             } else{
-                fetch("http://localhost:3001/api/0.1/student/degree/"+ [viewValue],
+                fetch("http://localhost:3001/api/0.1/student/degree/"+ [viewValue]+"?orderby="+[orderValue],
             {
                 method: "GET"
             })
@@ -249,4 +245,5 @@
         </div>
         );
  }
+
  export default View_Students;
