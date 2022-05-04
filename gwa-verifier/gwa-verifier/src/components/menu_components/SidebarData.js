@@ -1,6 +1,7 @@
 import React from 'react';
 import * as IoIcons from 'react-icons/io5';
 import { BsClockHistory } from 'react-icons/bs';
+import { HiDocument } from 'react-icons/hi';
 
 export const SidebarDataUser =  [
     {
@@ -31,15 +32,15 @@ export const SidebarDataStudent =  [
         cName: 'menu-side-item'
     },
     {
-        title: 'View / Delete Student',
+        title: 'View Student',
         path: '/view-student',
         icon: <IoIcons.IoPerson />,
         cName: 'menu-side-item'
     },
     {
-        title: 'View Logs',
-        path: '/',
-        icon: <BsClockHistory />,
+        title: 'Summary',
+        path: '/view-student-summary',
+        icon: <HiDocument />,
         cName: 'menu-side-item'
-    }
+    },
 ];
