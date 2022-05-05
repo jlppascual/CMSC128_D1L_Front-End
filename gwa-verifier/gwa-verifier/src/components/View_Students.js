@@ -269,18 +269,6 @@
                     
                     <div>"No students saved"</div>
                     }
-                    
-                    
-                    
-                    {/* {foo != undefined? foo.map((rec,i)=>{
-                        return <div key={i} className="view-student-details">
-                            <a href={"/view-student-details/"+ rec.student_id}>
-                            {i+1}. {rec.last_name}, {rec.first_name}, {rec.middle_name[0]}., {rec.suffix} {rec.student_number} {rec.degree_program} {rec.gwa} 
-                            </a>
-                        <a href='#' onClick={()=>{onDelete({rec})}}><AiFillDelete/></a>
-                        </div>
-                    }): <div>"No students saved"</div>} */}
-
                 </div>
 
             </div>
