@@ -1,21 +1,17 @@
-/**
- * author: Jem, Leila
- */
- import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+ import { useNavigate } from 'react-router-dom';
  import {BsSearch}  from 'react-icons/bs';
  import {AiFillDelete} from 'react-icons/ai';
  import '../css/view_students.css'
  import Header from './Header';
  import Footer from './Footer';
  import Menu from './Menu';
- import View_Student_Details from './View_Student_Details'
-
+ 
  const View_Students =()=>{
 
-    // const foo = [{first_name: 'foo', middle_name: 'foo', suffix: 'foo', student_number: '2019-01069',
+   // const foo = [{first_name: 'foo', middle_name: 'foo', suffix: 'foo', student_number: '2019-01069',
     // degree_program: 'BS Computer Science', gwa: '1.00'}];
     const foo = [];
-
     const [record, setRecord] = useState();
     const [state, changeState]= useState('0');
     const [orderValue, setOrderValue] = useState("");
@@ -57,7 +53,7 @@
         {
             method: "GET"
         })
-        .then(response => {return response.json()})
+        .then(response => {return (response.json())})
         .then(json=>{
             console.log(json)
             if(json.result.success){
@@ -140,11 +136,9 @@
 
     const handleSubmit = (e) => {
         e.preventDefault();
-      
         let url = 'http:localhost:3001/api/0.1/student/search?name=';
         if(searchValue === "student_number"){
             url = 'http://localhost:3001/api/0.1/student/search?student_number='
-
         }else{
             url = 'http://localhost:3001/api/0.1/student/search?name='
         }
@@ -226,18 +220,17 @@
         );
     }
 
-    return(
+        return(
         <div>
-            <Header />
-            <Menu />
+            <Header/>
+            <Menu/>
             <div className='view-student-body'>
-      
-                <div className='view-student-header'>
+            <div className='view-student-header'>
                     <span>Student Records</span>
                     <ul className='view-student-list'>
-                        <li><DropDown options={searchFilter} className='view-student-dropdown' value = {searchValue} onChange={searchChange}/></li>
-                        <li><DropDown options={orderFilter} className='view-student-dropdown' value = {orderValue} onChange={orderChange}/></li>
-                        <li><DropDown options={viewFilter} className='view-student-dropdown' value = {searchValue} onChange={searchChange}/></li>
+                        <li><DropDown options={searchFilter} className='view-student-dropdown' value = {searchValue} onChange={searchChange} type={"search"}/></li>
+                        <li><DropDown options={orderFilter} className='view-student-dropdown' value = {orderValue} onChange={orderChange} type={"order"}/></li>
+                        <li><DropDown options={viewFilter} className='view-student-dropdown' value = {viewValue} onChange={viewChange}type={"view"}/></li>
                     </ul>
                 </div>
                 <hr className='view-student-line'/>
@@ -247,7 +240,7 @@
                     <a href='#' onClick={handleSubmit} ><BsSearch className='view-student-sicon'/></a>      
                 </div>
                 <div className='view-student-preview'>
-                    {foo != undefined? foo.map((rec,i)=>{
+                    {record != undefined? record.map((rec,i)=>{
                         return <span key={i}><div className='student-tile'>
                             <a href={"/view-student-details/"+ rec.student_id} className="student-details">
                             {i+1}. {rec.last_name}, {rec.first_name}, {rec.middle_name} {rec.suffix} {rec.student_number} {rec.degree_program} {rec.gwa} 
@@ -256,9 +249,8 @@
                         </div></span>
                     }): <div>"No students saved"</div>}
                 </div>
-
             </div>
-            <Footer />
+            <Footer/>
         </div>
         );
  }
