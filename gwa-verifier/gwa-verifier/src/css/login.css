@@ -1,7 +1,6 @@
 .header{
     width: 100%;
     height: 70px;
-
     background-color: #800D0D;
     display:flex;
     position:fixed;
@@ -23,6 +22,7 @@ body{
     margin-right: 2%;
     margin-top: 7px;
     float:left;
+}
 
 .text-header{
     line-height: 0%;
