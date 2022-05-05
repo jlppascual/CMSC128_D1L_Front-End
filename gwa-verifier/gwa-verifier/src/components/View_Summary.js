@@ -2,24 +2,17 @@
  * author: Jem, Leila
  */
  import React, { useEffect, useState, useRef } from 'react';
+ import { useNavigate } from 'react-router-dom';
  import {BsSearch}  from 'react-icons/bs';
- import {AiFillDelete} from 'react-icons/ai';
  import '../css/view_students.css'
  import Header from './Header';
  import Footer from './Footer';
- import Menu from './Menu';
- import View_Student_Details from './View_Student_Details'
-
- const View_Students =()=>{
-
-    // const foo = [{first_name: 'foo', middle_name: 'foo', suffix: 'foo', student_number: '2019-01069',
-    // degree_program: 'BS Computer Science', gwa: '1.00'}];
-    const foo = [];
+ 
+ const View_Summary =()=>{
 
     const [record, setRecord] = useState();
     const [state, changeState]= useState('0');
     const [orderValue, setOrderValue] = useState("");
-    const [searchValue, setSearchValue] = useState("");
     const [viewValue, setViewValue] = useState("");
     const [input, setInput] = useState("")
     const prev_order_state = useRef();
@@ -28,10 +21,7 @@
         {label: 'name', value:'name'},
         {label:'gwa',value:'gwa'}
     ]
-    const searchFilter = [
-        {label: 'name', value:'name'},
-        {label:'student number',value:'student_number'}
-    ]
+
     const viewFilter = [
         {label:'ALL', value:'ALL'}, 
         {label:'BACA', value:'BACA'}, 
@@ -53,7 +43,7 @@
 
     //if state changes, this function is executed
      useEffect(()=>{
-        fetch("http://localhost:3001/api/0.1/student?orderby="+[orderValue],
+        fetch("http://localhost:3001/api/0.1/student/summary?orderby="+[orderValue],
         {
             method: "GET"
         })
@@ -72,8 +62,8 @@
     useEffect(()=>{
         if(prev_order_state.current != [orderValue]){
             prev_order_state.current = [orderValue];
-            if(viewValue === "ALL" || viewValue === ""){
-                fetch("http://localhost:3001/api/0.1/student?orderby="+[orderValue],
+            if(viewValue === "ALL" || viewValue===undefined){
+                fetch("http://localhost:3001/api/0.1/student/summary?orderby="+[orderValue],
                 {
                     method: "GET"
                 })
@@ -86,7 +76,7 @@
                     }
                 })
             }else{
-                fetch("http://localhost:3001/api/0.1/student/degree/"+ [viewValue]+"?orderby="+[orderValue],
+                fetch("http://localhost:3001/api/0.1/student/summary/degree/"+ [viewValue]+"?orderby="+[orderValue],
                 {
                     method: "GET"
                 })
@@ -108,8 +98,8 @@
     useEffect(()=>{
         if(prev_view_state.current != [viewValue]){
             prev_view_state.current = [viewValue];
-            if (viewValue==="ALL" || viewValue===""){
-                fetch("http://localhost:3001/api/0.1/student?orderby="+[orderValue],
+            if (viewValue==="ALL"){
+                fetch("http://localhost:3001/api/0.1/student/summary?orderby="+[orderValue],
                 {
                     method: "GET"
                 })
@@ -122,7 +112,7 @@
                     }
                 })
             } else{
-                fetch("http://localhost:3001/api/0.1/student/degree/"+ [viewValue]+"?orderby="+[orderValue],
+                fetch("http://localhost:3001/api/0.1/student/summary/degree/"+ [viewValue],
             {
                 method: "GET"
             })
@@ -140,17 +130,8 @@
 
     const handleSubmit = (e) => {
         e.preventDefault();
-      
-        let url = 'http:localhost:3001/api/0.1/student/search?name=';
-        if(searchValue === "student_number"){
-            url = 'http://localhost:3001/api/0.1/student/search?student_number='
-
-        }else{
-            url = 'http://localhost:3001/api/0.1/student/search?name='
-        }
-
         if(input === ""){
-            fetch("http://localhost:3001/api/0.1/student?orderby="+[orderValue],
+            fetch("http://localhost:3001/api/0.1/student/summary?orderby="+[orderValue],
         {
             method: "GET"
         })
@@ -164,16 +145,12 @@
             }
         })} else {
 
-        fetch(url + [input])
+        fetch('http://localhost:3001/api/0.1/student/summary/search?name=' + [input]+'&&orderby='+[orderValue])
         .then((response) => {return response.json()})
         .then(json => {
             if(json.result.success){
-                console.log(json.result.output)  // Contains the list of match users
-                if(searchValue === "student_number"){
-                    setRecord([json.result.output]);
-                }else{
-                    setRecord(json.result.output);
-                }
+                // console.log(json.result.output)  // Contains the list of match users
+                setRecord(json.result.output);
             }
             else{
                 alert(json.result.message) // Message: No results found
@@ -185,10 +162,6 @@
         setOrderValue(e.target.value);
     }
 
-    const searchChange=(e)=>{
-        setSearchValue(e.target.value);
-    }
-
     const viewChange=(e)=>{
         setViewValue(e.target.value);
     }
@@ -196,21 +169,6 @@
     const handleUserInput = (e) => {
         const value = e.target.value;
         setInput(value);
-    }
-
-    const onDelete=async (student)=>{
-        console.log(student)
-        let student_id = student.rec.student_id
-        await fetch('http://localhost:3001/api/0.1/student/'+student_id,{
-            method: "DELETE",
-        }).then(response =>{ return response.json()})
-        .then(json=>{
-            console.log(json)
-            if(json.result.success){
-                window.alert(json.result.message)
-                changeState(!state)
-            }
-        })
     }
 
     const DropDown =({value,options,onChange, type})=>{
@@ -226,41 +184,28 @@
         );
     }
 
-    return(
+        return(
         <div>
-            <Header />
-            <Menu />
+            <Header/>
             <div className='view-student-body'>
-      
-                <div className='view-student-header'>
-                    <span>Student Records</span>
-                    <ul className='view-student-list'>
-                        <li><DropDown options={searchFilter} className='view-student-dropdown' value = {searchValue} onChange={searchChange}/></li>
-                        <li><DropDown options={orderFilter} className='view-student-dropdown' value = {orderValue} onChange={orderChange}/></li>
-                        <li><DropDown options={viewFilter} className='view-student-dropdown' value = {searchValue} onChange={searchChange}/></li>
-                    </ul>
-                </div>
-                <hr className='view-student-line'/>
-                <div className='view-student-search'>
-                    <input type = "text" className = 'view-student-input' placeholder = "Search by name, student number, or degree program..."
-                    value = {input} onChange = {handleUserInput} required></input>
-                    <a href='#' onClick={handleSubmit} ><BsSearch className='view-student-sicon'/></a>      
-                </div>
-                <div className='view-student-preview'>
-                    {foo != undefined? foo.map((rec,i)=>{
-                        return <span key={i}><div className='student-tile'>
-                            <a href={"/view-student-details/"+ rec.student_id} className="student-details">
-                            {i+1}. {rec.last_name}, {rec.first_name}, {rec.middle_name} {rec.suffix} {rec.student_number} {rec.degree_program} {rec.gwa} 
-                            </a>
-                        <button onClick={()=>{onDelete({rec})}}><AiFillDelete/></button>
-                        </div></span>
-                    }): <div>"No students saved"</div>}
-                </div>
+            <input type = "text" className = "input" placeholder = "Search by Name"
+                value = {input} onChange = {handleUserInput} required></input>
+                <button onClick={handleSubmit}><i ><BsSearch /></i></button>                
+            
+                <DropDown options={orderFilter} value = {orderValue} onChange={orderChange} type={"order"}/>
+                <DropDown options={viewFilter} value = {viewValue} onChange={viewChange} type={"view"}/>
+
+                {record != undefined? record.map((rec,i)=>{
+                    return <span key={i}><div className='student-tile'>
+                        <a href={"/view-student-details/"+ rec.student_id} className="student-details">
+                        {i+1}. {rec.last_name}, {rec.first_name}, {rec.middle_name} {rec.suffix} {rec.student_number} {rec.degree_program} {rec.gwa} 
+                        </a></div></span>
+                }): <div className="student-details">"No students saved"</div>}
 
             </div>
-            <Footer />
+            <Footer/>
         </div>
         );
  }
 
- export default View_Students;
+ export default View_Summary;
