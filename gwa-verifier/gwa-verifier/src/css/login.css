@@ -1,3 +1,13 @@
+.login-body{
+    height: 100vh;
+    background-image: linear-gradient(rgba(255,255,255,0.4), rgba(255,255,255,0.4)) ,url("../images/uplb_bg.jpg");
+    background-size:     cover;                      
+    background-repeat:   no-repeat;
+    background-position: center center; 
+    background-attachment: fixed; 
+    
+}
+
 .header{
     width: 100%;
     height: 70px;
@@ -6,14 +16,6 @@
     position:fixed;
     top:0;
     text-align: left;
-}
-
-body{
-    background-image: linear-gradient(rgba(255,255,255,0.4), rgba(255,255,255,0.4)) ,url("../images/uplb_bg.jpg");
-    background-size:     cover;                      /* <------ */
-    background-repeat:   no-repeat;
-    background-position: center center; 
-    background-attachment: fixed;
 }
 
 #uplb-logo{
