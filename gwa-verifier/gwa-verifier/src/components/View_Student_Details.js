@@ -50,7 +50,7 @@ class View_Student_Details extends React.Component{
                TOTAL UNITS: {record.total_units} 
                <br/><br/>
                 {terms!=[]? terms.map((term, i)=>{
-                    return <span key={i}>{term.semester}/{term.acad_year} total weights: {term.total_weights} total units: {term.total_units} <br/>
+                    return <span key={i}>{term.semester}/{term.acad_year} total weights: {term.total_weights} no. of units: {term.no_of_units} <br/>
                     <h2>Course Grade Units Weight Cumulated</h2>
                     {term.course_data!=[]? term.course_data.map((course)=>{
                         return <div><div className='headers'>

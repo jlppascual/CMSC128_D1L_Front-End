@@ -6,19 +6,19 @@ import { HiDocument } from 'react-icons/hi';
 export const SidebarDataUser =  [
     {
         title: 'Add User',
-        path: '/add-user',
+        path: '/student/new',
         icon: <IoIcons.IoPersonAdd />,
         cName: 'menu-side-item'
     },
     {
         title: 'View / Delete User',
-        path: '/view-users',
+        path: '/users',
         icon: <IoIcons.IoPersonRemove />,
         cName: 'menu-side-item'
     },
     {
         title: 'View Logs',
-        path: '/view-logs',
+        path: '/logs',
         icon: <BsClockHistory />,
         cName: 'menu-side-item'
     },
@@ -27,19 +27,19 @@ export const SidebarDataUser =  [
 export const SidebarDataStudent =  [
     {
         title: 'Add Student',
-        path: '/add-student',
+        path: '/student/new',
         icon: <IoIcons.IoPersonAdd />,
         cName: 'menu-side-item'
     },
     {
         title: 'View Student',
-        path: '/view-student',
+        path: '/students',
         icon: <IoIcons.IoPerson />,
         cName: 'menu-side-item'
     },
     {
         title: 'Summary',
-        path: '/view-student-summary',
+        path: '/summary',
         icon: <HiDocument />,
         cName: 'menu-side-item'
     },

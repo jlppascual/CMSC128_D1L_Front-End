@@ -233,7 +233,7 @@
 
                 {record != undefined? record.map((rec,i)=>{
                     return <span key={i}><div className='student-tile'>
-                        <a href={"/view-student-details/"+ rec.student_id} className="student-details">
+                        <a href={"/student/"+ rec.student_id} className="student-details">
                         {i+1}. {rec.last_name}, {rec.first_name}, {rec.middle_name} {rec.suffix} {rec.student_number} {rec.degree_program} {rec.gwa} 
                         </a>
                     <button onClick={()=>{onDelete({rec})}}><AiFillDelete/></button>
