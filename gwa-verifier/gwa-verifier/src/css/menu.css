@@ -3,21 +3,32 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    position:fixed;
+    margin-top: 60px;
 }
 
 .menu-bars{
     margin-left: 2rem; 
-    font-size: 1rem;
+    font-size: 1.8rem;
     background: none;
 }
 
 .menu-icon{
-    fill: black;
+    fill: #3f3f3f;
+}
+
+.menu-name{
+    font-size: 23px;
+    font-weight: bold;
+    color: #3f3f3f;
+    position:fixed;
+    top:83px;
+    left: 80px;
 }
 
 .menu-side{
     background-color: rgb(222, 222, 222);
-    width: 250px;
+    width: 220px;
     height: 100vh;
     display: flex; 
     justify-content: flex-start;
@@ -25,6 +36,7 @@
     top: 60px;
     left: -100%;
     transition: 850ms;
+    padding-top: 20px;
 }
 
 .menu-side.active{
@@ -35,8 +47,8 @@
 .menu-side-item{
     display: flex;
     justify-content: flex-start;
-    align-items: center;
-    padding: 8px 0px 8px 16px;
+    align-items: left;
+    padding: 8px;
     list-style: none;
     height: 30px;
 }
@@ -49,7 +61,7 @@
     height: 100%;
     display: flex;
     align-items: center;
-    padding: 0 16px;
+    padding: 0 8px;
     border-radius: 4px;
     
 }
@@ -63,12 +75,17 @@
 }
 
 .menu-navbar-toggle{
-    width: 100%;
     display: flex;
     justify-content: flex-start;
-    align-items: center;
+    align-items: left;
+    margin-top: -30px;
+    margin-left: -35px;
 }
 
 .menu-span{
-    margin-left: 16px;
+    margin-left: 8px;
+}
+
+ul{
+    padding:20px;
 }

@@ -23,10 +23,12 @@ class Header extends React.Component{
     
     render(){
         return(
-            <div className={'header-main'}>
-                <h1 className={'header-name'} onClick={()=> window.location.href='/home'}>GWA Verifier</h1>
-                <ul className={'header-right'}>
-                    <span className={'header-user'}>{ this.state.userType }</span>
+            <div className='header-main'>
+                <div className='green-shape'></div>
+                <div className='yellow-shape'></div>
+                <h1 className='header-name' onClick={()=> window.location.href='/home'}>ASTERIS</h1>
+                <div className='header-right'>
+                    <span className='header-user'>{ this.state.userType }</span>
                     <img src = {Dp} className={'header-dp'}/>
                     <Dropdown>
                         <div className={'header-dropdown'}>
@@ -41,7 +43,7 @@ class Header extends React.Component{
                             </Link>
                         </div>
                     </Dropdown>
-                </ul>
+                </div>
                 
             </div>
         );

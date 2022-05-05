@@ -8,6 +8,8 @@
  import {AiFillDelete} from 'react-icons/ai';
  import Header from './Header';
  import Footer from './Footer';
+ import Menu from './Menu';
+ import '../css/viewstudents.css'
  import View_Student_Details from './View_Student_Details'
 
  
@@ -18,7 +20,6 @@
          this.state = {
             record:[],
             orderfilter:[
-                {label: 'order by', value:''},
                 {label: 'name', value:'name'},
                 {label:'gwa',value:'gwa'}
             ],
@@ -128,27 +129,35 @@
          return(
          <div>
              <Header/>
-             <div className='view-student-body'>
-             <input type = "text" name = "name" placeholder = "Search by Name"
+             
+             <div className='body'>
+                <p className="title">Student Records</p>
+                <hr className='line'></hr>
+                <div className='filters'>
+                <input type = "text" name = "name" placeholder = "Search by Name"
                     value = {this.state.name} onChange = {this.handleUserInput} required></input>
-                    <button onClick={this.handleSubmit}><i ><BsSearch /></i></button>                
+                    <button onClick={this.handleSubmit}><i ><BsSearch /></i></button><br />                
+                <label htmlFor="orderby">Order by:</label>
                 <DropDown
                 // label = "View"
+                name = "orderby"
                 options={this.state.orderfilter}
                 value = {this.state.ordervalue}
                 onChange={this.onHandleChange}
                 />
-                
+                </div>
+                <div className='content'>
                  {this.state.record != []? this.state.record.map((record,i)=>{
-                     return <span key={i}><div className='student-tile'>
-                         <a href={"/view-student-details/"+ record.student_id}>
-                         {i+1}. {record.last_name}, {record.first_name}, {record.middle_name} {record.suffix} {record.student_number} {record.degree_program} {record.gwa} 
+                     return <div key={i}>
+                         <a href={"/view-student-details/"+ record.student_id} className='student-tile'>
+                         {record.last_name}, {record.first_name} {record.middle_name} {record.suffix} {record.student_number} {record.degree_program} 
                      <button onClick={()=>{this.onDelete({record})}}><AiFillDelete/></button>
                      </a>
-                     </div></span>
+                     </div>
                  }): ""}
-
+                </div>
              </div>
+             <Menu />
              <Footer/>
          </div>
          );

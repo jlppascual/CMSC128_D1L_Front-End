@@ -2,15 +2,15 @@ import { useNavigate } from 'react-router-dom'
 
 import useStore from './hooks/authHook'
 import UPLB from '../images/uplb.png'
+import Footer from '../components/Footer'
 import '../css/login.css'
 
 // changed to function to use hooks
 const Login = () => {
 
-    const { setUser, setIsAuthenticated } = useStore();     // from zustand store
-
+    const { setUser, setIsAuthenticated, user } = useStore();     // from zustand store
     const navigate = useNavigate();     // hook for navigation
-    
+    let alert_message;
     // handles login action and 
     const login = (e) => {
         e.preventDefault();
@@ -38,26 +38,29 @@ const Login = () => {
     }
 
     return(
-        <div className = {'login'}> 
-        <div className= {'login-header'}>
-            <img src = {UPLB} className="uplb-logo" alt="uplb logo"/>
-            <h3 className="web-name">University of the Philippines Los Baños</h3>
+        
+        <div className = 'login'>
+        <div className='header'>
+        <p className="app-name">ASTERIS</p>
+            <img src = {UPLB} id="uplb-logo" alt="UPLB logo"/>
+            <div className='text-header'>
+                <p className="univ-name">UNIVERSITY OF THE PHILIPPINES LOS BAÑOS</p>
+                <p className="college-name">College of Arts and Sciences</p>
                 
+            </div>   
+            
         </div>
-        <div className={'login-body'}>
-        <form>
-            {/* Username field */}
-            <label>Username:</label>&nbsp;
-            <input type='text' id='login-username' /><br/>
-
-            {/* Password field */}
-            <label>Password:</label>&nbsp;&nbsp;
-            <input type='password' id='login-password' /><br/>
+        <div>
+        <form className='login-form'>
+            <h2>User Login</h2>
+            <input type='text' className= "form-field" id='login-username' placeholder='⭕ Username'/><br/>
+            <input type='password' className= "form-field" id='login-password' placeholder='⭕ Password'/><br/>
 
             {/* Submit */}
-            <input type="submit" value="Submit" onClick={login}/>
+            <input type="submit" value="LOG IN" className='submit-btn' onClick={login}/>
         </form><br/>
         </div>
+        <Footer />
     </div> 
     )
 }

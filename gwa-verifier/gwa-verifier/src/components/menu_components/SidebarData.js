@@ -2,7 +2,7 @@ import React from 'react';
 import * as IoIcons from 'react-icons/io5';
 import { BsClockHistory } from 'react-icons/bs';
 
-export const SidebarData =  [
+export const SidebarDataUser =  [
     {
         title: 'Add User',
         path: '/add-user',
@@ -10,17 +10,20 @@ export const SidebarData =  [
         cName: 'menu-side-item'
     },
     {
-        title: 'View / Delete Users',
+        title: 'View/Delete Users',
         path: '/view-users',
-        icon: <IoIcons.IoPersonOutline />,
+        icon: <IoIcons.IoPerson />,
         cName: 'menu-side-item'
     },
     {
         title: 'View Logs',
-        path: '/',
+        path: '/view-logs',
         icon: <BsClockHistory />,
         cName: 'menu-side-item'
     },
+];
+
+export const SidebarDataStudent =  [
     {
         title: 'Add Student',
         path: '/add-student',
@@ -28,15 +31,15 @@ export const SidebarData =  [
         cName: 'menu-side-item'
     },
     {
-        title: 'View / Delete Student',
-        path: '/view-student',
-        icon: <IoIcons.IoPerson />,
+        title: 'Delete Student',
+        path: '/',
+        icon: <IoIcons.IoPersonRemove />,
         cName: 'menu-side-item'
     },
     {
-        title: 'View Logs',
-        path: '/',
-        icon: <BsClockHistory />,
+        title: 'View Student',
+        path: '/view-student',
+        icon: <IoIcons.IoPerson />,
         cName: 'menu-side-item'
     }
 ];

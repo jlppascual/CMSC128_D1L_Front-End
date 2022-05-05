@@ -4,79 +4,71 @@
 import React from 'react';
 import Header from './Header';
 import Footer from './Footer';
+import Menu from './Menu'
+import '../css/addstudent.css'
 
 class Add_Student_Page extends React.Component{
     constructor(props){
         super(props);
 
         this.state = {
-            arrayData:[], //catcher for the file content
-            headers:[],
-            term_data:[],
-            courses:[],
-            student_number:'',
-            last_name:'',
-            first_name:'',
-            middle_name:'',
-            suffix:'',
-            degree_program:'',
-            total_units:0,
-            gwa:0.0,
-            semester:'',
-            acad_year:'',
-            cumulated_sum:0,
-            weight_per_term:0
+            files : [],
+            results:[]
         }
+        this.setCSVFile = this.setCSVFile.bind(this);
         this.submitButton = this.submitButton.bind(this);
         this.parseData = this.parseData.bind(this);
-        this.sendData = this.sendData.bind(this);
         this.getRecords = this.getRecords.bind(this);
+        this.sendData = this.sendData.bind(this);
+        //this.resetState = this.resetState.bind(this);
     }
-
-    ///function to update the currently read CSV File
-    setCSVFile(e){
-        try{
-            e.preventDefault();
-            const reader = new FileReader();
-
-            //loads the results from the readAsText
-            reader.onload = function(e){
-                const text = e.target.result;
-                document.getElementById("textarea").value = text;
+    //https://stackoverflow.com/a/67296403
+    setCSVFile = async (e) => {
+  
+        // Convert the FileList into an array and iterate
+        let files = Array.from(e.target.files).map(file => {
+            let filenames = []
+            for (let i = 0; i< e.target.files.length; i++) {
+                filenames.push(e.target.files[i].name)
             }
-            reader.readAsText(e.target.files[0]);
-
-        }catch(e){console.log(e)}
+            this.setState({files:filenames})
+            
+            // Define a new file reader
+            let reader = new FileReader();
+    
+            // Create a new promise
+            return new Promise(resolve => {
+                // Resolve the promise after reading file
+                reader.onload = () => resolve(reader.result);
+                // Read the file as a text
+                reader.readAsText(file);
+            });
+        });
+    
+        // At this point you'll have an array of results
+        let res = await Promise.all(files);
+        await this.setState({results:res})
     }
 
-    parseData=async()=>{
-        let content = this.state.fileContent;
-
+    parseData = async(content)=>{
+       
         //separates file content by new line
-        const rows = content.slice(content.indexOf('\n')+1).split('\n');
+        let rows = content.slice(content.indexOf('\n')+1).split('\n');
 
         //returns filecontent in an array of strings splited by ','
-        const newArray = rows.map(row =>{
+        let array = rows.map(row =>{
             //separate each line content by a comma
             return row.split(',');
         })
-        
-        await this.setState({arrayData: newArray}, function(){
-            let array = this.state.arrayData;
-            this.setState({student_number:array[1][4], last_name:array[2][4], first_name:array[3][4], middle_name:array[4][4],suffix:array[5][4], 
-                degree_program:array[6][4], total_units:array[7][4], gwa:Number(array[8][4])})
-
-        })
-
-        await this.getRecords();
+        return this.getRecords(array);
     }
 
-    getRecords = async()=>{
-        let array = this.state.arrayData;
+    getRecords = async(array) =>{
         let headers = [];
         let courses = [];
         let term_data=[];
         let term = {};
+        let cumulative_sum = 0;
 
         for(var i = 1; i < array[10].length; i++){
             if (array[10][i] != ''){
@@ -126,75 +118,106 @@ class Add_Student_Page extends React.Component{
                     courses.push({course_code: array[j][1], grade: array[j][2], units: array[j][3], 
                         weight: Number(array[j][4]), cumulated: Number(array[j][5])})
 
-                    this.setState({weight_per_term: Number(array[j][5])})
+                    await this.setState({weight_per_term: Number(array[j][5])})
                 }
 
             }else{break;}
-             this.setState({cumulated_sum: Number(array[j][5])})
+            await this.setState({cumulated_sum: Number(array[j][5])})
+            cumulative_sum = Number(array[j][5])
         }
-         this.setState({term_data})
+         await this.setState({term_data})
+        let data ={
+            student_data: {
+                student_number:array[1][4], 
+                last_name:array[2][4], 
+                first_name:array[3][4], 
+                middle_name:array[4][4],
+                suffix:array[5][4], 
+                degree_program:array[6][4], 
+                
+            },
+            record_data:{
+                total_units:Number(array[7][4]), 
+                gwa:Number(array[8][4]),
+                cumulative_sum,
+                term_data
+            }
+        }
+        return data
     }
 
     ///function to read the read csv file as text
-    submitButton=async (e)=>{
+    submitButton(e){
         e.preventDefault();
-        await this.setState({fileContent:document.getElementById('textarea').value})
-        await this.parseData();
-        await this.sendData();
+        //await await this.setState({fileContent:document.getElementById('textarea').value})
+        if(this.state.results.length > 0){
+            this.state.results.map(async(result) => {
+                let data = await this.parseData(result);
+                await this.sendData(data);
+            });
+            this.setState({
+                files : []
+            })
+        }
     }
 
-    sendData(){
-        let record_data= {
-            gwa: Number(this.state.gwa),
-            total_units: Number(this.state.total_units),
-            cumulative_sum: this.state.cumulated_sum,
-            term_data: this.state.term_data
-        };
-        console.log(record_data);
-
+    sendData = async(data)=>{
         fetch('http://localhost:3001/api/0.1/student',{
             method:'POST',
             headers:{
                 'Content-Type':'application/json'
             },
             body: JSON.stringify({
-                student_data:{
-                    last_name: this.state.last_name,
-                    first_name: this.state.first_name,
-                    middle_name:this.state.middle_name,
-                    suffix: this.state.suffix,
-                    student_number: this.state.student_number,
-                    degree_program: this.state.degree_program
-                },
-                record_data: {
-                    gwa: Number(this.state.gwa),
-                    total_units: Number(this.state.total_units),
-                    cumulative_sum: this.state.cumulated_sum,
-                    term_data: this.state.term_data
-                }
+                student_data: data.student_data,
+                record_data: data.record_data
             })
         }).then((response) => {return response.json()})
-        .then(json => alert(json.result.message))
+        .then(json => {
+            if(json.result.success){
+                const student = json.result.output.record
+                const full_name = student.first_name+" "+student.last_name+", "+student.degree_program+":\n"
+                let message =  full_name+json.result.message
+                alert(message)
+            }
+            else{
+                const full_name = this.state.first_name+" "+this.state.last_name+", "+this.state.degree_program+":\n"
+                let message =  full_name+json.result.message
+                alert(message)
+            }
+        })
     }
 
     render(){
         return(
         <div>
-            <Header/>
-            <div className='add-student-body'>
+            <div className='body'>
                 <form>
-                    <h1>Add Student Page</h1>
-                    <input type='file' accept='.csv' id='csvFile' onChange={this.setCSVFile}
-                    ></input>
+                    <p className="title">Add Student Records</p>
+                    <hr className='line'></hr>
+                    
+                    <label htmlFor="file-acceptor" className='file-accept'> Click here to add students
+                    </label>
+                    <label htmlFor="file-acceptor" className='plus-sign'> + </label>
+                    <input type='file' accept='.csv' id='file-acceptor' multiple="multiple" onChange={this.setCSVFile}/>
+                    <div className='chosen-files'>
+                        {this.state.files != []? 
+                        this.state.files.map((file,i) => {
+                            return <span key={i} className='file'>
+                            <p>{i+1}. {file}</p>
+                            </span>
+                        }): ""}
+                    </div>
                     <br/><br/>
-                    <button onClick={this.submitButton}>Submit</button> 
+                    <button onClick={this.submitButton} className="submit-button">Submit</button> 
                     <br/><br/> 
-                    <textarea id='textarea' hidden={true}></textarea>  
+                    {/*<textarea id='textarea' hidden={true}></textarea>  
                     {this.state.arrayData.length>0? 
-                    <div>{this.state.last_name}<br/>{this.state.first_name}<br/>{this.state.middle_name}<br/>
-                    {this.state.student_number}<br/>{this.state.degree_program}<br/>{this.state.gwa}<br/>{this.state.total_units}<br/></div>:''}            
+                    <div className='added-students'>{this.state.last_name}<br/>{this.state.first_name}<br/>{this.state.middle_name}<br/>
+                    {this.state.student_number}<br/>{this.state.degree_program}<br/></div>:''} */}          
                 </form>
             </div>
+            <Header />
+            <Menu />
             <Footer/>
         </div>
         );

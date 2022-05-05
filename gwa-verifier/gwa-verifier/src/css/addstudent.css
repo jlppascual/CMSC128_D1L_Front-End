@@ -1,0 +1,86 @@
+.body{
+    background-color: white;
+    width: 100%;
+    height:100%;
+    position:fixed;
+    top:60px;
+    
+}
+
+.title{
+    text-align: left;
+    margin-top: 85px;
+    margin-left: 16.5%;
+    margin-bottom:10px;
+    color: #8D1436;
+    font-family: Palatino;
+    font-size: 30px;
+}
+
+.line{
+    text-align: center;
+    width: 67%
+}
+
+#file-acceptor{
+    display:none;
+}
+
+label{
+    color:white;
+    font-size: 22px;
+    font-family: Helvetica;
+    cursor: pointer;
+}
+
+.plus-sign{
+    position:fixed;
+    top: 320px;
+    left: 34.2%;
+    font-size: 60px;
+    color: white;
+}
+.file-accept{
+    text-align: center;
+    padding:200px 8% 120px 8%;
+    border-radius: 10px;
+    background-color: rgb(212, 212, 212);
+    position:relative;
+    top: 210px;
+    left: 19%;
+}
+
+.submit-button{
+    border:none;
+    outline:none;
+    width: 27%;
+    height: 35px;
+    position:absolute;
+    top:460px;
+    left:53.5%;
+    font-size: 15px;
+    background-color: #00563F;
+    border-radius: 10px;
+    color:#fcfff6;
+    font-weight: bold;
+    padding:4px;
+    cursor:pointer;
+}
+
+.submit-button:hover{
+    opacity:0.8
+}
+
+.chosen-files{
+    text-align: left;
+    position:relative;
+    top:-15px;
+    left:53.5%;
+    padding:15px;
+    padding-top:3px;
+    overflow-y: scroll;
+    background: rgb(212, 212, 212);
+    width: 25%;
+    height:280px;
+    border-radius: 10px;
+}
