@@ -14,10 +14,6 @@
 
  const View_Students =()=>{
 
-    // const foo = [{first_name: 'foo', middle_name: 'foo', suffix: 'foo', student_number: '2019-01069',
-    // degree_program: 'BS Computer Science', gwa: '1.00'}];
-    const foo = [];
-
     const [record, setRecord] = useState();
     const [state, changeState]= useState('0');
     const [orderValue, setOrderValue] = useState("name");
@@ -176,14 +172,44 @@
                     <a href='#' onClick={handleSubmit} ><BsSearch className='view-student-sicon'/></a>      
                 </div>
                 <div className='view-student-preview'>
-                    {foo != undefined? foo.map((rec,i)=>{
-                        return <span key={i}><div className='student-tile'>
-                            <a href={"/view-student-details/"+ rec.student_id} className="student-details">
-                            {i+1}. {rec.last_name}, {rec.first_name}, {rec.middle_name} {rec.suffix} {rec.student_number} {rec.degree_program} {rec.gwa} 
+                    {record != undefined ? 
+                        <table className='view-student-table'>
+                            <thead className='view-student-thead'>
+                                <tr>
+                                    <th className='view-student-cell-header'>NAME</th>
+                                    <th className='view-student-cell-header'>STUDENT NUMBER</th>
+                                    <th className='view-student-cell-header'>DEGREE PROGRAM</th>
+                                </tr>
+                            </thead>
+                            <tbody class = 'view-student-tbody'>
+                                {record.map((rec, i) => {
+                                    return (
+                                        <tr className='view-student-element'>
+                                            <td className='view-student-cell'>{rec.last_name}, {rec.first_name} {rec.middle_name[0]}.
+                                            {rec.suffix ? ', ' + rec.suffix : ''}</td>
+                                            <td className='view-student-cell'>{rec.student_number}</td>
+                                            <td className='view-student-cell'>{rec.degree_program}</td>
+                                            <a href='#' onClick={()=>{onDelete({rec})}}><AiFillDelete className='view-student-edit-icon'/></a>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>:
+                    
+                    <div>"No students saved"</div>
+                    }
+                    
+                    
+                    
+                    {/* {foo != undefined? foo.map((rec,i)=>{
+                        return <div key={i} className="view-student-details">
+                            <a href={"/view-student-details/"+ rec.student_id}>
+                            {i+1}. {rec.last_name}, {rec.first_name}, {rec.middle_name[0]}., {rec.suffix} {rec.student_number} {rec.degree_program} {rec.gwa} 
                             </a>
-                        <button onClick={()=>{onDelete({rec})}}><AiFillDelete/></button>
-                        </div></span>
-                    }): <div>"No students saved"</div>}
+                        <a href='#' onClick={()=>{onDelete({rec})}}><AiFillDelete/></a>
+                        </div>
+                    }): <div>"No students saved"</div>} */}
+
                 </div>
             </div>
             <Footer />
