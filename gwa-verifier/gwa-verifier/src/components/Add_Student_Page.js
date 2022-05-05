@@ -175,7 +175,8 @@
              },
              body: JSON.stringify({
                  student_data: data.student_data,
-                 record_data: data.record_data
+                 record_data: data.record_data,
+                 user_id: "d545afff-ca32-11ec-b248-98fa9bd5dc59"
              })
          }).then((response) => {return response.json()})
          .then(json => {

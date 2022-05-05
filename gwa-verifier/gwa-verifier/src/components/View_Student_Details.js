@@ -1,3 +1,6 @@
+/**
+ * author: Jem and Thomas
+ */
 import React from 'react'
 import {VscSettings}  from 'react-icons/vsc';
 import Header from './Header';

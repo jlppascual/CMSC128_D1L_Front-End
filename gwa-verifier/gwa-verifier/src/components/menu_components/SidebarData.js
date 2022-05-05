@@ -6,7 +6,7 @@ import { HiDocument } from 'react-icons/hi';
 export const SidebarDataUser =  [
     {
         title: 'Create User',
-        path: '/student/new',
+        path: '/users/new',
         icon: <IoIcons.IoPersonAdd />,
         cName: 'menu-side-item'
     },
@@ -38,7 +38,7 @@ export const SidebarDataStudent =  [
         cName: 'menu-side-item'
     },
     {
-        title: 'Summary',
+        title: 'Student Summary',
         path: '/summary',
         icon: <HiDocument />,
         cName: 'menu-side-item'

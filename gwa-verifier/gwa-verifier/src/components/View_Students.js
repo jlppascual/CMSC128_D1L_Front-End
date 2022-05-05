@@ -9,9 +9,6 @@ import React, { useEffect, useState, useRef } from 'react';
  
  const View_Students =()=>{
 
-   // const foo = [{first_name: 'foo', middle_name: 'foo', suffix: 'foo', student_number: '2019-01069',
-    // degree_program: 'BS Computer Science', gwa: '1.00'}];
-    const foo = [];
     const [record, setRecord] = useState();
     const [state, changeState]= useState('0');
     const [orderValue, setOrderValue] = useState("");
@@ -242,7 +239,7 @@ import React, { useEffect, useState, useRef } from 'react';
                 <div className='view-student-preview'>
                     {record != undefined? record.map((rec,i)=>{
                         return <span key={i}><div className='student-tile'>
-                            <a href={"/view-student-details/"+ rec.student_id} className="student-details">
+                            <a href={"/student/"+ rec.student_id} className="student-details">
                             {i+1}. {rec.last_name}, {rec.first_name}, {rec.middle_name} {rec.suffix} {rec.student_number} {rec.degree_program} {rec.gwa} 
                             </a>
                         <button onClick={()=>{onDelete({rec})}}><AiFillDelete/></button>

@@ -1,5 +1,6 @@
 .menu-navbar{
     height: 80px;
+
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -15,8 +16,6 @@
 
 .menu-icon{
     fill: #3f3f3f;
-    position: fixed;
-    top: 86px;
 }
 
 .menu-name{
@@ -30,7 +29,7 @@
 
 .menu-side{
     background-color: rgb(222, 222, 222);
-    width: 220px;
+    width: 250px;
     height: 100vh;
     display: flex; 
     justify-content: flex-start;

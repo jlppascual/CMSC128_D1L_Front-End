@@ -21,7 +21,7 @@ function App() {
         <Route exact path='/students' element={<View_Students/>}/>
         <Route exact path='/student/:id' element={<View_Student_Details/>}/>
         <Route path='/summary' element={<View_Summary/>}/>
-        <Route path='/add-user' element={<Add_User/>}/>
+        <Route path='/users/new' element={<Add_User/>}/>
         <Route path='/users' element={<View_User/>}/>
         <Route path='/logs' element={<View_Logs/>}/>
       </Routes>
