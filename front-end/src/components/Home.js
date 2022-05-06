@@ -20,12 +20,12 @@ const Home = () => {
 
     const navigate = useNavigate();     // navigation hook
 
-    useEffect(() => {
-        if(!isAuthenticated) navigate('/');
-        else {
-            // case 2 to be added after backend logic
-        }
-    })
+    // useEffect(() => {
+    //     if(!isAuthenticated) navigate('/');
+    //     else {
+    //         // case 2 to be added after backend logic
+    //     }
+    // })
 
     return(
         <div>

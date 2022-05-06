@@ -8,6 +8,7 @@ import Add_User from './components/Add_User_Page'
 import View_User from './components/View_Users_Page'
 import View_Logs from './components/View_Logs'
 import View_Summary from './components/View_Summary'
+import Settings from './components/Settings'
 
 
 
@@ -24,6 +25,8 @@ function App() {
         <Route path='/users/new' element={<Add_User/>}/>
         <Route path='/users' element={<View_User/>}/>
         <Route path='/logs' element={<View_Logs/>}/>
+        <Route path='/settings' element={<Settings/>}/>
+
       </Routes>
     </BrowserRouter>
   );

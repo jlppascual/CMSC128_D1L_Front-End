@@ -1,0 +1,54 @@
+* {
+  box-sizing: border-box;
+}
+
+/* Float four columns side by side */
+.column {
+  float: left;
+  width: 25%;
+  padding: 0 10px;
+  margin: 50px 0px 0px 250px;
+}
+
+/* Remove extra left and right margins, due to padding in columns */
+.row {margin: 0 -5px;}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
+  padding: 3px 16px 16px;
+  text-align: center;
+  background-color: #f1f1f1;
+  border-radius: 4px;
+}
+
+/* Responsive columns - one column layout (vertical) on small screens
+@media screen and (max-width: 600px) {
+  .column {
+    width: 100%;
+    display: block;
+    margin-bottom: 20px;
+  }
+} */
+
+.inside-card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
+  padding: 3px 16px 16px;
+  text-align: left;
+  background-color: #dfdcdc;
+  border-radius: 4px;
+}
+
+.web-desc{
+  text-align: justify;
+  padding: 10px 16px 10px;
+}
+
+/* still need to improve for responsiveness and positioning */

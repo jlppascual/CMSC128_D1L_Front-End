@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
  import { useNavigate } from 'react-router-dom';
  import {BsSearch}  from 'react-icons/bs';
- import {AiFillDelete} from 'react-icons/ai';
+ import {AiFillDelete, AiFillEye} from 'react-icons/ai';
  import '../css/view_students.css'
+ import Popup from './button_component/Popup'
  import Header from './Header';
  import Footer from './Footer';
  import Menu from './Menu';
@@ -15,6 +16,7 @@ import React, { useEffect, useState, useRef } from 'react';
     const [searchValue, setSearchValue] = useState("");
     const [viewValue, setViewValue] = useState("");
     const [input, setInput] = useState("")
+    const [isToggled, setToggled] = useState(false)
     const prev_order_state = useRef();
     const prev_view_state = useRef();
     const orderFilter = [
@@ -192,7 +194,7 @@ import React, { useEffect, useState, useRef } from 'react';
     const onDelete=async (student)=>{
         console.log(student)
         let student_id = student.rec.student_id
-        await fetch('http://localhost:3001/api/0.1/student/'+student_id,{
+        await fetch('http://localhost:3001/api/0.1/student/'+student_id+"/d545afff-ca32-11ec-b248-98fa9bd5dc59",{
             method: "DELETE",
         }).then(response =>{ return response.json()})
         .then(json=>{
@@ -243,9 +245,11 @@ import React, { useEffect, useState, useRef } from 'react';
                             {i+1}. {rec.last_name}, {rec.first_name}, {rec.middle_name} {rec.suffix} {rec.student_number} {rec.degree_program} {rec.gwa} 
                             </a>
                         <button onClick={()=>{onDelete({rec})}}><AiFillDelete/></button>
+                        <button onClick={()=>{setToggled(!isToggled)}}><AiFillEye/></button>
                         </div></span>
                     }): <div>"No students saved"</div>}
                 </div>
+                {(isToggled === true)? <Popup/>:""}
             </div>
             <Footer/>
         </div>

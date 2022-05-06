@@ -35,7 +35,7 @@ class Header extends React.Component{
                             <Link to = '/' className={'header-dropitem'}>
                                 Profile
                             </Link>
-                            <Link to = '/' className={'header-dropitem'}>
+                            <Link to = '/settings' className={'header-dropitem'}>
                                 Settings
                             </Link>
                             <Link to = '/' className={'header-dropitem'}>

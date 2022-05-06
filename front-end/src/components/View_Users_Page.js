@@ -52,7 +52,7 @@ class View_Users_Page extends React.Component{
     }
     onDelete(user){
         let user_id = user.user.user_id
-        fetch('http://localhost:3001/api/0.1/user/'+ user_id,{
+        fetch('http://localhost:3001/api/0.1/user/'+ user_id+"/d545afff-ca32-11ec-b248-98fa9bd5dc59",{
             method: "DELETE",
             headers:{
                 'Content-Type':'application/json'
