@@ -3,7 +3,7 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: 195vh;
+    width: 1400px;
 }
 
 .view-student-header span{
@@ -78,7 +78,51 @@
 .view-student-preview{
     margin: 0 auto;
     background-color: rgb(185, 181, 181);
-    height: 55vh;
-    width: 193vh;
+    height: 390px;
+    width: 1390px;
     border-radius: 5px;
+}
+
+.view-student-table{
+    margin-left: auto;
+    margin-right: auto;
+    border-spacing: 0 10px;
+}
+
+.view-student-thead{
+    display: block;
+}
+.view-student-tbody{
+    display: block;
+    height: 310px;
+    overflow-y: auto;
+    padding-right: 30px;
+    padding-left: 30px;
+}
+
+.view-student-element{
+    background-color: #fcfff6;
+}
+
+.view-student-cell{
+    text-align: center;
+    height: 40px;
+    margin-bottom: 10px;
+    width: 330px;
+} 
+
+.view-student-cell-header{
+    text-align: center;
+    width: 330px;
+} 
+
+.view-student-edit-icon{
+    padding-left: 10px;
+    padding-right: 10px;
+    color: black;
+    padding-top: 12px;
+}
+
+.view-student-edit-icon:hover{
+    fill: gray;
 }

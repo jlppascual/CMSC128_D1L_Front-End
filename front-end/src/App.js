@@ -1,14 +1,14 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Login  from './components/Login';
-import Home from './components/Home';
-import Add_Student from './components/Add_Student_Page'
-import View_Students from './components/View_Students'
-import View_Student_Details from './components/View_Student_Details'
-import Add_User from './components/Add_User_Page'
-import View_User from './components/View_Users_Page'
-import View_Logs from './components/View_Logs'
-import View_Summary from './components/View_Summary'
-import Settings from './components/Settings'
+import Login  from './components/pages/Login';
+import Home from './components/pages/Home';
+import Add_Student from './components/pages/Add_Student_Page'
+import View_Students from './components/pages/View_Students'
+import View_Student_Details from './components/pages/View_Student_Details'
+import Add_User from './components/pages/Add_User_Page'
+import View_User from './components/pages/View_Users_Page'
+import View_Logs from './components/pages/View_Logs'
+import View_Summary from './components/pages/View_Summary'
+import Settings from './components/pages/Settings'
 
 
 
