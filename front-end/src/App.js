@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import RequireAuth from './components/components/RequireAuth';
 import Login  from './components/pages/Login';
 import Home from './components/pages/Home';
 import Add_Student from './components/pages/Add_Student_Page'
@@ -17,7 +18,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route exact path='/' element={<Login />} />
-        <Route exact path='/home' element={<Home />} />
+        <Route exact path='/home' element={ <RequireAuth children={ <Home /> } /> } />
         <Route exact path='/student/new' element={<Add_Student/>}/>
         <Route exact path='/students' element={<View_Students/>}/>
         <Route exact path='/student/:id' element={<View_Student_Details/>}/>
