@@ -16,7 +16,16 @@ const Edit_Row = ( {func, course}) => {
         weight: weight,
         cumulated: cumulated};
 
-    func.updateCourse(updatedCourse);
+        
+    let empty = 0;
+
+    if (course_code === "" || grade === "" || units === "" || weight === "" || cumulated === ""){
+        empty = 1
+    } else {
+        empty = 0
+    }
+
+    func.updateCourse(empty, updatedCourse);
 
     return(
         <tr>
