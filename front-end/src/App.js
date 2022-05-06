@@ -19,14 +19,14 @@ function App() {
       <Routes>
         <Route exact path='/' element={<Login />} />
         <Route exact path='/home' element={ <RequireAuth children={ <Home /> } /> } />
-        <Route exact path='/student/new' element={<Add_Student/>}/>
-        <Route exact path='/students' element={<View_Students/>}/>
-        <Route exact path='/student/:id' element={<View_Student_Details/>}/>
-        <Route path='/summary' element={<View_Summary/>}/>
-        <Route path='/users/new' element={<Add_User/>}/>
-        <Route path='/users' element={<View_User/>}/>
-        <Route path='/logs' element={<View_Logs/>}/>
-        <Route path='/settings' element={<Settings/>}/>
+        <Route exact path='/student/new' element={<RequireAuth children={<Add_Student/>}/>}/>
+        <Route exact path='/students' element={<RequireAuth children={<View_Students/>}/>}/>
+        <Route exact path='/student/:id' element={<RequireAuth children={<View_Student_Details/>}/>}/>
+        <Route path='/summary' element={<RequireAuth children={<View_Summary/>}/>}/>
+        <Route path='/users/new' element={<RequireAuth children={<Add_User/>}/>}/>
+        <Route path='/users' element={<RequireAuth children={<View_User/>}/>}/>
+        <Route path='/logs' element={<RequireAuth children={<View_Logs/>}/>}/>
+        <Route path='/settings' element={<RequireAuth children={<Settings/>}/>}/>
 
       </Routes>
     </BrowserRouter>

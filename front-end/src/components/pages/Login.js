@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom'
-
 import useStore from '../hooks/authHook'
 import UPLB from '../../images/uplb.png'
 import Footer from '../components/Footer'
@@ -19,6 +18,7 @@ const Login = () => {
             username: document.getElementById('login-username').value,
             password: document.getElementById('login-password').value
         }
+        console.log(credentials)
 
         fetch('http://localhost:3001/api/0.1/auth' ,{
                 method:'POST',

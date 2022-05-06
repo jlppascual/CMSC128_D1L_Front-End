@@ -29,14 +29,14 @@
     transform: translate(-50%, -50%);
 }
 
-#field{
+.field{
     padding: 5px;
     margin : 1px;
     width : 225px;
     font-family: Optima;
 }
 
-#rolefield{
+.rolefield{
     padding: 5px;
     margin : 1px;
     width : 239px;
