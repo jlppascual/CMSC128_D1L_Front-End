@@ -2,7 +2,9 @@
     Author: Christian, Leila
     This is the source code for the path '/home'
 */
-
+import { useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import useStore from '../hooks/authHook'
 import Header from '../components/Header';
 import Menu from '../components/Menu';
 import Footer from '../components/Footer'
@@ -10,6 +12,20 @@ import '../../css/home.css';
 
 // changed to a handler function to use hooks
 const Home = () => {
+
+        // from zustand store
+        const { isAuthenticated } = useStore();
+
+        const navigate = useNavigate();     // navigation hook
+    
+        useEffect(() => {
+            if(!isAuthenticated) {
+                navigate('/')
+                alert("You are not logged in!")}
+            else {
+                navigate('/home');
+            }
+        },[isAuthenticated])
 
     return(
         <div>

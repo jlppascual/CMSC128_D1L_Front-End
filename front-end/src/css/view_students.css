@@ -126,3 +126,8 @@
 .view-student-edit-icon:hover{
     fill: gray;
 }
+
+.student-tile{
+    text-decoration: none;
+    color: black;
+}

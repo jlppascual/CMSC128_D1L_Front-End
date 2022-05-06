@@ -1,7 +1,10 @@
 /**
  * author: Jem, Thomas
  */
+ import { useEffect } from 'react'
+ import { useNavigate } from 'react-router-dom'
  import React, { useRef, useState } from 'react';
+ import useStore from '../hooks/authHook'
  import Header from '../components/Header';
  import Footer from '../components/Footer';
  import Menu from '../components/Menu'
@@ -20,7 +23,14 @@
      const weightPerTerm = useRef();
      const [cumulated_sum, setCumulatedSum] = useState();
   
+     const { user, isAuthenticated } = useStore();
+     const navigate = useNavigate();     // navigation hook
  
+     useEffect(() => {
+         if(!isAuthenticated) {
+             navigate('/')
+             alert("You are not logged in!")}
+     },[isAuthenticated])
  
  
      //https://stackoverflow.com/a/67296403
@@ -71,7 +81,6 @@
                  let sem = array[j][7].slice(0,array[j][7].indexOf('/'));
                  let year = array[j][7].slice(array[j][7].indexOf('/')+1, array[j][7].length)
                  let no_of_units = Number(array[j][6]);
-                 console.log(sem, year, no_of_units)
                  
                  //if course is found at the beginning of the record
                  if(courses.length <=0 && array[j][7] != ''){
@@ -91,7 +100,7 @@
                              total_weights: weightPerTerm.current, course_data: courses}
                          term_data.push(term);
                      }
-                     console.log(term_data)
+
                      semester.current = sem;
                      acad_year.current = year;
                      num_of_units.current = no_of_units;
@@ -117,7 +126,6 @@
          }
  
          await setTermData(term_data)
-         console.log(term_data)
  
          let data ={
              student_data: {
@@ -170,13 +178,14 @@
      const sendData = async(data)=>{
          fetch('http://localhost:3001/api/0.1/student',{
              method:'POST',
+             credentials:'include',
              headers:{
                  'Content-Type':'application/json'
              },
              body: JSON.stringify({
                  student_data: data.student_data,
                  record_data: data.record_data,
-                 user_id: "d545afff-ca32-11ec-b248-98fa9bd5dc59"
+                 user_id: user.user_id
              })
          }).then((response) => {return response.json()})
          .then(json => {

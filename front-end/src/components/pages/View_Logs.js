@@ -13,7 +13,8 @@
      useEffect(()=>{
         fetch("http://localhost:3001/api/0.1/log",
         {
-            method: "GET"
+            method: "GET",
+            credentials:'include'
         })
         .then(response => {return response.json()})
         .then(json=>{

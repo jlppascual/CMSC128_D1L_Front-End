@@ -1,44 +1,56 @@
 import React, {useState, Fragment, useEffect} from 'react'
-import {VscSettings}  from 'react-icons/vsc';
+import { useNavigate } from 'react-router-dom'
+import useStore from '../hooks/authHook'
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Read_Row from '../components/Read_Row';
 import Edit_Row from '../components/Edit_Row';
-
+import {VscSettings}  from 'react-icons/vsc';
 
 const View_Student_Details =()=>{
+    const[pageState, setPage] = useState(false)
     const[editable, setEditable] = useState(false);
+
     const [state, setState]= useState({
         student_details:[],
         record_details:[],
-        term_details:[],
-        pageState:false,
-        
+        term_details:[],        
     })
+
     let changed_courses = [];
     let empty_field = [];
 
+    const { user, isAuthenticated } = useStore();
+    const navigate = useNavigate();     // navigation hook
+
+
     useEffect(()=>{
-        const link = window.location.href
-        const id = link.slice(link.lastIndexOf('/')+1,link.length)
-        console.log(id)
-        fetch('http://localhost:3001/api/0.1/student/'+id,{
-            method:'GET'
-        }).then(response=> {return response.json()})
-        .then(json=>{
-            //console.log(json.result.output.record)
-            setState(
-                {student_details:json.result.output.record,
-                record_details:json.result.output.record.record_data,
-                term_details:json.result.output.record.record_data.term_data,
-                course_details:json.result.output.record.record_data.term_data.course_data})         
-        })
-    },[state.pageState])
+        if(!isAuthenticated) {
+            navigate('/')
+            alert("You are not logged in!")}
+        else{
+            const link = window.location.href
+            const id = link.slice(link.lastIndexOf('/')+1,link.length)
+            // console.log(id)
+            fetch('http://localhost:3001/api/0.1/student/'+id,{
+                method:'GET',
+                credentials:'include'
+            }).then(response=> {return response.json()})
+            .then(json=>{
+                //console.log(json.result.output.record)
+                setState(
+                    {student_details:json.result.output.record,
+                    record_details:json.result.output.record.record_data,
+                    term_details:json.result.output.record.record_data.term_data,
+                    course_details:json.result.output.record.record_data.term_data.course_data})         
+            })
+        }
+    },[isAuthenticated, pageState])
    
    const handleClick=(event)=>{
         event.preventDefault();
         setEditable(!editable)
-        console.log(editable)
+        // console.log(editable)
     }
     
     const handleUpdate=(event)=>{
@@ -49,33 +61,39 @@ const View_Student_Details =()=>{
             setEditable(!editable)
             fetch("http://localhost:3001/api/0.1/student/"+ state.student_details.student_id, {
                 method:'PATCH',
+                credentials:'include',
+
                 headers:{
                     'Content-Type':'application/json'
                 },
                 body: JSON.stringify({
                     changed_courses,
-                    user_id: "361b1b68-cf4a-4887-bec0-29884e2942ef",
+                    user_id: user.user_id,
                     details: "Kunwari nag-edit"
                 }) 
             })
             .then((response) => {return response.json()})
             .then(json => {
-                const student = state.student_details
-                const full_name = student.first_name+" "+student.last_name+", "+student.degree_program+":\n"
-                let message =  full_name+json.result.message
-                alert(message)
+                if(json.result.success){
+                    console.log(json.result)
+                    const student = state.student_details
+                    const full_name = student.first_name+" "+student.last_name+", "+student.degree_program+":\n"
+                    let message =  full_name+json.result.message
+                    setPage(!pageState)
+                    
+                }
             })
         }
     }
 
     const updateCourse=(empty, updatedCourse)=>{
+
         let courses = changed_courses.filter(course => course.course_id !== updatedCourse.course_id)
         courses.push(updatedCourse)
         changed_courses = courses
         empty_field = empty
-        console.log(changed_courses)
-        console.log(empty_field)
-
+        //console.log(changed_courses)
+        // console.log(empty_field)
     }
 
     return(
