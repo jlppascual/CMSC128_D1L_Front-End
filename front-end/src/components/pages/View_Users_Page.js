@@ -21,8 +21,6 @@
     const [showConfirmation, setShowConfirmation] = useState(false)
     const [toDelete, setToDelete] = useState("")
 
-
-    
     const { user, isAuthenticated, setAuth } = useStore();
     const navigate = useNavigate();     // navigation hook
     const prev_view_state = useRef();

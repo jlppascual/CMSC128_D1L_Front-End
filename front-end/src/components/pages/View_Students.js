@@ -73,7 +73,6 @@ const navigate = useNavigate();     // navigation hook
         if(json.result.success){
             setRecord(json.result.output)
         }else{
-            // alert(json.result.message)
         }
     })}
 },[isAuthenticated, state]);
@@ -230,6 +229,7 @@ const confirmDelete= async(decision) =>{
         })
     }
 }
+
 const onDelete=(student)=>{
     setShowConfirmation(true)
     setToDelete(student);
@@ -243,6 +243,7 @@ const DropDown =({value,options,onChange, type})=>{
             {options.map((option,i)=>(
                 <option key={i} value = {option.value} >{option.label}</option>
             ))}
+
             </select>
         </label>
     );
@@ -250,16 +251,15 @@ const DropDown =({value,options,onChange, type})=>{
 
 return(
     <div>
-
         <div className='view-student-body'>
             <ul className='view-student-list'>
                     <li><DropDown options={searchFilter}  value = {searchValue} onChange={searchChange} type ="search"/></li>
                     <li><DropDown options={orderFilter}  value = {orderValue} onChange={orderChange} type = "order"/></li>
                     <li><DropDown options={viewFilter} value = {viewValue} onChange={viewChange} type="view"/></li>
+
             </ul>
             <p className="title">Student Records</p>
-            <hr className='line'></hr>
-                
+            <hr className='line'></hr>      
     
             <div className='view-student-header'>
         
@@ -271,6 +271,7 @@ return(
             </div>
             <div className='view-student-search'>
                 <input type = "text" className = 'view-student-input' placeholder = "Search a student record" value = {input} onChange = {handleUserInput} required></input>
+
                 <a href='#' onClick={handleSubmit} ><BsSearch className='search-icon'/></a>      
             </div>
             <div className='view-student-preview'>
@@ -279,7 +280,7 @@ return(
                         <thead className='view-student-thead'>
                             <tr>
                             <th className='name-header'>NAME</th>
-                                <th className='studno-header'>STUDENT NUMBER</th>
+                               <th className='studno-header'>STUDENT NUMBER</th>
                                 <th className='degree-header'>DEGREE PROGRAM</th>
                             </tr>
                         </thead>
@@ -291,8 +292,7 @@ return(
                                             <td className='name-cell'>{rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""} {rec.suffix ? ', ' + rec.suffix : ''}</td></a>
 	                                        <td className='studno-cell'>{rec.student_number}</td>
                                         <td className='degree-cell'>{rec.degree_program}</td>
-                                        <a onClick={()=>{onDelete(rec)}}><AiFillDelete className='view-student-edit-icon'/></a>
-                                        
+                                        <a onClick={()=>{onDelete(rec)}}><AiFillDelete className='view-student-edit-icon'/></a>                                        
                                     </tr>
                                 );
                             })}
