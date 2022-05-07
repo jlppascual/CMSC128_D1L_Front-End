@@ -18,14 +18,17 @@ const Edit_Row = ( {func, course}) => {
 
         
     let empty = 0;
-
+    // Check for empty fields
     if (course_code === "" || grade === "" || units === "" || weight === "" || cumulated === ""){
         empty = 1
     } else {
         empty = 0
     }
-
-    func.updateCourse(empty, updatedCourse);
+    // Check for changes
+    if(course_code !== course.course_code || grade !== course.grade || units !== course.units || weight !== course.weight || cumulated !== course.cumulated){
+        func.updateCourse(empty, updatedCourse);
+    }
+        
 
     return(
         <tr>
@@ -36,7 +39,7 @@ const Edit_Row = ( {func, course}) => {
                     placeholder= "Enter Course Code"
                     name = "course_code"
                     value = {course_code}
-                    onChange = {(e)=> setCourse(e.target.value)}
+                    onChange = {(e)=> {setCourse(e.target.value)}}
                 ></input>
             </td>
             <td>
@@ -46,7 +49,7 @@ const Edit_Row = ( {func, course}) => {
                     placeholder= "Enter Grade"
                     name = "grades"
                     value = {grade}
-                    onChange = {(e)=> setGrade(e.target.value)}
+                    onChange = {(e)=> {setGrade(e.target.value)}}
                 ></input>
             </td>
             <td>
@@ -56,7 +59,7 @@ const Edit_Row = ( {func, course}) => {
                     placeholder= "Enter Units"
                     name = "units"
                     value = {units}
-                    onChange = {(e)=> setUnits(e.target.value)}
+                    onChange = {(e)=> {setUnits(e.target.value)}}
                 ></input>
             </td>
             <td>
@@ -66,7 +69,7 @@ const Edit_Row = ( {func, course}) => {
                     placeholder= "Enter Weight"
                     name = "weight"
                     value = {weight}
-                    onChange = {(e)=> setWeight(e.target.value)}
+                    onChange = {(e)=> {setWeight(e.target.value)}}
                 ></input>
             </td>
             <td>
@@ -76,7 +79,7 @@ const Edit_Row = ( {func, course}) => {
                     placeholder= "Enter Cumulated"
                     name = "cumulated"
                     value = {cumulated}
-                    onChange = {(e)=> setCumulated(e.target.value)}
+                    onChange = {(e)=> {setCumulated(e.target.value)}}
                 ></input>
                 
             </td>

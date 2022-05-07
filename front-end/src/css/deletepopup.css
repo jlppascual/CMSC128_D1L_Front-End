@@ -19,6 +19,7 @@
     margin: 25px;
 }
 .confirm-btn{
+    cursor: pointer;
     background-color: #8D1436;
     color: white;
     padding: 8px;
@@ -28,6 +29,7 @@
 }
 
 .cancel-btn{
+    cursor: pointer;
     background-color:gray;
     color: white;
     padding: 8px;
@@ -36,4 +38,12 @@
     border-radius: 5px;
     margin-left: 21%;
     margin-right: 10%;
+}
+
+.confirm-btn:hover{
+    opacity:0.8;
+}
+
+.cancel-btn:hover{
+    opacity:0.8;
 }
