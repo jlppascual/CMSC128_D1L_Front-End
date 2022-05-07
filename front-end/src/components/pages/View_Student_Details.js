@@ -171,10 +171,11 @@ const View_Student_Details =()=>{
             <hr className='line'></hr></div>
             
             < div className='student-record'>
-            STUDENT NUMBER: {state.student_details.student_number}<br/>
+            Degree Program: {state.student_details.degree_program} <br/>  
+            Student No.: {state.student_details.student_number}<br/>
+            Total Units: {state.record_details.total_units}  <br/>
             GWA: {state.record_details.gwa}<br/>
-            TOTAL UNITS: {state.record_details.total_units} <br />
-            <br/>
+            
             <br/><br/>
 
             {state.term_details!=[]? state.term_details.map((term, i)=>{
@@ -183,11 +184,12 @@ const View_Student_Details =()=>{
                     <table>
                         <thead>
                             <tr>
-                                <th>Course</th>
+                                <th>Course Code</th>
                                 <th>Grade</th>
                                 <th>Units</th>
                                 <th>Weight</th>
-                                <th>Cumulated</th>
+                                <th>Enrolled</th>
+                                <th>Term</th>
                             </tr>
                         </thead>
                         <tbody>
