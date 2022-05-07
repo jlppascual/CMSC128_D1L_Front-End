@@ -11,7 +11,6 @@
 
 const Add_User_Page=()=>{
 
-    const [pageState, setPage] = useState(false);
     const { user, isAuthenticated } = useStore();
     const navigate = useNavigate();     // navigation hook
 
@@ -19,7 +18,7 @@ const Add_User_Page=()=>{
 
     useEffect(() => {
         if(!isAuthenticated) {
-            Navigate('/')
+            navigate('/')
             alert("You are not logged in!")}
     },[isAuthenticated])
 
@@ -27,7 +26,7 @@ const Add_User_Page=()=>{
         e.preventDefault();
         // document.getElementById("result").innerHTML = document.getElementById("username").value + " " + document.getElementById("password").value;
 
-            let user_details={
+        let user_details={
             first_name: document.getElementById("first_name").value,
             last_name: document.getElementById("last_name").value,
             user_role: document.getElementById("user_role").value,
@@ -41,8 +40,7 @@ const Add_User_Page=()=>{
         };
 
         await sendData(user_details);
-        // alert("User has been created!");
-     }
+    }
 
     const sendData=(user_details)=>{
          fetch('http://localhost:3001/api/0.1/user', {
@@ -75,9 +73,9 @@ const Add_User_Page=()=>{
                     <input type="text" className = "field" id="last_name" placeholder="🔘 Last Name"></input><br />
                     <select className = "rolefield" id="user_role" value={userRole} onChange={handleChange}>
                         <option value="" disabled selected hidden>🔽 User Role</option>
-                        <option value="ocs_rep">OCS Rep</option>
+                        <option value="ocs rep">OCS Rep</option>
                         <option value="acs">ACS</option>
-                        <option value="unit_rep">Unit Rep</option>
+                        <option value="unit rep">Unit Rep</option>
                         <option value="member">Member</option>
                     </select><br />
                     <input type="text" className = "field" id="username" placeholder="🔘 Username" /><br />
@@ -87,7 +85,6 @@ const Add_User_Page=()=>{
                     <input type="text" className = "field" id="phone_number"placeholder = "🔘 Phone Number"/><br />
                     <input type="submit" value="Confirm" className='confirm-button' onClick={readInput}/>
                     <input type="reset" value="Reset" className='reset-button'/>
-                {/* <br></br><span id="result"></span> */}
             </form>
             </div>
             <Header />
