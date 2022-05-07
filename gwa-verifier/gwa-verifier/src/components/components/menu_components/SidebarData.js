@@ -1,23 +1,24 @@
 import React from 'react';
 import * as IoIcons from 'react-icons/io5';
 import { BsClockHistory } from 'react-icons/bs';
+import { HiDocument } from 'react-icons/hi';
 
 export const SidebarDataUser =  [
     {
-        title: 'Add User',
-        path: '/add-user',
+        title: 'Create User',
+        path: '/users/new',
         icon: <IoIcons.IoPersonAdd />,
         cName: 'menu-side-item'
     },
     {
-        title: 'View/Delete Users',
-        path: '/view-users',
+        title: 'Users',
+        path: '/users',
         icon: <IoIcons.IoPerson />,
         cName: 'menu-side-item'
     },
     {
-        title: 'View Logs',
-        path: '/view-logs',
+        title: 'Logs',
+        path: '/logs',
         icon: <BsClockHistory />,
         cName: 'menu-side-item'
     },
@@ -25,21 +26,21 @@ export const SidebarDataUser =  [
 
 export const SidebarDataStudent =  [
     {
-        title: 'Add Student',
-        path: '/add-student',
+        title: 'Create Student',
+        path: '/student/new',
         icon: <IoIcons.IoPersonAdd />,
         cName: 'menu-side-item'
     },
     {
-        title: 'Delete Student',
-        path: '/',
-        icon: <IoIcons.IoPersonRemove />,
+        title: 'Students',
+        path: '/students',
+        icon: <IoIcons.IoPerson />,
         cName: 'menu-side-item'
     },
     {
-        title: 'View Student',
-        path: '/view-student',
-        icon: <IoIcons.IoPerson />,
+        title: 'Student Summary',
+        path: '/summary',
+        icon: <HiDocument />,
         cName: 'menu-side-item'
-    }
+    },
 ];

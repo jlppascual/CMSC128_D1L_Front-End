@@ -1,0 +1,132 @@
+.view-student-body{
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 1400px;
+}
+
+.view-student-header span{
+    margin: 0;
+    font-size: 40px;
+    color: #8d1436;
+    font-family: Palatino Linotype,Palatino LT STD;
+}
+
+.view-student-header{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 50px;
+}
+
+.view-student-list{
+    list-style: none;
+    margin-top: 20px;
+    padding: 0;
+    margin-bottom: 5px;
+}
+
+.view-student-list li{
+    display: inline-block;
+    margin: 0 5px;
+}
+
+.student-details{
+    text-decoration: none;
+    color:black;
+    background-color: whitesmoke;
+}
+
+.view-student-search{
+    background-color: #00563f;
+    margin: 5px;
+    height: 40px;
+    align-items: center;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+}
+
+.view-student-sicon{
+    margin-left: 13px;
+    color: whitesmoke;
+}
+
+.view-student-sicon:hover{
+    fill: gray;
+}
+
+.view-student-line{
+    height: -1px;
+    margin-top: 0px;
+}
+
+.view-student-input{
+    height: 25px;
+    width: 185vh;
+    margin-left: 5px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+}
+
+.view-student-dropdown{
+    color: gray;
+}
+
+.view-student-preview{
+    margin: 0 auto;
+    background-color: rgb(185, 181, 181);
+    height: 390px;
+    width: 1390px;
+    border-radius: 5px;
+}
+
+.view-student-table{
+    margin-left: auto;
+    margin-right: auto;
+    border-spacing: 0 10px;
+}
+
+.view-student-thead{
+    display: block;
+}
+.view-student-tbody{
+    display: block;
+    height: 310px;
+    overflow-y: auto;
+    padding-right: 30px;
+    padding-left: 30px;
+}
+
+.view-student-element{
+    background-color: #fcfff6;
+}
+
+.view-student-cell{
+    text-align: center;
+    height: 40px;
+    margin-bottom: 10px;
+    width: 330px;
+} 
+
+.view-student-cell-header{
+    text-align: center;
+    width: 330px;
+} 
+
+.view-student-edit-icon{
+    padding-left: 10px;
+    padding-right: 10px;
+    color: black;
+    padding-top: 12px;
+}
+
+.view-student-edit-icon:hover{
+    fill: gray;
+}
+
+.student-tile{
+    text-decoration: none;
+    color: black;
+}

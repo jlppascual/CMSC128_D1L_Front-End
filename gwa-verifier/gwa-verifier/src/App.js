@@ -1,13 +1,16 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Login  from './components/Login';
-import Home from './components/Home';
-import Add_Student from './components/Add_Student_Page'
-import View_Students from './components/View_Students'
-import View_Student_Details from './components/View_Student_Details'
-import Add_User from './components/Add_User_Page'
-import View_User from './components/View_Users_Page'
-import Delete_User from './components/Delete_User'
-import View_Logs from './components/View_Logs'
+import RequireAuth from './components/components/RequireAuth';
+import Login  from './components/pages/Login';
+import Home from './components/pages/Home';
+import Add_Student from './components/pages/Add_Student_Page'
+import View_Students from './components/pages/View_Students'
+import View_Student_Details from './components/pages/View_Student_Details'
+import Add_User from './components/pages/Add_User_Page'
+import View_User from './components/pages/View_Users_Page'
+import View_Logs from './components/pages/View_Logs'
+import View_Summary from './components/pages/View_Summary'
+import Settings from './components/pages/Settings'
+
 
 
 function App() {
@@ -15,14 +18,15 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route exact path='/' element={<Login />} />
-        <Route exact path='/home' element={<Home />} />
-        <Route exact path='/add-student' element={<Add_Student/>}/>
-        <Route exact path='/view-student' element={<View_Students/>}/>
-        <Route exact path='/view-student-details/:id' element={<View_Student_Details/>}/>
-        <Route path='/add-user' element={<Add_User/>}/>
-        <Route path='/view-users' element={<View_User/>}/>
-        <Route path='/delete-user' element={<Delete_User/>}/>
-        <Route path='/view-logs' element={<View_Logs/>}/>
+        <Route exact path='/home' element={ <RequireAuth children={ <Home /> } /> } />
+        <Route exact path='/student/new' element={<RequireAuth children={<Add_Student/>}/>}/>
+        <Route exact path='/students' element={<RequireAuth children={<View_Students/>}/>}/>
+        <Route exact path='/student/:id' element={<RequireAuth children={<View_Student_Details/>}/>}/>
+        <Route path='/summary' element={<RequireAuth children={<View_Summary/>}/>}/>
+        <Route path='/users/new' element={<RequireAuth children={<Add_User/>}/>}/>
+        <Route path='/users' element={<RequireAuth children={<View_User/>}/>}/>
+        <Route path='/logs' element={<RequireAuth children={<View_Logs/>}/>}/>
+        <Route path='/settings' element={<RequireAuth children={<Settings/>}/>}/>
 
       </Routes>
     </BrowserRouter>

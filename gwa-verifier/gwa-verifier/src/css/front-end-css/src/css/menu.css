@@ -1,6 +1,5 @@
 .menu-navbar{
     height: 80px;
-
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -29,7 +28,7 @@
 
 .menu-side{
     background-color: rgb(222, 222, 222);
-    width: 250px;
+    width: 220px;
     height: 100vh;
     display: flex; 
     justify-content: flex-start;
