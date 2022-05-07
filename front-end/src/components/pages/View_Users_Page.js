@@ -20,7 +20,7 @@
 
     const [pageState, setPage] = useState('0');
 
-    const { user, isAuthenticated } = useStore();
+    const { user, isAuthenticated, setAuth } = useStore();
     const navigate = useNavigate();     // navigation hook
     const [todo, setTodo] = useState(InitialState)
  
@@ -37,6 +37,9 @@
             .then(response => {return response.json()})
             .then(json=>{
                 setTodo({users:json.result.output})
+                if(json.result.session){
+                    setAuth(user,json.result.session)
+                }
             })
         }
 

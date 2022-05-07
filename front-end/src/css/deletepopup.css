@@ -1,0 +1,39 @@
+.popup-box{
+    position: fixed;
+    top: 40%;
+    left: 39%;
+    width: 22%;
+    height: 20%;
+    background-color:white;
+    box-shadow: 2px 2px #888888;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.delete-text{
+    margin-top: 20px;
+}
+
+.buttons{
+    text-align: left;
+    margin: 25px;
+}
+.confirm-btn{
+    background-color: #8D1436;
+    color: white;
+    padding: 8px;
+    outline:none;
+    border:none;
+    border-radius: 5px;
+}
+
+.cancel-btn{
+    background-color:gray;
+    color: white;
+    padding: 8px;
+    outline:none;
+    border:none;
+    border-radius: 5px;
+    margin-left: 21%;
+    margin-right: 10%;
+}
