@@ -4,9 +4,11 @@
  import React, { useEffect, useState, useRef } from 'react';
  import { useNavigate } from 'react-router-dom';
  import {BsSearch}  from 'react-icons/bs';
- import '../../css/view_students.css'
  import Header from '../components/Header';
  import Footer from '../components/Footer';
+ import { useReactToPrint } from 'react-to-print';
+ import ComponentToPrint from '../components/ComponentToPrint'
+ import '../../css/view_summary.css'
  
  const View_Summary =()=>{
 
@@ -17,6 +19,8 @@
     const [input, setInput] = useState("")
     const prev_order_state = useRef();
     const prev_view_state = useRef();
+    const[isVisible, setVisibility] = useState(false);
+
     const orderFilter = [
         {label: 'name', value:'name'},
         {label:'gwa',value:'gwa'}
@@ -41,15 +45,21 @@
     prev_order_state.current = [orderValue];
     prev_view_state.current = [viewValue];
 
+    // for printing
+    const componentRef = useRef();
+    const handlePrint = useReactToPrint({
+        content: () => componentRef.current,
+    });
+
     //if state changes, this function is executed
      useEffect(()=>{
         fetch("http://localhost:3001/api/0.1/student/summary?orderby="+[orderValue],
         {
-            method: "GET"
+            method: "GET",
+            credentials:'include'
         })
         .then(response => {return response.json()})
         .then(json=>{
-            console.log(json)
             if(json.result.success){
                 setRecord(json.result.output)
             }else{
@@ -62,10 +72,11 @@
     useEffect(()=>{
         if(prev_order_state.current != [orderValue]){
             prev_order_state.current = [orderValue];
-            if(viewValue === "ALL" || viewValue===undefined){
+            if(viewValue === "ALL" || viewValue===""){
                 fetch("http://localhost:3001/api/0.1/student/summary?orderby="+[orderValue],
                 {
-                    method: "GET"
+                    method: "GET",
+                    credentials:'include'
                 })
                 .then(response => {return response.json()})
                 .then(json=>{
@@ -78,11 +89,11 @@
             }else{
                 fetch("http://localhost:3001/api/0.1/student/summary/degree/"+ [viewValue]+"?orderby="+[orderValue],
                 {
-                    method: "GET"
+                    method: "GET",
+                    credentials:'include'
                 })
                 .then(response => {return response.json()})
                 .then(json=>{
-                    // console.log(json.result)
                     if(json.result.success){
                         setRecord(json.result.output)
                     }else{
@@ -101,7 +112,8 @@
             if (viewValue==="ALL"){
                 fetch("http://localhost:3001/api/0.1/student/summary?orderby="+[orderValue],
                 {
-                    method: "GET"
+                    method: "GET",
+                    credentials:'include'
                 })
                 .then(response => {return response.json()})
                 .then(json=>{
@@ -114,11 +126,11 @@
             } else{
                 fetch("http://localhost:3001/api/0.1/student/summary/degree/"+ [viewValue],
             {
-                method: "GET"
+                method: "GET",
+                credentials:'include'
             })
             .then(response => {return response.json()})
             .then(json=>{
-                // console.log(json.result)
                 if(json.result.success){
                     setRecord(json.result.output)
                 }else{
@@ -133,7 +145,8 @@
         if(input === ""){
             fetch("http://localhost:3001/api/0.1/student/summary?orderby="+[orderValue],
         {
-            method: "GET"
+            method: "GET",
+            credentials:'include'
         })
         .then(response => {return response.json()})
         .then(json=>{
@@ -145,11 +158,12 @@
             }
         })} else {
 
-        fetch('http://localhost:3001/api/0.1/student/summary/search?name=' + [input]+'&&orderby='+[orderValue])
+        fetch('http://localhost:3001/api/0.1/student/summary/search?name=' +[input]+'&&orderby='+[orderValue]),{
+            credentials:'include'
+        }
         .then((response) => {return response.json()})
         .then(json => {
             if(json.result.success){
-                // console.log(json.result.output)  // Contains the list of match users
                 setRecord(json.result.output);
             }
             else{
@@ -187,21 +201,49 @@
         return(
         <div>
             <Header/>
-            <div className='view-student-body'>
-            <input type = "text" className = "input" placeholder = "Search by Name"
+            <div className='view-summary-body'>
+            <div className='view-summary-header'>
+                <span> Summary of Graduating Students</span>
+                <ul className="view-summary-list">
+                    <li><DropDown options={orderFilter} value = {orderValue} onChange={orderChange} type={"order"}/></li>
+                    <li><DropDown options={viewFilter} value = {viewValue} onChange={viewChange} type={"view"}/></li>
+                    <li><button onClick={handlePrint} className="print-button">  Print </button> </li>            
+                </ul>
+            </div>    
+
+            <hr className='view-student-line'/>
+
+            <div className="view-summary-search">
+                <input type = "text" className = "view-summary-input" placeholder = "Search by Name"
                 value = {input} onChange = {handleUserInput} required></input>
-                <button onClick={handleSubmit}><i ><BsSearch /></i></button>                
-            
-                <DropDown options={orderFilter} value = {orderValue} onChange={orderChange} type={"order"}/>
-                <DropDown options={viewFilter} value = {viewValue} onChange={viewChange} type={"view"}/>
+                <a href="#"onClick={handleSubmit}><BsSearch className='view-summary-sicon'/></a>  
+            </div>
 
-                {record != undefined? record.map((rec,i)=>{
-                    return <span key={i}><div className='student-tile'>
-                        <a href={"/view-student-details/"+ rec.student_id} className="student-details">
-                        {i+1}. {rec.last_name}, {rec.first_name}, {rec.middle_name} {rec.suffix} {rec.student_number} {rec.degree_program} {rec.gwa} 
-                        </a></div></span>
-                }): <div className="student-details">"No students saved"</div>}
-
+            <div className='view-summary-preview'>
+                {record != undefined ? 
+                    <table className='view-summary-table'>
+                        <thead className='view-summary-thead'>
+                            <tr>
+                                <th className='view-summary-cell-header'>NAME</th>
+                                <th className='view-summary-cell-header'>GWA</th>
+                                <th className='view-summary-cell-header'>DEGREE PROGRAM</th>
+                            </tr>
+                        </thead>
+                        <tbody className = 'view-summary-tbody'  ref={componentRef}>
+                            {record.map((rec, i) => {
+                                return (
+                                    <tr className='view-summary-element'>
+                                        <a className = "summary-tile" href={'/summary/'+rec.student_id}><td className='view-summary-cell'>{i+1}. {rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""}
+                                        {rec.suffix ? ', ' + rec.suffix : ''}</td></a>
+                                        <td className='view-summary-cell'>{rec.gwa}</td>
+                                        <td className='view-summary-cell'>{rec.degree_program}</td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>:<div>"No students saved"</div>}
+            </div>
+               {/* <ComponentToPrint record={record} ref={componentRef}/> */}
             </div>
             <Footer/>
         </div>

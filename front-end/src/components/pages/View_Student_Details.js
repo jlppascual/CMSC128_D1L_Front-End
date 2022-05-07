@@ -5,7 +5,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Read_Row from '../components/Read_Row';
 import Edit_Row from '../components/Edit_Row';
-import {VscSettings}  from 'react-icons/vsc';
+// import Menu from '../components/Menu'
 
 const View_Student_Details =()=>{
     const[pageState, setPage] = useState(false)
@@ -77,6 +77,7 @@ const View_Student_Details =()=>{
                     const student = state.student_details
                     const full_name = student.first_name+" "+student.last_name+", "+student.degree_program+":\n"
                     let message =  full_name+json.result.message
+                    alert(message)
                     setPage(!pageState)
                     
                 }
@@ -97,7 +98,6 @@ const View_Student_Details =()=>{
 
     return(
     <div>
-        <Header/>
         <div>
                 LAST NAME: {state.student_details.last_name} <br/> 
                 FIRST NAME: {state.student_details.first_name} <br/>
@@ -142,6 +142,8 @@ const View_Student_Details =()=>{
                     </form>
                     </span>
                 }):""}
+        <Header />
+        {/* <Menu /> */}
         <Footer/>
         </div>
     </div>

@@ -1,0 +1,136 @@
+.log-title{
+    text-align: left;
+    margin-top: 85px;
+    margin-left: 10%;
+    margin-bottom:10px;
+    color: #8D1436;
+    font-family: Palatino;
+    font-size: 30px;}
+    
+.line{
+    width:80%;
+}
+.view-logs{
+    margin-left:80px;
+}
+
+.view-logs-body{
+    background-color: white;
+    width: 100%;
+    height:100%;
+    position:fixed;
+    top:60px;
+    overflow-y: scroll;
+}
+
+.view-logs-header{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    width: 940px;
+    margin-left: 120px;
+}
+
+.log-tile{
+    text-align: left;
+    margin-top: 40px;
+    margin-left: 16.5%;
+    margin-bottom:10px;
+    color: #8D1436;
+    font-family: Palatino;
+    font-size: 30px;
+}
+
+.view-log-preview{
+    margin-top: 5px;
+    background-color: rgb(206, 206, 206);
+    height: 50%;
+    border-radius: 10px;
+    width: 80%;
+    margin-left: 10%;
+    padding-bottom: 2%;
+}
+
+.view-log-table{
+    height: 20%;
+}
+
+.view-log-thead{
+    display: block;
+    font-family: Palatino;
+    margin-top: 10px;
+    text-align: left;
+}
+
+.user-header{
+    text-align: center;
+    width: 25%;
+} 
+.time-header{
+    text-align: center;
+    padding: 7px;
+    width: 29%;
+} 
+
+.activity-header{
+    text-align: center;
+    padding: 7px;
+    width: 37%;
+
+} 
+
+.details-header{
+    text-align: center;
+    padding:10px;
+    width: 38%;
+
+} 
+
+.view-log-tbody{
+    display: block;
+    height: 250px;
+    overflow-y: auto;
+    padding-right: 30px;
+    padding-left: 30px;
+}
+
+.view-log-element{
+    background-color: #fcfff6;
+    text-align: center;
+    width: 100%;
+}
+
+.user-cell{
+    width: 600px;
+    padding: 7px;
+} 
+
+.time-cell{
+    text-align: center;
+    padding: 7px;
+    width: 28%;
+} 
+
+.activity-cell{
+    text-align: center;
+    padding: 7px;
+    width: 28%;
+} 
+
+.details-cell{
+    text-align: center;
+    padding: 7px;
+    width: 28%;
+} 
+
+.no-logs{
+    margin-left: 33%;
+    font-family: Optima;
+    width: 400px;
+    border-color: #9e9e9e;
+    border-style: solid;
+    border-width: 10px;
+    padding: 10px;
+    margin-bottom:10px;
+    display:flex;
+}

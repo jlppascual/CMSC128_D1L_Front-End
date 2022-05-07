@@ -1,35 +1,33 @@
 .view-student-body{
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 1400px;
-}
-
-.view-student-header span{
-    margin: 0;
-    font-size: 40px;
-    color: #8d1436;
-    font-family: Palatino Linotype,Palatino LT STD;
-
-}
-
-.view-student-header{
-    display: flex;
-    justify-content: space-between;
-    margin-top: 50px;
+    background-color: white;
+    width: 100%;
+    height: 100%;
+    position:fixed;
+    top:60px;
 }
 
 .view-student-list{
-    list-style: none;
-    margin-top: 20px;
-    padding: 0;
-    margin-bottom: 5px;
+    position:fixed;
+    left: 58%;
+    top: 110px;
 }
 
 .view-student-list li{
     display: inline-block;
     margin: 0 5px;
+    outline:none;
+}
+
+.view-student-dropdown{
+    background-color: rgb(211, 211, 211);
+    outline:none;
+    border: none;
+    border-radius: 10px;
+    padding: 2px;
+    font-family: Helvetica;
+}
+option{
+    background-color: white;
 }
 
 .student-details{
@@ -42,59 +40,71 @@
     background-color: #00563f;
     margin: 5px;
     height: 40px;
+    margin-left: 16.5%;
     align-items: center;
     display: flex;
-    align-items: center;
-    border-radius: 5px;
+    border-radius: 8px;
+    width: 67%;
+    padding: 1px;
 }
 
-.view-student-sicon{
-    margin-left: 13px;
+.search-icon{
+    margin: 10px;
     color: whitesmoke;
 }
 
-.view-student-sicon:hover{
-    fill: gray;
-}
-
-.view-student-line{
-    height: -1px;
-    margin-top: 0px;
+.search-icon:hover{
+    fill: #DE9720;
 }
 
 .view-student-input{
     height: 25px;
     width: 185vh;
     margin-left: 5px;
-    border-radius: 5px;
+    border-radius: 7px;
     border: none;
     outline: none;
+    padding-left: 15px;
 }
 
-.view-student-dropdown{
-    color: gray;
-}
+
 
 .view-student-preview{
-    margin: 0 auto;
-    background-color: rgb(185, 181, 181);
-    height: 390px;
-    width: 1390px;
-    border-radius: 5px;
+    margin-top: 10px;
+    background-color: rgb(206, 206, 206);
+    height: 50%;
+    border-radius: 8px;
+    width: 67%;
+    margin-left: 16.5%;
 }
 
 .view-student-table{
-    margin-left: auto;
-    margin-right: auto;
-    border-spacing: 0 10px;
+    height: 20%;
 }
 
 .view-student-thead{
     display: block;
+    font-family: Palatino;
+    margin-top: 10px;
+    text-align: left;
 }
+
+.name-header{
+    text-align: center;
+    width: 480px;
+} 
+
+.studno-header{
+    width: 270px;
+} 
+
+.degree-header{
+    width: 320px;
+} 
+
 .view-student-tbody{
     display: block;
-    height: 310px;
+    height: 250px;
     overflow-y: auto;
     padding-right: 30px;
     padding-left: 30px;
@@ -102,19 +112,27 @@
 
 .view-student-element{
     background-color: #fcfff6;
+    text-align: center;
+    width: 100%;
 }
 
-.view-student-cell{
-    text-align: center;
-    height: 40px;
-    margin-bottom: 10px;
-    width: 330px;
+.name-cell{
+    width: 600px;
+    padding: 7px;
 } 
 
-.view-student-cell-header{
+.studno-cell{
     text-align: center;
-    width: 330px;
+    padding: 7px;
+    width: 28%;
 } 
+
+.degree-cell{
+    text-align: center;
+    padding: 7px;
+    width: 28%;
+} 
+
 
 .view-student-edit-icon{
     padding-left: 10px;
@@ -128,6 +146,7 @@
 }
 
 .student-tile{
+    text-align: left;
     text-decoration: none;
     color: black;
 }
