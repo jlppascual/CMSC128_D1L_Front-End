@@ -23,6 +23,7 @@ const View_Student_Details =()=>{
     const { user, isAuthenticated } = useStore();
     const navigate = useNavigate();     // navigation hook
 
+
     useEffect(()=>{
         if(!isAuthenticated) {
             navigate('/')
@@ -61,6 +62,7 @@ const View_Student_Details =()=>{
             fetch("http://localhost:3001/api/0.1/student/"+ state.student_details.student_id, {
                 method:'PATCH',
                 credentials:'include',
+
                 headers:{
                     'Content-Type':'application/json'
                 },
@@ -81,18 +83,17 @@ const View_Student_Details =()=>{
                     setPage(!pageState)
                     
                 }
-
             })
         }
     }
 
     const updateCourse=(empty, updatedCourse)=>{
-        // console.log(state.student_details)
-        let courses = changed_courses.filter(course => {course.course_id !== updatedCourse.course_id})
+
+        let courses = changed_courses.filter(course => course.course_id !== updatedCourse.course_id)
         courses.push(updatedCourse)
         changed_courses = courses
         empty_field = empty
-        console.log(changed_courses)
+        //console.log(changed_courses)
         // console.log(empty_field)
     }
 
