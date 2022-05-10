@@ -2,10 +2,10 @@
  * author: Jem, Leila
  */
  import React, { useEffect, useState, useRef } from 'react';
- import { useNavigate } from 'react-router-dom';
  import {BsSearch}  from 'react-icons/bs';
  import Header from '../components/Header';
  import Footer from '../components/Footer';
+ import Menu from '../components/Menu'
  import { useReactToPrint } from 'react-to-print';
  import ComponentToPrint from '../components/ComponentToPrint'
  import '../../css/view_summary.css'
@@ -245,6 +245,7 @@
             </div>
                {/* <ComponentToPrint record={record} ref={componentRef}/> */}
             </div>
+            <Menu/>
             <Footer/>
         </div>
         );

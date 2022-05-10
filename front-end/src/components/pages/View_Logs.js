@@ -3,31 +3,38 @@
  */
 
  import React, { useState, useEffect} from 'react';
- import { BsSearch } from 'react-icons/bs';
  import Header from '../components/Header';
  import Footer from '../components/Footer';
  import Menu from '../components/Menu'
+ import useStore from '../hooks/authHook';
  import '../../css/view_logs.css'
  
  const View_Logs=()=>{
      const[input, setInput] = useState("");
      const[logs, changeLogs] = useState([]);
 
+     const { isAuthenticated } = useStore();
+
      useEffect(()=>{
-        fetch("http://localhost:3001/api/0.1/log",
-        {
-            method: "GET",
-            credentials:'include'
-        })
-        .then(response => {return response.json()})
-        .then(json=>{
-            if(json.result.success){
-                changeLogs(json.result.output)
-            }else{
-                alert(json.result.message)
-            }
-        })
-     })
+        if(!isAuthenticated) {
+            navigate('/')
+            alert("You are not logged in!")
+        }else{
+            fetch("http://localhost:3001/api/0.1/log",
+            {
+                method: "GET",
+                credentials:'include'
+            })
+            .then(response => {return response.json()})
+            .then(json=>{
+                if(json.result.success){
+                    changeLogs(json.result.output)
+                }else{
+                    alert(json.result.message)
+                }
+            })
+        }
+     },[isAuthenticated])
 
      const handleUserInput = (e) => {
         const value = e.target.value;

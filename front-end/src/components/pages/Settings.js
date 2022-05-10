@@ -91,22 +91,29 @@ const Settings =()=>{
     }
 
     const Popup=(props)=>{
-        // console.log(props)
         return (
-            <div>
-            {props.type === 'username'? (
-               <div> 
-                   <input type="text" id="new-username" placeholder="input your username"></input><br/>
-                   <button onClick={confirmClicked} >Confirm</button> <button onClick={cancelClicked}>Cancel</button>
+            <div className="popup-box">
+                 {props.type === 'username'? (
+                <div> 
+                    <div  className='username-box'>
+                            New Username:<input type="text" id="new-username" placeholder="input your username"></input><br/>
+                        </div>
+                        <div className='popup-buttons'>
+                            <button className="confirm" onClick={confirmClicked}>Confirm</button> <button className="cancel" onClick={cancelClicked}>Cancel</button>
+                        </div>                
+                    </div>
+                ) : (
+                <div>
+                    <div className='password-box'>
+                        Current Password:<input type="password" id="current-password" placeholder="input current password"></input><br/>
+                        New Password:<input type="password" id="new-password" placeholder="input new password"></input><br/>
+                        Confirm Password:<input type="password" id="confirm-password" placeholder="confirm new password"></input><br/>
+                    </div>
+                    <div className='popup-buttons'>
+                        <button className="confirm" onClick={confirmClicked}>Confirm</button> <button className="cancel" onClick={cancelClicked}>Cancel</button>
+                    </div>
                 </div>
-            ) : (
-            <div>
-                <input type="password" id="current-password" placeholder="input current password"></input><br/>
-                <input type="password" id="new-password" placeholder="input new password"></input><br/>
-                <input type="password" id="confirm-password" placeholder="confirm new password"></input><br/>
-                <button onClick={confirmClicked}>Confirm</button> <button onClick={cancelClicked}>Cancel</button>
-            </div>
-            )}
+                )}
             </div>
 
         )
@@ -127,17 +134,22 @@ const Settings =()=>{
 
     return(
         <div>
-            <Menu/>
-            <Header/>
-            <div className="settings-box">
-                <ul className='settings-tile'>
-                    {settings_list.map((foo,i)=>{
-                        return <li key={i}>{foo.label} <button onClick={()=>handleChange(foo)}>Edit</button></li>
-                    })}
-                </ul>
-                {isToggled===true? <Popup type={popType}/>:""}
-                {/* {popType} */}
+            <div className='settings-container'>
+            {/* <div className='top-box'>
+                <p className='header'>Settings</p>
+                <hr className="line"></hr>
+            </div> */}
+                <div className="settings-box">
+                    <ul>
+                        {settings_list.map((foo,i)=>{
+                            return <li key={i} className='settings-tile'>{foo.label} <button className='edit-button' onClick={()=>handleChange(foo)}>Edit</button></li>
+                        })}
+                    </ul>
+                    {isToggled===true? <Popup type={popType}/>:""}
+                </div>
             </div>
+            <Header/>
+            <Menu/>
             <Footer/>
         </div>
     )
