@@ -20,7 +20,7 @@ const Header =()=>{
         })
         .then(response => response.json())
         .then(body => {
-            if(!body.sucess) alert(body.message);
+            if(!body.success) alert(body.message);
             else{
                 console.log(body);
                 navigate('/');
