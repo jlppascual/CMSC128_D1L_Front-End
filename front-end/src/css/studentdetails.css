@@ -27,7 +27,7 @@
     margin-bottom:0px;
 }
 
-.line{
+.student-line{
     text-align: center;
     width: 67%
 }
@@ -57,6 +57,44 @@
     padding: 20px;
     bottom: 50px;
 }
+
+.record-head{
+    font-size: 17px
+}
+.record{
+    background-color: white;
+    padding: 20px;
+}
+
+.record-table{
+    border-collapse:collapse;
+    width: 100%;
+}
+
+.record-line{
+    border: 1px solid white;
+    margin-bottom: 0px;
+}
+.term-summary{
+    text-align: center;
+    background-color: rgba(206, 206, 206, 0.8);
+    padding: 8px;
+    margin-top: 15px;
+    border-radius: 20px;
+    font-size: 15px;
+}
+
+.term-summary span{
+    color: gray;
+}
+
+.edit-cell{
+    width: 90%;
+    outline:none;
+    padding: 8px;
+    border: 1px solid gray
+}
+
 .bottom-space{
     width: 100%;
     height: 30%;

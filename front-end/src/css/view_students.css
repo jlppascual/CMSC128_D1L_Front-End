@@ -25,6 +25,7 @@
     border-radius: 10px;
     padding: 2px;
     font-family: Helvetica;
+    cursor: pointer;
 }
 option{
     background-color: white;
@@ -68,7 +69,6 @@ option{
 }
 
 
-
 .view-student-preview{
     margin-top: 10px;
     background-color: rgb(206, 206, 206);
@@ -80,6 +80,7 @@ option{
 
 .view-student-table{
     height: 20%;
+    border-collapse: collapse;
 }
 
 .view-student-thead{

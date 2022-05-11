@@ -13,15 +13,10 @@
  const Add_Student_Page=()=>{
      const [files, setFiles] = useState([]);
      const [results, setResults] = useState([]);
-     const [term_data , setTermData] = useState([]);
-     const [courses, setCourses] = useState([]);
-     const [headers, setHeaders] = useState([]);
      const [ fullName, setFullName] = useState("");
      const semester= useRef();
      const acad_year = useRef();
      const num_of_units = useRef();
-     const weightPerTerm = useRef();
-     const [cumulated_sum, setCumulatedSum] = useState();
   
      const { user, isAuthenticated } = useStore();
      const navigate = useNavigate();     // navigation hook
@@ -66,6 +61,7 @@
          let courses = [];
          let term_data=[];
          let term = {};
+         let weightPerTerm = 0;
          let cumulative_sum = 0;
  
          for(var i = 1; i < array[10].length; i++){
@@ -73,7 +69,6 @@
                  headers.push(array[10][i])
              }
          }
-         await setHeaders(headers);
          for(var j = 11; j < array.length; j++){
  
              if(array[j][1] != ''){
@@ -86,46 +81,44 @@
                  if(courses.length <=0 && array[j][7] != ''){
                      courses.push({course_code: array[j][1], grade: array[j][2], units: array[j][3], 
                      weight: Number(array[j][4]), cumulated: Number(array[j][5])})
- 
+                     weightPerTerm = weightPerTerm + (Number(array[j][4]))
+                        
                      semester.current = sem;
                      acad_year.current = year;
                      num_of_units.current = no_of_units; 
- 
+                     
                  }
                  // indicates that the course is included in a new term
                  else if (array[j][7] != ''){
                      // if a new term is found, push the previous states and courses first before renewing
                      if(courses[0] != ''){
                          term={acad_year: acad_year.current, semester: semester.current, no_of_units: num_of_units.current, 
-                             total_weights: weightPerTerm.current, course_data: courses}
+                             total_weights: weightPerTerm, course_data: courses}
                          term_data.push(term);
                      }
 
                      semester.current = sem;
                      acad_year.current = year;
                      num_of_units.current = no_of_units;
+                     weightPerTerm = 0;
                  
                      courses = [];
                      term = {};
-  
-                     await setCourses(courses)
                      
                      courses.push({course_code: array[j][1], grade: array[j][2], units: array[j][3], 
                      weight: Number(array[j][4]), cumulated: Number(array[j][5])})
+                     weightPerTerm = weightPerTerm + (Number(array[j][4]))
                  // all courses under the current term will be appended until a new term is found
                  }else{
                      courses.push({course_code: array[j][1], grade: array[j][2], units: array[j][3], 
                          weight: Number(array[j][4]), cumulated: Number(array[j][5])})
  
-                     weightPerTerm.current=(Number(array[j][5]))
+                     weightPerTerm = weightPerTerm + (Number(array[j][4]))
                  }
  
              }else{break;}
-             await setCumulatedSum(Number(array[j][5]))
              cumulative_sum = Number(array[j][5])
          }
- 
-         await setTermData(term_data)
  
          let data ={
              student_data: {

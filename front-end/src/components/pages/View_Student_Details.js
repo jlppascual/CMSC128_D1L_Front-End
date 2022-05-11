@@ -11,7 +11,6 @@ import {BiEdit, BiTrash}  from 'react-icons/bi';
 import {RiAlertLine}  from 'react-icons/ri';
 import '../../css/studentdetails.css'
 
-
 const View_Student_Details =()=>{
     const[pageState, setPage] = useState(false)
     const[editable, setEditable] = useState(false);
@@ -24,8 +23,7 @@ const View_Student_Details =()=>{
         term_details:[],        
     })
 
-    let edited_courses=[]
-    let empty_field = [];
+    let new_courses=[]
 
     const { user, isAuthenticated } = useStore();
     const navigate = useNavigate();     // navigation hook
@@ -87,23 +85,17 @@ const View_Student_Details =()=>{
 
     const handleCancel=(event)=>{
         event.preventDefault();
-        if(edited_courses.length == 0){
-            alert("No changes made")
-            setEditable(false)
-        }
-        else{
-            setShowCancelConfirmation(true)
-        }
+        setShowCancelConfirmation(true)
+        
     }
     
     const handleUpdate=async(event)=>{
-        if (empty_field === 1){
+        const edited = getEdits();
+        const new_terms = edited.terms;
+        const new_record = edited.record;
+        if (!isCompleteFields(new_courses)){
             alert("Complete missing fields")
         } 
-        else if(edited_courses.length === 0){
-            alert("No changes made")
-            setEditable(false)
-        }
         else {
             event.preventDefault();
             setEditable(false)
@@ -114,7 +106,9 @@ const View_Student_Details =()=>{
                     'Content-Type':'application/json'
                 },
                 body: JSON.stringify({
-                    changed_courses:edited_courses,
+                    new_courses,
+                    new_terms,
+                    new_record,
                     user_id: user.user_id,
                     details: "Kunwari nag-edit"
                 }) 
@@ -128,18 +122,43 @@ const View_Student_Details =()=>{
                     alert(message)
                     setPage(!pageState)
                 }
-
             })
-            
         }
     }
 
-    const updateCourse=(empty, updatedCourse)=>{
-        edited_courses = edited_courses.filter(course => course.course_id !== updatedCourse.course_id)
-        edited_courses.push(updatedCourse)
-        
-        console.log(edited_courses)
-        empty_field = empty
+    const getEdits = () =>{
+        let terms_count = state.term_details.length
+        let terms = []
+        let temp_term;
+        for (let i = 0; i < terms_count; i++) {
+            let term_id = state.term_details[i].term_id
+            let total_weights = Number(document.getElementsByName("weights-term"+i)[0].innerHTML)
+            let no_of_units = document.getElementsByName("units-term"+i)[0].innerHTML
+            temp_term = {term_id,total_weights,no_of_units}
+            terms.push(temp_term)
+        }
+        let cumulative_sum = document.getElementsByName("record-cumulative")[0].innerHTML;
+        let total_units = document.getElementsByName("record-units")[0].innerHTML;
+        let gwa = document.getElementsByName("record-gwa")[0].innerHTML
+        let record = {cumulative_sum, total_units, gwa}
+        return {terms,record}
+    }
+
+    const isCompleteFields = (courses) =>{
+        let flag = true;
+        for (let i = 0; i < courses.length; i++) {
+            if (courses[i].course_code === "" || courses[i].grade === "" || courses[i].units === "" ){
+                flag = false;
+                break;
+            }
+        }
+        return flag;
+    }
+
+    const updateCourse=(updatedCourse)=>{
+        new_courses = new_courses.filter(course => course.course_id !== updatedCourse.course_id)
+        new_courses.push(updatedCourse)
+        console.log(new_courses)
     }
 
     const CancelPopup=({})=>{
@@ -164,52 +183,68 @@ const View_Student_Details =()=>{
                     <i className = "icon"><RiAlertLine size= {25}/></i>
                     <i className = "icon" onClick={handleClick}><BiEdit size= {25}/></i>
                     <i className = "icon" onClick={handleDelete}><BiTrash size= {25}/></i>
-                    
                 </div>
                 <p className="student-name">{state.student_details.last_name}, {state.student_details.first_name} {state.student_details.middle_name} {state.student_details.suffix} </p>
-            <hr className='line'></hr></div>
+                <hr className='student-line'></hr>
+            </div>
             
             < div className='student-record'>
             Degree Program: {state.student_details.degree_program} <br/>  
             Student No.: {state.student_details.student_number}<br/>
-            Total Units: {state.record_details.total_units}  <br/>
-            GWA: {state.record_details.gwa}<br/>
-            
-            <br/><br/>
+            Accumulated weights: <span name={"record-cumulative"}>{state.record_details.cumulative_sum}</span>  <br/>
+            Total Units: <span name={"record-units"}>{state.record_details.total_units}</span>  <br/>
+            GWA: <span name={"record-gwa"}>{state.record_details.gwa}</span><br/>
 
+            <br/>
+            <hr className='record-line'></hr>
+            <br/>
+            <div className='record'>
             {state.term_details!=[]? state.term_details.map((term, i)=>{
-                return <span key={i}>{term.semester}/{term.acad_year} total weights: {term.total_weights} total units: {term.no_of_units} <br/>
+                let headStyle = {textAlign:'left', visibility:'hidden'}
+                if(i>=0) headStyle = {textAlign:'left'}
+                return <span key={i} name = {"term"+i}>
                 <form>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Course Code</th>
-                                <th>Grade</th>
-                                <th>Units</th>
-                                <th>Weight</th>
-                                <th>Enrolled</th>
-                                <th>Term</th>
+                    <table className='record-table'>
+                        <thead className='record-head'>
+                            <tr style={headStyle}>
+                                <th style = {{paddingLeft:'40px'}}>Course Code</th> 
+                                <th style = {{paddingLeft:'40px'}}>Grade</th>
+                                <th style = {{paddingLeft:'40px'}}>Units</th>
+                                <th style = {{paddingLeft:'40px'}}>Weight</th>
+                                <th style = {{paddingLeft:'40px'}}>Enrolled</th>   
                             </tr>
+
                         </thead>
+                        
                         <tbody>
-                            {term.course_data!=[]? term.course_data.map((course,i)=>(
-                                <Fragment key={i}>
+                            <tr style={headStyle}>
+                                <td colSpan="100%" ><hr /></td>
+                            </tr>
+                            {term.course_data!=[]? term.course_data.map((course,index)=>(
+                                <Fragment key={index}>
                                     {editable === true ? (
-                                    <Edit_Row func={{updateCourse: updateCourse.bind()}} course = {course} />
+                                    <Edit_Row func={{updateCourse: updateCourse.bind()}} term_index = {i} course = {course} index = {index}/>
                                     ) : (
-                                    <Read_Row course = {course} />
+                                    <Read_Row course = {course} index = {index}/>
                                     ) }
                                 </Fragment>
+                                
                             )):""}
                         </tbody>
                     </table>
                 </form>
-                {showDeleteConfirmation ? <DeletePopup props={{confirmDelete: confirmDelete.bind()}} />:""}
-                {showCancelConfirmation ? <CancelPopup />:""}
-                
+                <div className = "term-summary">
+                Term: <u>{term.semester}/{term.acad_year}</u> &nbsp;&nbsp;&nbsp;&nbsp;  <span >|</span> &nbsp;&nbsp;&nbsp;&nbsp;
+                Total units: <u name = {"units-term"+i}>{term.no_of_units}</u> &nbsp;&nbsp;&nbsp;&nbsp;  <span >|</span> &nbsp;&nbsp;&nbsp;&nbsp;
+                Total weights: <u name = {"weights-term"+i}>{term.total_weights} </u> &nbsp;&nbsp;&nbsp;&nbsp;<span>|</span> &nbsp;&nbsp;&nbsp;&nbsp;
+                GPA: <u name = {"gpa-term"+i}>{parseFloat((term.total_weights/term.no_of_units).toFixed(4))} </u>
+                </div>
+                <br/>
                 </span>
                 
-            }):""}</div>
+            }):""}</div></div>
+            {showDeleteConfirmation ? <DeletePopup props={{confirmDelete: confirmDelete.bind()}} />:""}
+            {showCancelConfirmation ? <CancelPopup />:""}
             <div className = "bottom-space">
                 {editable === true ? <span>
                     <button type = "button" onClick={handleCancel} className="cancel-edit-btn">Cancel Editing</button>
