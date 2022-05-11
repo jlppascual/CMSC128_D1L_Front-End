@@ -18,29 +18,17 @@ const Edit_Row = ( {func, course}) => {
 
         
     let empty = 0;
-<<<<<<< HEAD
     // Check for empty fields
-=======
-    //Check for empty fields
->>>>>>> dabc1677e8b344e0645b44f6f94a9f819bf3f0d3
     if (course_code === "" || grade === "" || units === "" || weight === "" || cumulated === ""){
         empty = 1
     } else {
         empty = 0
     }
-<<<<<<< HEAD
     // Check for changes
     if(course_code !== course.course_code || grade !== course.grade || units !== course.units || weight !== course.weight || cumulated !== course.cumulated){
         func.updateCourse(empty, updatedCourse);
     }
         
-=======
-    //Check for changes
-    if(course_code !== course.course_code || grade !== course.grade || units!== course.units || weight!== course.weight || cumulated !== course.cumulated){
-        func.updateCourse(empty, updatedCourse);
-    }
-
->>>>>>> dabc1677e8b344e0645b44f6f94a9f819bf3f0d3
 
     return(
         <tr>
