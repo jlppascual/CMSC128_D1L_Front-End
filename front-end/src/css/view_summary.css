@@ -1,0 +1,139 @@
+.view-summary-body{
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 1400px;
+}
+
+.view-summary-header span{
+    margin: 0;
+    font-size: 40px;
+    color: #8d1436;
+    font-family: Palatino Linotype,Palatino LT STD;
+
+}
+
+.view-summary-header{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 50px;
+}
+
+.view-summary-list{
+    list-style: none;
+    margin-top: 20px;
+    padding: 0;
+    margin-bottom: 5px;
+}
+
+.view-summary-list li{
+    display: inline-block;
+    margin: 0 5px;
+}
+
+.summary-details{
+    text-decoration: none;
+    color:black;
+    background-color: whitesmoke;
+}
+
+.view-summary-search{
+    background-color: #00563f;
+    margin: 5px;
+    height: 40px;
+    align-items: center;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+}
+
+.view-summary-sicon{
+    margin-left: 13px;
+    color: whitesmoke;
+}
+
+.view-summary-sicon:hover{
+    fill: gray;
+}
+
+.view-summary-line{
+    height: -1px;
+    margin-top: 0px;
+}
+
+.view-summary-input{
+    height: 25px;
+    width: 185vh;
+    margin-left: 5px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+}
+
+.view-summary-dropdown{
+    color: gray;
+}
+
+.view-summary-preview{
+    margin: 0 auto;
+    background-color: rgb(185, 181, 181);
+    height: 390px;
+    width: 1390px;
+    border-radius: 5px;
+}
+
+.view-summary-table{
+    margin-left: auto;
+    margin-right: auto;
+    border-spacing: 0 10px;
+}
+
+.view-summary-thead{
+    display: block;
+}
+.view-summary-tbody{
+    display: block;
+    height: 310px;
+    overflow-y: auto;
+    padding-right: 30px;
+    padding-left: 30px;
+}
+
+.view-summary-element{
+    background-color: #fcfff6;
+}
+
+.view-summary-cell{
+    text-align: center;
+    height: 40px;
+    margin-bottom: 10px;
+    width: 330px;
+} 
+
+.view-summary-cell-header{
+    text-align: center;
+    width: 330px;
+} 
+
+.view-summary-edit-icon{
+    padding-left: 10px;
+    padding-right: 10px;
+    color: black;
+    padding-top: 12px;
+}
+
+.view-summary-edit-icon:hover{
+    fill: gray;
+}
+
+.summary-tile{
+    text-decoration: none;
+    color: black;
+}
+
+@media print{
+    .view-summary-body{
+        display:none
+    }
+}

@@ -22,6 +22,7 @@ const [viewValue, setViewValue] = useState("");
 const [input, setInput] = useState("")
 const [showConfirmation, setShowConfirmation] = useState("")
 const [toDelete, setToDelete] = useState("")
+
 const prev_order_state = useRef();
 const prev_view_state = useRef();
 const orderFilter = [
@@ -72,7 +73,6 @@ const navigate = useNavigate();     // navigation hook
         if(json.result.success){
             setRecord(json.result.output)
         }else{
-            //alert(json.result.message)
         }
     })}
 },[isAuthenticated, state]);
@@ -239,10 +239,11 @@ const DropDown =({value,options,onChange, type})=>{
     return(
         <label>
             <select value={value} onChange={onChange} className='view-student-dropdown'>
-                {type === "search"? <option value = "" disabled hidden>search by</option>: type==="view"?  <option value = "" disabled hidden>view by</option>: <option value = "" disabled hidden>order by</option> }
-                {options.map((option,i)=>(
-                    <option key={i} value = {option.value} >{option.label}</option>
-                ))}
+            {type === "search"? <option value = "" disabled hidden>search by</option>: type==="view"?  <option value = "" disabled hidden>view by</option>: <option value = "" disabled hidden>order by</option> }
+            {options.map((option,i)=>(
+                <option key={i} value = {option.value} >{option.label}</option>
+            ))}
+
             </select>
         </label>
     );
@@ -252,16 +253,25 @@ return(
     <div>
         <div className='view-student-body'>
             <ul className='view-student-list'>
-                <li><DropDown options={searchFilter}  value = {searchValue} onChange={searchChange} type ="search"/></li>
-                <li><DropDown options={orderFilter}  value = {orderValue} onChange={orderChange} type = "order"/></li>
-                <li><DropDown options={viewFilter} value = {viewValue} onChange={viewChange} type="view"/></li>
+                    <li><DropDown options={searchFilter}  value = {searchValue} onChange={searchChange} type ="search"/></li>
+                    <li><DropDown options={orderFilter}  value = {orderValue} onChange={orderChange} type = "order"/></li>
+                    <li><DropDown options={viewFilter} value = {viewValue} onChange={viewChange} type="view"/></li>
+
             </ul>
             <p className="title">Student Records</p>
-            <hr className='line'></hr>
-                
+            <hr className='line'></hr>      
+    
+            <div className='view-student-header'>
+        
+                <ul className='view-student-list'>
+                    <li><DropDown options={searchFilter} className='view-student-dropdown' value = {searchValue} onChange={searchChange} type ="search"/></li>
+                    <li><DropDown options={orderFilter} className='view-student-dropdown' value = {orderValue} onChange={orderChange} type = "order"/></li>
+                    <li><DropDown options={viewFilter} className='view-student-dropdown' value = {viewValue} onChange={viewChange} type="view"/></li>
+                </ul>
+            </div>
             <div className='view-student-search'>
-                <input type = "text" className = 'view-student-input' placeholder = "Search a student record"
-                value = {input} onChange = {handleUserInput} required></input>
+                <input type = "text" className = 'view-student-input' placeholder = "Search a student record" value = {input} onChange = {handleUserInput} required></input>
+
                 <a href='#' onClick={handleSubmit} ><BsSearch className='search-icon'/></a>      
             </div>
             <div className='view-student-preview'>
@@ -269,24 +279,20 @@ return(
                     <table className='view-student-table'>
                         <thead className='view-student-thead'>
                             <tr>
-                                <th className='name-header'>NAME</th>
-                                <th className='studno-header'>STUDENT NUMBER</th>
+                            <th className='name-header'>NAME</th>
+                               <th className='studno-header'>STUDENT NUMBER</th>
                                 <th className='degree-header'>DEGREE PROGRAM</th>
                             </tr>
                         </thead>
                         <tbody className = 'view-student-tbody'>
                             {record.map((rec, i) => {
-                                return (
-                                    
-                                    <tr className='view-student-element' href={'/student/'+rec.student_id}>
-                                        <a className = "student-tile" href={'/student/'+rec.student_id}>
-                                        <td className='name-cell'>{rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""}
-                                        {rec.suffix ? ', ' + rec.suffix : ''}</td></a>
-                                        <td className='studno-cell'>{rec.student_number}</td>
+	                                return (
+                                        <tr className='view-student-element' href={'/student/'+rec.student_id}>
+                                            <a className = "student-tile" href={'/student/'+rec.student_id}>
+                                            <td className='name-cell'>{rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""} {rec.suffix ? ', ' + rec.suffix : ''}</td></a>
+	                                        <td className='studno-cell'>{rec.student_number}</td>
                                         <td className='degree-cell'>{rec.degree_program}</td>
-                                        <a onClick={()=>{onDelete(rec)}}><AiFillDelete className='view-student-edit-icon'/></a>
-                                        {/* <button onClick={()=>{setToggled(!isToggled)}}><AiFillEye/></button> */}
-                                        
+                                        <a onClick={()=>{onDelete(rec)}}><AiFillDelete className='view-student-edit-icon'/></a>                                        
                                     </tr>
                                 );
                             })}
@@ -295,10 +301,7 @@ return(
                     </table>:
                 <div>"No students saved"</div>
                 }
-                
-
             </div>
-
         </div>
         <Header />
         <Menu />

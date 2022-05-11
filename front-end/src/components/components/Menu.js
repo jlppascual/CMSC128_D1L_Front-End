@@ -20,9 +20,7 @@ function Menubar(){
     const [ sidebar, setSidebar ] = useState(false)
     const { user } = useStore();
     let user_title;
-    user_title = "User"
-    // if(user && user.user_role == "ADMIN") user_title = "User"
-    // else user_title = ""
+    user_title = user.user_role
 
     const showSidebar = () => setSidebar(!sidebar);
     
@@ -54,9 +52,9 @@ function Menubar(){
                         );
                     })}
                     <br /> <br />
-                    <div className='entity-title'>{user_title}</div>
-                    {/* {user && user.user_role == "ADMIN"?  */}
-                    { SidebarDataUser.map((item, index) => {
+                    {user && user.user_role == "CHAIR/HEAD"? 
+                    (<div className='entity-title'>{user_title}</div>,
+                    SidebarDataUser.map((item, index) => {
                         return(
                             <li key={index} className={item.cName}>
                                 <Link to={item.path}>
@@ -65,9 +63,7 @@ function Menubar(){
                                 </Link>
                             </li>
                         );
-                    // {/* // }) : user_title = ""} */}
-                })}
-                    
+                    })) : (user_title = "")}              
                 </ul>
             </nav>
         </IconContext.Provider>
