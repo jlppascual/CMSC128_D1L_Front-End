@@ -200,51 +200,51 @@
 
         return(
         <div>
-            <Header/>
             <div className='view-summary-body'>
-            <div className='view-summary-header'>
-                <span> Summary of Graduating Students</span>
-                <ul className="view-summary-list">
-                    <li><DropDown options={orderFilter} value = {orderValue} onChange={orderChange} type={"order"}/></li>
-                    <li><DropDown options={viewFilter} value = {viewValue} onChange={viewChange} type={"view"}/></li>
-                    <li><button onClick={handlePrint} className="print-button">  Print </button> </li>            
-                </ul>
-            </div>    
+                <div className='view-summary-header'>
+                    <span> Summary of Graduating Students</span>
+                    <ul className="view-summary-list">
+                        <li><DropDown options={orderFilter} value = {orderValue} onChange={orderChange} type={"order"}/></li>
+                        <li><DropDown options={viewFilter} value = {viewValue} onChange={viewChange} type={"view"}/></li>
+                        <li><button onClick={handlePrint} className="print-button">  Print </button> </li>            
+                    </ul>
+                </div>    
 
-            <hr className='view-student-line'/>
+                <hr className='view-summary-line'/>
 
-            <div className="view-summary-search">
-                <input type = "text" className = "view-summary-input" placeholder = "Search by Name"
-                value = {input} onChange = {handleUserInput} required></input>
-                <a href="#"onClick={handleSubmit}><BsSearch className='view-summary-sicon'/></a>  
-            </div>
+                <div className="view-summary-search">
+                    <input type = "text" className = "view-summary-input" placeholder = "Search by Name"
+                    value = {input} onChange = {handleUserInput} required></input>
+                    <a href="#"onClick={handleSubmit}><BsSearch className='view-summary-sicon'/></a>  
+                </div>
 
-            <div className='view-summary-preview'>
-                {record != undefined ? 
-                    <table className='view-summary-table'>
-                        <thead className='view-summary-thead'>
-                            <tr>
-                                <th className='view-summary-cell-header'>NAME</th>
-                                <th className='view-summary-cell-header'>GWA</th>
-                                <th className='view-summary-cell-header'>DEGREE PROGRAM</th>
-                            </tr>
-                        </thead>
-                        <tbody className = 'view-summary-tbody'  ref={componentRef}>
-                            {record.map((rec, i) => {
-                                return (
-                                    <tr className='view-summary-element'>
-                                        <a className = "summary-tile" href={'/summary/'+rec.student_id}><td className='view-summary-cell'>{i+1}. {rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""}
-                                        {rec.suffix ? ', ' + rec.suffix : ''}</td></a>
-                                        <td className='view-summary-cell'>{rec.gwa}</td>
-                                        <td className='view-summary-cell'>{rec.degree_program}</td>
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>:<div>"No students saved"</div>}
+                <div className='view-summary-preview'>
+                    {record != undefined ? 
+                        <table className='view-summary-table'>
+                            <thead className='view-summary-thead'>
+                                <tr>
+                                    <th className='view-summary-cell-header'>NAME</th>
+                                    <th className='view-summary-cell-header'>GWA</th>
+                                    <th className='view-summary-cell-header'>DEGREE PROGRAM</th>
+                                </tr>
+                            </thead>
+                            <tbody className = 'view-summary-tbody'>
+                                {record.map((rec, i) => {
+                                    return (
+                                        <tr className='view-summary-element'>
+                                           <td className='view-summary-cell'> <a className = "summary-tile" href={'/student/'+rec.student_id}>{i+1}. {rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""}
+                                            {rec.suffix ? ', ' + rec.suffix : ''}</a></td>
+                                            <td className='view-summary-cell'>{rec.gwa}</td>
+                                            <td className='view-summary-cell'>{rec.degree_program}</td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>:<div>"No students saved"</div>}
+                </div>
+                <div style={{display:"none"}}><ComponentToPrint record={record} ref={componentRef}/></div> 
             </div>
-               {/* <ComponentToPrint record={record} ref={componentRef}/> */}
-            </div>
+            <Header/>
             <Menu/>
             <Footer/>
         </div>
