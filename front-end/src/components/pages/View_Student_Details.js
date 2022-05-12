@@ -7,6 +7,7 @@ import Footer from '../components/Footer';
 import Read_Row from '../components/Read_Row';
 import Edit_Row from '../components/Edit_Row';
 import DeletePopup from '../components/Popups/DeletePopup';
+import DetailsPopup from '../components/Popups/DetailsPopup';
 import {BiEdit, BiTrash}  from 'react-icons/bi';
 import {RiAlertLine}  from 'react-icons/ri';
 import '../../css/studentdetails.css'
@@ -16,6 +17,7 @@ const View_Student_Details =()=>{
     const[editable, setEditable] = useState(false);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState("")
     const [showCancelConfirmation, setShowCancelConfirmation] = useState("")
+    const [showEditConfirmation, setShowEditConfirmation] = useState("")
     
     const [state, setState]= useState({
         student_details:[],
@@ -90,15 +92,30 @@ const View_Student_Details =()=>{
     }
     
     const handleUpdate=async(event)=>{
-        const edited = getEdits();
-        const new_terms = edited.terms;
-        const new_record = edited.record;
+        event.preventDefault();
         if (!isCompleteFields(new_courses)){
-            alert("Complete missing fields")
-        } 
-        else {
-            event.preventDefault();
+            alert("Please complete missing fields")
+        }
+        else setShowEditConfirmation(true)
+        
+    }
+    const confirmEdit = async(decision,details)=>{
+        setShowEditConfirmation(false)
+        document.getElementById("submit-changes-btn").disabled = false;
+        document.getElementById("cancel-editing-btn").disabled = false;
+        if(decision){
+            const edited = getEdits();
+            const new_terms = edited.terms;
+            const new_record = edited.record;
             setEditable(false)
+            const updatedStudent = {
+                new_courses,
+                new_terms,
+                new_record,
+            }
+            console.log(details)
+            console.log(updatedStudent)
+
             fetch("http://localhost:3001/api/0.1/student/"+ state.student_details.student_id, {
                 method:'PATCH',
                 credentials:'include',
@@ -106,11 +123,10 @@ const View_Student_Details =()=>{
                     'Content-Type':'application/json'
                 },
                 body: JSON.stringify({
-                    new_courses,
-                    new_terms,
-                    new_record,
+                    updatedStudent,
+                    details,
                     user_id: user.user_id,
-                    details: "Kunwari nag-edit"
+                    
                 }) 
             })
             .then((response) => {return response.json()})
@@ -140,7 +156,7 @@ const View_Student_Details =()=>{
         let cumulative_sum = document.getElementsByName("record-cumulative")[0].innerHTML;
         let total_units = document.getElementsByName("record-units")[0].innerHTML;
         let gwa = document.getElementsByName("record-gwa")[0].innerHTML
-        let record = {cumulative_sum, total_units, gwa}
+        let record = {record_id:state.record_details.record_id,cumulative_sum, total_units, gwa}
         return {terms,record}
     }
 
@@ -158,13 +174,12 @@ const View_Student_Details =()=>{
     const updateCourse=(updatedCourse)=>{
         new_courses = new_courses.filter(course => course.course_id !== updatedCourse.course_id)
         new_courses.push(updatedCourse)
-        console.log(new_courses)
     }
 
     const CancelPopup=({})=>{
         return(
             <div className="popup-box">
-                    <p className='cancel-text'>Are you sure you want to cancel all the changes?</p>
+                    <p className='cancel-text'>Are you sure you want to cancel editing?</p>
                     
                     <div className='buttons'>
                         <button onClick={() => {setShowCancelConfirmation(false)}} className = 'no-btn'>No</button>
@@ -189,12 +204,15 @@ const View_Student_Details =()=>{
             </div>
             
             < div className='student-record'>
-            Degree Program: {state.student_details.degree_program} <br/>  
-            Student No.: {state.student_details.student_number}<br/>
-            Accumulated weights: <span name={"record-cumulative"}>{state.record_details.cumulative_sum}</span>  <br/>
-            Total Units: <span name={"record-units"}>{state.record_details.total_units}</span>  <br/>
-            GWA: <span name={"record-gwa"}>{state.record_details.gwa}</span><br/>
-
+            <div className='student-info-left'>
+                <div><b>Degree Program:</b> <span className='info-l'>{state.student_details.degree_program}</span></div>  <br/>
+                <div><b>Student No.:</b> <span className='info-l'>{state.student_details.student_number}</span></div> <br/>
+                <div><b>GWA:</b> <span name={"record-gwa"} className='info-l'>{state.record_details.gwa}</span></div><br/>
+            </div>
+            <div className='student-info-right'>
+                <div><b>Total weights:</b> <span name={"record-cumulative"} className='info-r'>{state.record_details.cumulative_sum}</span></div>  <br/>
+                <div><b>Total Units:</b> <span name={"record-units"} className='info-r'>{state.record_details.total_units}</span></div>  <br/>
+            </div>
             <br/>
             <hr className='record-line'></hr>
             <br/>
@@ -243,11 +261,12 @@ const View_Student_Details =()=>{
                 
             }):""}</div></div>
             {showDeleteConfirmation ? <DeletePopup props={{confirmDelete: confirmDelete.bind()}} />:""}
+            {showEditConfirmation ? <DetailsPopup props={{confirmEdit: confirmEdit.bind()}} />:""}
             {showCancelConfirmation ? <CancelPopup />:""}
             <div className = "bottom-space">
                 {editable === true ? <span>
-                    <button type = "button" onClick={handleCancel} className="cancel-edit-btn">Cancel Editing</button>
-                    <button type = "button" onClick={handleUpdate} className="submit-btn">Submit Changes</button>
+                    <button type = "button" onClick={handleCancel} className="cancel-edit-btn" id="cancel-editing-btn">Cancel Editing</button>
+                    <button type = "button" onClick={handleUpdate} className="submit-btn" id="submit-changes-btn">Submit Changes</button>
                     </span>:""}
             </div>
         </div>

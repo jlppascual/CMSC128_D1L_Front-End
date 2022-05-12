@@ -27,6 +27,41 @@
     margin-bottom:0px;
 }
 
+.student-info-left{
+    margin-top: 15px;
+    font-family: Helvetica;
+    margin-left: 3%;
+    width: 50%;
+    float:left;
+}
+.student-info-right{
+    margin-top: 15px;
+    font-family: Helvetica;
+    width: 40%;
+    float:left;
+    margin-right: 3%;
+}
+
+.info-l{
+    margin-top: -5px;
+    width: 40%;
+    font-size: 15px;
+    background-color: white;
+    padding: 5px 10px;
+    float:right;
+    margin-right: 15%;
+}
+.info-r{
+    margin-top: -5px;
+    width: 35%;
+    font-size: 15px;
+    background-color: white;
+    padding: 5px 10px;
+    float:right;
+    margin-right: 15%;
+}
+
+
 .student-line{
     text-align: center;
     width: 67%
@@ -52,7 +87,7 @@
 .student-record{
     width:64%;
     margin-left: 16.5%;
-    background-color: rgb(206, 206, 206);
+    background-color: rgb(223, 223, 223);
     margin-top: 15px;
     padding: 20px;
     bottom: 50px;
@@ -73,6 +108,7 @@
 
 .record-line{
     border: 1px solid white;
+    margin-top: 120px;
     margin-bottom: 0px;
 }
 .term-summary{
@@ -148,7 +184,7 @@
     cursor: pointer;
     background-color: #8D1436;
     color: white;
-    padding: 8px;
+    padding: 5px 25px;
     outline:none;
     border:none;
     border-radius: 5px;
@@ -158,11 +194,11 @@
     cursor: pointer;
     background-color:gray;
     color: white;
-    padding: 8px;
+    padding: 5px 29px;
     outline:none;
     border:none;
     border-radius: 5px;
-    margin-left: 31%;
+    margin-left: 16%;
     margin-right: 10%;
     
 }

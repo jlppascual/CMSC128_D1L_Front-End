@@ -20,7 +20,7 @@
             navigate('/')
             alert("You are not logged in!")
         }else{
-            fetch("http://localhost:3001/api/0.1/log",
+            fetch("http://localhost:3001/api/0.1/log/date/2022-05-12",
             {
                 method: "GET",
                 credentials:'include'
@@ -28,6 +28,7 @@
             .then(response => {return response.json()})
             .then(json=>{
                 if(json.result.success){
+                    console.log(json.result.output)
                     changeLogs(json.result.output)
                 }else{
                     alert(json.result.message)

@@ -35,6 +35,16 @@ const Edit_Row = ( {func, course, term_index,index}) => {
         if(index > 0) {
             prevCumulated = document.getElementsByName("cumulated-"+term_index+"-"+(index-1))[0].value
         }
+        else if(term_index > 0){
+            let c_index = 10;
+            let next_course = document.getElementsByName("cumulated-"+(term_index-1)+"-"+(c_index))[0]
+            // iterate through the terms and get the last course
+            while(next_course === undefined){
+                next_course = document.getElementsByName("cumulated-"+(term_index-1)+"-"+(c_index--))[0]
+            }
+            if(isNaN(next_course.value)) next_course.value = 0
+            prevCumulated = next_course.value
+        }
         let sum = Number(prevCumulated) + Number(curr_weight)
         setCumulated(sum)
         let i = index+1
