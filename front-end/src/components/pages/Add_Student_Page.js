@@ -202,7 +202,7 @@
          <div className='body'>
              <form>
                  <p className="title">Add Student Records</p>
-                 <hr className='line'></hr>
+                 <hr className='add-line'></hr>
                  
                  <label htmlFor="file-acceptor" className='file-accept'> Click here to add students
                  </label>

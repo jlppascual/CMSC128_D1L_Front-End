@@ -200,8 +200,7 @@ const View_Student_Details =()=>{
             <br/>
             <div className='record'>
             {state.term_details!=[]? state.term_details.map((term, i)=>{
-                let headStyle = {textAlign:'left', visibility:'hidden'}
-                if(i>=0) headStyle = {textAlign:'left'}
+                let headStyle = {textAlign:'left'}
                 return <span key={i} name = {"term"+i}>
                 <form>
                     <table className='record-table'>
