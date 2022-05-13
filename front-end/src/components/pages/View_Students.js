@@ -231,7 +231,6 @@ const confirmDelete= async(decision) =>{
         })
     }
 }
-
 const onDelete=(student)=>{
     setShowConfirmation(true)
     setToDelete(student);
@@ -245,7 +244,6 @@ const DropDown =({value,options,onChange, type})=>{
             {options.map((option,i)=>(
                 <option key={i} value = {option.value} >{option.label}</option>
             ))}
-
             </select>
         </label>
     );
@@ -253,12 +251,12 @@ const DropDown =({value,options,onChange, type})=>{
 
 return(
     <div>
+
         <div className='view-student-body'>
             <ul className='view-student-list'>
                     <li><DropDown options={searchFilter}  value = {searchValue} onChange={searchChange} type ="search"/></li>
                     <li><DropDown options={orderFilter}  value = {orderValue} onChange={orderChange} type = "order"/></li>
                     <li><DropDown options={viewFilter} value = {viewValue} onChange={viewChange} type="view"/></li>
-
             </ul>
             <p className="title">Student Records</p>
             <hr className='add-line'></hr>      
@@ -273,7 +271,6 @@ return(
             </div>
             <div className='view-student-search'>
                 <input type = "text" className = 'view-student-input' placeholder = "Search a student record" value = {input} onChange = {handleUserInput} required></input>
-
                 <a href='#' onClick={handleSubmit} ><BsSearch className='search-icon'/></a>      
             </div>
             <div className='view-student-preview'>
@@ -299,6 +296,7 @@ return(
                                         <td className='student-cell' style ={{textAlign:'right', paddingRight: '30px'}} onClick={()=>{onDelete(rec)}}><AiFillDelete className='view-student-delete-icon'/></td>
                                     </tr>                                        
                             );
+
                             })}
                         </tbody>
                         {showConfirmation===true? <DeletePopup props={{confirmDelete: confirmDelete.bind()}} />:""}

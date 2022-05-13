@@ -48,7 +48,7 @@
                 <div className='view-logs'>
                     <form>
                     <p className="log-title">User Logs</p>
-                    <hr className='line'></hr>
+                    <hr className='div-line'></hr>
                         <div className='view-logs-header'></div>
                         {/* <div className='"search-field'><input type="text" name="input" placeholder="🔎 Search log"
                              value = {input} onChange = {handleUserInput} className = "user-search" required></input>
