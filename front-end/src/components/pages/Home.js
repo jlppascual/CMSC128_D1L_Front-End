@@ -13,19 +13,19 @@ import '../../css/home.css';
 // changed to a handler function to use hooks
 const Home = () => {
 
-        // from zustand store
-        const { isAuthenticated } = useStore();
+    // from zustand store
+    const { isAuthenticated } = useStore();
 
-        const navigate = useNavigate();     // navigation hook
-    
-        useEffect(() => {
-            if(!isAuthenticated) {
-                navigate('/')
-                alert("You are not logged in!")}
-            else {
-                navigate('/home');
-            }
-        },[isAuthenticated])
+    const navigate = useNavigate();     // navigation hook
+
+    useEffect(() => {
+        if(!isAuthenticated) {
+            navigate('/')
+            alert("You are not logged in!")}
+        else {
+            navigate('/home');
+        }
+    },[isAuthenticated])
 
     return(
         <div>

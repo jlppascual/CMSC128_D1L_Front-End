@@ -15,6 +15,7 @@ import '../../css/studentdetails.css'
 const View_Student_Details =()=>{
     const[pageState, setPage] = useState(false)
     const[editable, setEditable] = useState(false);
+    const {REACT_APP_HOST_IP} = process.env
     const[warnings, setWarnings] = useState(false);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState("")
     const [showCancelConfirmation, setShowCancelConfirmation] = useState("")
@@ -40,7 +41,7 @@ const View_Student_Details =()=>{
             const link = window.location.href
             const id = link.slice(link.lastIndexOf('/')+1,link.length)
             // console.log(id)
-            fetch('http://localhost:3001/api/0.1/student/'+id,{
+            fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/'+id,{
                 method:'GET',
                 credentials:'include'
             }).then(response=> {return response.json()})
@@ -123,7 +124,8 @@ const View_Student_Details =()=>{
             console.log(details)
             console.log(updatedStudent)
 
-            fetch("http://localhost:3001/api/0.1/student/"+ state.student_details.student_id, {
+           fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/"+ state.student_details.student_id, {
+
                 method:'PATCH',
                 credentials:'include',
                 headers:{

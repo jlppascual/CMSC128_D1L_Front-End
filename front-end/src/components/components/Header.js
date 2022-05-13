@@ -6,15 +6,18 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Dp from '../../images/dp_default.jpg';
+import useStore from '../hooks/authHook';
 import '../../css/header.css'
 
 const Header =()=>{
 
     const[userType, setType]=useState();
     const navigate = useNavigate();     // hook for navigation
-
-   const userLogout=()=>{
-        fetch('http://localhost:3001/api/0.1/auth' ,{
+    const {user, host} = useStore();
+    
+    const userLogout=()=>{ 
+        
+        fetch('http://'+host+':3001/api/0.1/auth' ,{
             method:'GET',
             credentials:'include'
         })
@@ -43,7 +46,7 @@ const Header =()=>{
     }
 
     useEffect(()=>{
-        setType("Admin")
+        setType(user.first_name)
     },[userType])
     
     //**need to add useeffect to check if admin yung user */

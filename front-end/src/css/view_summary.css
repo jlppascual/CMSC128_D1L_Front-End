@@ -1,4 +1,3 @@
-@page{}
 .view-summary-body{
     background-color: white;
     position: fixed;
@@ -19,42 +18,36 @@
     display: flex;
     justify-content: space-between;
     margin-top: 8%;
-    margin-left: 2%;
+    margin-left: 9.5%;
     width: 90%;
 }
 
 .view-summary-list{
-    list-style: none;
-    margin-top: 20px;
-    padding: 0;
-    margin-bottom: 5px;
+    position:fixed;
+    left: 69%;
+    top: 110px;
 }
 
 .view-summary-list li{
     display: inline-block;
     margin: 0 5px;
-}
-
-.summary-details{
-    text-decoration: none;
-    color:black;
-    background-color: whitesmoke;
+    outline:none;
 }
 
 .view-summary-search{
     background-color: #00563f;
     margin: 5px;
-    margin-left: 5%;
+    margin-left: 12.5%;
     height: 40px;
     align-items: center;
     display: flex;
     align-items: center;
     border-radius: 5px;
-    width: 90%;
+    width: 75%;
 }
 
 .view-summary-sicon{
-    margin-left: 8px;
+    margin-left: 12px;
     color: whitesmoke;
 }
 
@@ -65,27 +58,33 @@
 .view-summary-line{
     height: -1px;
     margin-top: 0px;
-    width: 90%;
+    width: 76%;
 }
 
 .view-summary-input{
     height: 25px;
-    width: 185vh;
+    width: 153vh;
     margin-left: 5px;
     border-radius: 5px;
     border: none;
     outline: none;
 }
 
-.view-summary-dropdown{
-    color: gray;
+
+.summary-dropdown{
+    background-color: rgb(211, 211, 211);
+    outline:none;
+    border: none;
+    border-radius: 10px;
+    padding: 2px;
+    font-family: Helvetica; 
 }
 
 .view-summary-preview{
     margin: 0 auto;
     background-color: rgb(185, 181, 181);
     height: 390px;
-    width: 1390px;
+    width: 75%;
     border-radius: 5px;
 }
 
@@ -107,7 +106,7 @@
 }
 
 .view-summary-element{
-    background-color: #fcfff6;
+    background-color: white;
 }
 
 .view-summary-cell{
@@ -122,24 +121,7 @@
     width: 330px;
 } 
 
-.view-summary-edit-icon{
-    padding-left: 10px;
-    padding-right: 10px;
-    color: black;
-    padding-top: 12px;
-}
-
-.view-summary-edit-icon:hover{
-    fill: gray;
-}
-
 .summary-tile{
     text-decoration: none;
     color: black;
-}
-
-@media print{
-    .view-summary-body{
-        display:none
-    }
 }

@@ -11,15 +11,19 @@
  import '../../css/addstudent.css'
  
  const Add_Student_Page=()=>{
-     const [files, setFiles] = useState([]);
-     const [results, setResults] = useState([]);
-     const [ fullName, setFullName] = useState("");
-     const semester= useRef();
-     const acad_year = useRef();
-     const num_of_units = useRef();
-  
-     const { user, isAuthenticated } = useStore();
-     const navigate = useNavigate();     // navigation hook
+
+    const {REACT_APP_HOST_IP} = process.env
+    const [files, setFiles] = useState([]);
+    const [results, setResults] = useState([]);
+    const [ fullName, setFullName] = useState("");
+    const semester= useRef();
+    const acad_year = useRef();
+    const num_of_units = useRef();
+    const weightPerTerm = useRef();
+
+    const { user, isAuthenticated } = useStore();
+    const navigate = useNavigate();     // navigation hook
+
  
      useEffect(() => {
          if(!isAuthenticated) {
@@ -104,7 +108,7 @@
                  
                      courses = [];
                      term = {};
-                     
+
                      courses.push({course_code: array[j][1], grade: array[j][2], units: array[j][3], 
                      weight: Number(array[j][4]), cumulated: Number(array[j][5])})
                      weightPerTerm = weightPerTerm + (Number(array[j][4]))
@@ -124,7 +128,7 @@
          term={acad_year: acad_year.current, semester: semester.current, no_of_units: num_of_units.current, 
             total_weights: weightPerTerm, course_data: courses}
         term_data.push(term);
- 
+
          let data ={
              student_data: {
                  student_number:array[1][4], 
@@ -174,7 +178,7 @@
      }
  
      const sendData = async(data)=>{
-         fetch('http://localhost:3001/api/0.1/student',{
+         fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student',{
              method:'POST',
              credentials:'include',
              headers:{

@@ -6,13 +6,13 @@ const RequireAuth = ({ children }) => {
 
   const { user, isAuthenticated, setAuth } = useStore();
   const navigate = useNavigate();
-
+  const {REACT_APP_HOST_IP} = process.env
   // Check if user session has expired
   useEffect(() => {
 
     if (!user && !isAuthenticated) {
 
-      fetch('http://localhost:3001/api/0.1/auth/refresh',
+      fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/auth/refresh',
         { method: 'GET', credentials: 'include' }
       )
       .then(res => res.json() )

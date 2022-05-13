@@ -19,8 +19,7 @@ class Menu extends React.Component{
 function Menubar(){
     const [ sidebar, setSidebar ] = useState(false)
     const { user } = useStore();
-    let user_title;
-    user_title = user.user_role
+    const user_title = user.user_role
 
     const showSidebar = () => setSidebar(!sidebar);
     
@@ -63,7 +62,7 @@ function Menubar(){
                                 </Link>
                             </li>
                         );
-                    })) : (user_title = "")}              
+                    })) : ""}              
                 </ul>
             </nav>
         </IconContext.Provider>

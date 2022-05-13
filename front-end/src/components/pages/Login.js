@@ -4,8 +4,11 @@ import UPLB from '../../images/uplb.png'
 import Footer from '../components/Footer'
 import '../../css/login.css'
 
+
 // changed to function to use hooks
 const Login = () => {
+
+    const {REACT_APP_HOST_IP} = process.env
 
     const { setAuth } = useStore();     // from zustand store
     const navigate = useNavigate();     // hook for navigation
@@ -13,13 +16,12 @@ const Login = () => {
     // handles login action and 
     const login = (e) => {
         e.preventDefault();
-        
         const credentials = {
             username: document.getElementById('login-username').value,
             password: document.getElementById('login-password').value
         }
 
-        fetch('http://localhost:3001/api/0.1/auth' ,{
+        fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/auth' ,{
                 method:'POST',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },

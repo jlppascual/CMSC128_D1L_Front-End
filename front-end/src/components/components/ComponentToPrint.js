@@ -11,6 +11,7 @@ class ComponentToPrint extends React.Component{
 
             {this.props.record != undefined ? 
                 <table className='view-print-table'>
+                    <span className="watermark-text">ASTERIS</span>
                     <thead className='view-print-thead'>
                         <tr>
                             <th className='view-print-cell-header'>NAME</th>
@@ -19,9 +20,10 @@ class ComponentToPrint extends React.Component{
                         </tr>
                     </thead>
                     <tbody className = 'view-print-tbody'>
+                        <div className="watermark">
+                        </div>
                         {this.props.record.map((rec, i) => {
                             return (
-                                
                                 <tr className='view-print-element'>
                                     <td className='name-cell'>{i+1}. {rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""}
                                     {rec.suffix ? ', ' + rec.suffix : ''}</td>
@@ -33,9 +35,6 @@ class ComponentToPrint extends React.Component{
                     </tbody>
                 </table>:
                 <div>"No students saved"</div>}
-                <div className="watermark">
-                    <span className="watermark-text">ASTERIS</span>
-                </div>
             </div>
         )
     }
