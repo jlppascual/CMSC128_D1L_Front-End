@@ -117,8 +117,13 @@
                  }
  
              }else{break;}
-             cumulative_sum = Number(array[j][5])
+            
+            cumulative_sum = Number(array[j][5])
          }
+         // Push the last term
+         term={acad_year: acad_year.current, semester: semester.current, no_of_units: num_of_units.current, 
+            total_weights: weightPerTerm, course_data: courses}
+        term_data.push(term);
  
          let data ={
              student_data: {
