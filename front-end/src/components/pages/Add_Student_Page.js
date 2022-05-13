@@ -23,6 +23,7 @@
 
     const { user, isAuthenticated } = useStore();
     const navigate = useNavigate();     // navigation hook
+
  
      useEffect(() => {
          if(!isAuthenticated) {
@@ -64,6 +65,7 @@
          let courses = [];
          let term_data=[];
          let term = {};
+         let weightPerTerm = 0;
          let cumulative_sum = 0;
  
          for(var i = 1; i < array[10].length; i++){
@@ -83,43 +85,50 @@
                  if(courses.length <=0 && array[j][7] != ''){
                      courses.push({course_code: array[j][1], grade: array[j][2], units: array[j][3], 
                      weight: Number(array[j][4]), cumulated: Number(array[j][5])})
- 
+                     weightPerTerm = weightPerTerm + (Number(array[j][4]))
+                        
                      semester.current = sem;
                      acad_year.current = year;
                      num_of_units.current = no_of_units; 
- 
+                     
                  }
                  // indicates that the course is included in a new term
                  else if (array[j][7] != ''){
                      // if a new term is found, push the previous states and courses first before renewing
                      if(courses[0] != ''){
                          term={acad_year: acad_year.current, semester: semester.current, no_of_units: num_of_units.current, 
-                             total_weights: weightPerTerm.current, course_data: courses}
+                             total_weights: weightPerTerm, course_data: courses}
                          term_data.push(term);
                      }
 
                      semester.current = sem;
                      acad_year.current = year;
                      num_of_units.current = no_of_units;
+                     weightPerTerm = 0;
                  
                      courses = [];
                      term = {};
-                       
+
                      courses.push({course_code: array[j][1], grade: array[j][2], units: array[j][3], 
                      weight: Number(array[j][4]), cumulated: Number(array[j][5])})
+                     weightPerTerm = weightPerTerm + (Number(array[j][4]))
                  // all courses under the current term will be appended until a new term is found
                  }else{
                      courses.push({course_code: array[j][1], grade: array[j][2], units: array[j][3], 
                          weight: Number(array[j][4]), cumulated: Number(array[j][5])})
  
-                     weightPerTerm.current=(Number(array[j][5]))
+                     weightPerTerm = weightPerTerm + (Number(array[j][4]))
                  }
  
              }else{break;}
-
-             cumulative_sum = Number(array[j][5])
+            
+            cumulative_sum = Number(array[j][5])
          }
-  
+         // Push the last term
+         term={acad_year: acad_year.current, semester: semester.current, no_of_units: num_of_units.current, 
+            total_weights: weightPerTerm, course_data: courses}
+        term_data.push(term);
+
          let data ={
              student_data: {
                  student_number:array[1][4], 
@@ -164,7 +173,7 @@
                  let data = await parseData(result);
                  await sendData(data);
              });
-             setFiles([]);
+             
          }
      }
  
@@ -189,10 +198,15 @@
                  alert(message)
              }
              else{
-                 let message =  fullName+json.result.message
-                 alert(message)
+                const student = data.student_data
+                const full_name = student.first_name+" "+student.last_name+", "+student.degree_program+":\n"
+                let message =  full_name+json.result.message
+                alert(message)
              }
+             setFiles([]);
+             setResults([]);
          })
+         
      }
  
      return(
@@ -202,7 +216,7 @@
          <div className='body'>
              <form>
                  <p className="title">Add Student Records</p>
-                 <hr className='line'></hr>
+                 <hr className='add-line'></hr>
                  
                  <label htmlFor="file-acceptor" className='file-accept'> Click here to add students
                  </label>

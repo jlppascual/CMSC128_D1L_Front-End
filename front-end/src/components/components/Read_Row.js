@@ -1,14 +1,18 @@
 import React from 'react';
 
-const Read_Row = ({course}) => {
+const Read_Row = ({course, index}) => {
+    let bg_color;
+    {index % 2 === 0? bg_color = 'rgba(0, 86, 63, 0.2)': bg_color = 'white'}
     return (
-            <tr>
-                <td>{course.course_code}</td>
-                <td>{course.grade}</td>
-                <td>{course.units}</td>
-                <td>{course.weight}</td>
-                <td>{course.cumulated}</td>
+            
+            <tr  style = {{lineHeight:2, backgroundColor: bg_color}}>
+                <td style = {{paddingLeft:'45px'}}>{course.course_code}</td>
+                <td style = {{paddingLeft:'45px'}}>{course.grade}</td>
+                <td style = {{paddingLeft:'55px'}}>{course.units}</td>
+                <td style = {{paddingLeft:'50px'}}>{course.weight}</td>
+                <td style = {{paddingLeft:'50px'}}>{course.cumulated}</td>
             </tr>
+
     )
 }
 

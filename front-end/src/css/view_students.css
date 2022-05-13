@@ -25,6 +25,7 @@
     border-radius: 10px;
     padding: 2px;
     font-family: Helvetica;
+    cursor: pointer;
 }
 option{
     background-color: white;
@@ -68,83 +69,96 @@ option{
 }
 
 .view-student-preview{
-    margin-top: 10px;
+    margin-top: 15px;
+    padding-top: 25px;
     background-color: rgb(206, 206, 206);
-    height: 50%;
+    height: 45%;
     border-radius: 8px;
     width: 67%;
     margin-left: 16.5%;
+    
+}
+
+.table-wrap{
+    overflow-y:scroll;
+    margin-left: 5%;
+    width: 90%;
+    height: 90%;
+    padding-right: 30px;
+}
+
+.table-wrap::-webkit-scrollbar {
+    width: 10px;
+}
+
+.table-wrap::-webkit-scrollbar-thumb {
+    background-color: white;
 }
 
 .view-student-table{
-    height: 20%;
+    width: 100%;
+    border-collapse: collapse;
 }
 
 .view-student-thead{
-    display: block;
     font-family: Palatino;
-    margin-top: 10px;
-    text-align: left;
+    position: sticky;
+    top: 0;
+}
+    
+.header-row{
+    position: sticky;
+    top: 0;
 }
 
-.name-header{
-    text-align: center;
-    width: 480px;
-} 
-
-.studno-header{
-    width: 270px;
-} 
-
-.degree-header{
-    width: 320px;
-} 
-
-.view-student-tbody{
-    display: block;
-    height: 260px;
-    overflow-y: auto;
-    padding-right: 30px;
-    padding-left: 30px;
+.student-header{
+    background-color: rgb(206, 206, 206);
+    text-align: left;
+    padding-left: 35px;
+    padding-bottom: 10px;
+    padding-top: 0px;
+    position: sticky;
+    top: 0;
 }
 
 .view-student-element{
+    margin-right: 10px;
     background-color: white;
     text-align: center;
-    width: 100%;
+    cursor: pointer;
 }
 
-.name-cell{
-    width: 600px;
-    padding: 7px;
+.view-student-element:hover{
+    background-color: #ebebeb;
+}
+
+.student-cell{
+    padding: 5px;
+    padding-right: 15px;
+    border-bottom: 10px solid rgb(206, 206, 206);
 } 
 
-.studno-cell{
-    text-align: center;
-    padding: 7px;
-    width: 28%;
-} 
-
-.degree-cell{
-    text-align: center;
-    padding: 7px;
-    width: 28%;
-} 
-
-
-.view-student-edit-icon{
-    padding-left: 10px;
-    padding-right: 10px;
+.view-student-delete-icon{
     color: black;
-    padding-top: 12px;
 }
 
-.view-student-edit-icon:hover{
+.view-student-delete-icon:hover{
     fill: gray;
 }
 
-.student-tile{
-    text-align: left;
-    text-decoration: none;
-    color: black;
+.empty-students{
+    margin-top: 10%;
+    text-align: center;
+}
+
+.empty-students button{
+    background-color: white;
+    border:1px solid gray;
+    outline:none;
+    padding: 10px 15px ;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.empty-students button:hover{
+    background-color: rgb(245, 245, 245);
 }

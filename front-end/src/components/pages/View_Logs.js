@@ -182,6 +182,7 @@ import { BsSearch } from 'react-icons/bs';
             .then(response => {return response.json()})
             .then(json=>{
                 if(json.result.success){
+                    console.log(json.result.output)
                     changeLogs(json.result.output)
                 }else{
                     alert(json.result.message)

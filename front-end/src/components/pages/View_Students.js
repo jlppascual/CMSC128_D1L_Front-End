@@ -1,7 +1,7 @@
 /**
  * author: Jem, Leila
  */
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, Fragment } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {BsSearch}  from 'react-icons/bs';
 import {AiFillDelete, AiFillEye} from 'react-icons/ai';
@@ -74,7 +74,8 @@ const View_Students =()=>{
             if(json.result.success){
                 setRecord(json.result.output)
             }else{
-                // alert(json.result.message)
+              //**concern: if bulk adding and unsuccessful, madami need iclick na alert window/
+                console.log(json.result.message)
             }
         })}
     },[isAuthenticated, state]);
@@ -112,7 +113,6 @@ const View_Students =()=>{
                     }
                 })
             }
-
         }
     },[orderValue]);
 
@@ -252,7 +252,9 @@ const View_Students =()=>{
         <div className='view-student-body'>
         
             <p className="title">Student Records</p>
-                
+
+            <hr className='add-line'></hr>      
+
             <div className='view-student-header'>
                 <ul className='view-student-list'>
                     <li><DropDown options={searchFilter} className='view-student-dropdown' value = {searchValue} onChange={searchChange} type ="search"/></li>
@@ -269,30 +271,36 @@ const View_Students =()=>{
             </div>
             <div className='view-student-preview'>
                 {record != undefined ? 
+                    <div className='table-wrap'>
                     <table className='view-student-table'>
                         <thead className='view-student-thead'>
-                            <tr>
-                            <th className='name-header'>NAME</th>
-                                <th className='studno-header'>STUDENT NUMBER</th>
-                                <th className='degree-header'>DEGREE PROGRAM</th>
+                            <tr className='header-row'>
+                                <th className='student-header' >NAME</th>
+                                <th className='student-header'>STUDENT NUMBER</th>
+                                <th className='student-header'>DEGREE PROGRAM</th>
+                                <th className='student-header'></th>
                             </tr>
                         </thead>
+                        
                         <tbody className = 'view-student-tbody'>
                             {record.map((rec, i) => {
-                                    return (
-                                        <tr className='view-student-element' key={i}>
-                                        <td className='name-cell'><a className = "student-tile" href={'/student/'+rec.student_id}>{rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""} {rec.suffix ? ', ' + rec.suffix : ''}</a></td>
-                                            <td className='studno-cell'>{rec.student_number}</td>
-                                        <td className='degree-cell'>{rec.degree_program}</td>
-                                        <a onClick={()=>{onDelete(rec)}}><AiFillDelete className='view-student-edit-icon'/></a>
-                                        
-                                    </tr>
-                                );
+
+                                return (
+                                    <tr key={i} className='view-student-element' >
+                                        <td className='student-cell' onClick={()=> window.location.href='/student/'+rec.student_id}style ={{textAlign:'left', paddingLeft: '20px'}}>{rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""} {rec.suffix ? ', ' + rec.suffix : ''}</td>
+                                        <td className='student-cell' onClick={()=> window.location.href='/student/'+rec.student_id}>{rec.student_number}</td>
+                                        <td className='student-cell' onClick={()=> window.location.href='/student/'+rec.student_id}>{rec.degree_program}</td>
+                                        <td className='student-cell' style ={{textAlign:'right', paddingRight: '30px'}} onClick={()=>{onDelete(rec)}}><AiFillDelete className='view-student-delete-icon'/></td>
+                                    </tr>                                        
+                            );
                             })}
                         </tbody>
                         {showConfirmation===true? <DeletePopup props={{confirmDelete: confirmDelete.bind()}} />:""}
-                    </table>:
-                <div>"No students saved"</div>
+                    </table></div>:
+                <div className='empty-students'>
+                    <p>No student records saved</p>
+                    <button onClick={()=> navigate('/student/new')}> Add Student Records</button>
+                    </div>
                 }
             </div>
         </div>
