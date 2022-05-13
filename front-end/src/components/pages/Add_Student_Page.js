@@ -169,7 +169,7 @@
                  let data = await parseData(result);
                  await sendData(data);
              });
-             setFiles([]);
+             
          }
      }
  
@@ -194,10 +194,15 @@
                  alert(message)
              }
              else{
-                 let message =  fullName+json.result.message
-                 alert(message)
+                const student = data.student_data
+                const full_name = student.first_name+" "+student.last_name+", "+student.degree_program+":\n"
+                let message =  full_name+json.result.message
+                alert(message)
              }
+             setFiles([]);
+             setResults([]);
          })
+         
      }
  
      return(

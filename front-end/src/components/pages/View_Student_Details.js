@@ -15,9 +15,11 @@ import '../../css/studentdetails.css'
 const View_Student_Details =()=>{
     const[pageState, setPage] = useState(false)
     const[editable, setEditable] = useState(false);
+    const[warnings, setWarnings] = useState(false);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState("")
     const [showCancelConfirmation, setShowCancelConfirmation] = useState("")
     const [showEditConfirmation, setShowEditConfirmation] = useState("")
+    const [showWarnings, setShowWarnings] = useState(false)
     
     const [state, setState]= useState({
         student_details:[],
@@ -43,12 +45,12 @@ const View_Student_Details =()=>{
                 credentials:'include'
             }).then(response=> {return response.json()})
             .then(json=>{
-                //console.log(json.result.output.record)
                 setState(
                     {student_details:json.result.output.record,
                     record_details:json.result.output.record.record_data,
                     term_details:json.result.output.record.record_data.term_data,
-                    course_details:json.result.output.record.record_data.term_data.course_data})         
+                    course_details:json.result.output.record.record_data.term_data.course_data,
+                    warnings:json.result.output.warnings })         
             })
         }
     },[isAuthenticated, pageState])
@@ -75,7 +77,12 @@ const View_Student_Details =()=>{
         }
     }
 
-    const handleClick=(event)=>{
+    const handleWarnings = (event) => {
+        event.preventDefault();
+        setShowWarnings(!showWarnings)
+    }
+
+    const handleEdit=(event)=>{
         event.preventDefault();
         if(editable === true){
             setShowCancelConfirmation(true)
@@ -179,12 +186,34 @@ const View_Student_Details =()=>{
     const CancelPopup=({})=>{
         return(
             <div className="popup-box">
-                    <p className='cancel-text'>Are you sure you want to cancel editing?</p>
-                    
-                    <div className='buttons'>
-                        <button onClick={() => {setShowCancelConfirmation(false)}} className = 'no-btn'>No</button>
-                        <button onClick={() => {setShowCancelConfirmation(false), setEditable(false);}} className = 'yes-btn'>Yes</button>
-                    </div>
+                <p className='cancel-text'>Are you sure you want to cancel editing?</p>
+                
+                <div className='buttons'>
+                    <button onClick={() => {setShowCancelConfirmation(false)}} className = 'no-btn'>No</button>
+                    <button onClick={() => {setShowCancelConfirmation(false), setEditable(false);}} className = 'yes-btn'>Yes</button>
+                </div>
+            </div>
+        )
+    }
+
+    const WarningPopup=({})=>{
+        console.log(state.warnings)
+        return(
+            <div className="warning-popup-box">
+                <h3 className='warning-header'>Record Warnings</h3>
+                {state.warnings.length > 0? 
+                <div className='warnings-body'>
+                    {state.warnings.map((warning,i) => {
+                        return <div key = {i} className = "warning">
+                            <h5>{warning.course}</h5>
+                            <h5>{warning.term}</h5>
+                            
+                            <p>{warning.details}</p>
+                            <span>{warning.warning_type}</span>
+                        </div>
+                    })}
+                </div>
+                : <p>No record warnings found</p>}
             </div>
         )
     }
@@ -195,9 +224,11 @@ const View_Student_Details =()=>{
             
             <div className = "top-header">
                 <div className='icons'>
-                    <i className = "icon"><RiAlertLine size= {25}/></i>
-                    <i className = "icon" onClick={handleClick}><BiEdit size= {25}/></i>
+                    <i className = "icon" onClick={handleEdit}><BiEdit size= {25}/></i>
                     <i className = "icon" onClick={handleDelete}><BiTrash size= {25}/></i>
+                    <i className = "icon" onClick={handleWarnings}><RiAlertLine size= {25}/></i>
+                    {state.warnings && state.warnings.length > 0? <span className="warning-badge">{state.warnings.length}</span>
+                    : ""}
                 </div>
                 <p className="student-name">{state.student_details.last_name}, {state.student_details.first_name} {state.student_details.middle_name} {state.student_details.suffix} </p>
                 <hr className='student-line'></hr>
@@ -207,11 +238,12 @@ const View_Student_Details =()=>{
             <div className='student-info-left'>
                 <div><b>Degree Program:</b> <span className='info-l'>{state.student_details.degree_program}</span></div>  <br/>
                 <div><b>Student No.:</b> <span className='info-l'>{state.student_details.student_number}</span></div> <br/>
-                <div><b>GWA:</b> <span name={"record-gwa"} className='info-l'>{state.record_details.gwa}</span></div><br/>
+                <div><b>Latin Honor:</b> {state.student_details.latin_honor !== ""?<span name={"record-gwa"} className='info-l'> {state.student_details.latin_honor}</span>: <span name={"record-gwa"} className='info-l'>-</span>}</div><br/>
             </div>
             <div className='student-info-right'>
                 <div><b>Total weights:</b> <span name={"record-cumulative"} className='info-r'>{state.record_details.cumulative_sum}</span></div>  <br/>
                 <div><b>Total Units:</b> <span name={"record-units"} className='info-r'>{state.record_details.total_units}</span></div>  <br/>
+                <div><b>GWA:</b> <span name={"record-gwa"} className='info-r'>{state.record_details.gwa}</span></div><br/>
             </div>
             <br/>
             <hr className='record-line'></hr>
@@ -263,6 +295,7 @@ const View_Student_Details =()=>{
             {showDeleteConfirmation ? <DeletePopup props={{confirmDelete: confirmDelete.bind()}} />:""}
             {showEditConfirmation ? <DetailsPopup props={{confirmEdit: confirmEdit.bind()}} />:""}
             {showCancelConfirmation ? <CancelPopup />:""}
+            {showWarnings ? <WarningPopup />:""}
             <div className = "bottom-space">
                 {editable === true ? <span>
                     <button type = "button" onClick={handleCancel} className="cancel-edit-btn" id="cancel-editing-btn">Cancel Editing</button>
