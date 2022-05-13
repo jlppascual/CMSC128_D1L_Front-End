@@ -7,9 +7,12 @@
  import React, { useState } from 'react';
  import Header from '../components/Header';
  import Footer from '../components/Footer';
+ import Menu from '../components/Menu'
  import '../../css/add_users.css'
 
 const Add_User_Page=()=>{
+
+    const {REACT_APP_HOST_IP} = process.env
 
     const { user, isAuthenticated } = useStore();
     const navigate = useNavigate();     // navigation hook
@@ -19,12 +22,17 @@ const Add_User_Page=()=>{
     useEffect(() => {
         if(!isAuthenticated) {
             navigate('/')
-            alert("You are not logged in!")}
+            alert("You are not logged in!")
+        }else{
+            if(user.user_role !=="CHAIR/HEAD"){
+                navigate("/home")
+                alert("Must be an admin to access this page")
+            }
+        }
     },[isAuthenticated])
 
     const readInput = async (e) =>{
         e.preventDefault();
-        // document.getElementById("result").innerHTML = document.getElementById("username").value + " " + document.getElementById("password").value;
 
         let user_details={
             first_name: document.getElementById("first_name").value,
@@ -43,7 +51,7 @@ const Add_User_Page=()=>{
     }
 
     const sendData=(user_details)=>{
-         fetch('http://localhost:3001/api/0.1/user', {
+         fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/user', {
              method: 'POST',
              credentials:'include',
              headers:{
@@ -58,6 +66,19 @@ const Add_User_Page=()=>{
                 alert(json.result.message)
             }}
          )
+
+         clearInputs();
+     }
+
+     const clearInputs=()=>{
+        document.getElementById("first_name").value = ""
+        document.getElementById("last_name").value = ""
+        document.getElementById("user_role").value = ""
+        document.getElementById("username").value = ""
+        document.getElementById("password").value = ""
+        document.getElementById("confirm_password").value = ""
+        document.getElementById("email").value = ""
+        document.getElementById("phone_number").value = ""
      }
 
      const handleChange=()=>{
@@ -87,6 +108,7 @@ const Add_User_Page=()=>{
                     <input type="reset" value="Reset" className='reset-button'/>
             </form>
             </div>
+            <Menu/>
             <Header />
             <Footer/>
     </div> 

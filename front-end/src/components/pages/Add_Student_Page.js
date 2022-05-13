@@ -11,20 +11,18 @@
  import '../../css/addstudent.css'
  
  const Add_Student_Page=()=>{
-     const [files, setFiles] = useState([]);
-     const [results, setResults] = useState([]);
-     const [term_data , setTermData] = useState([]);
-     const [courses, setCourses] = useState([]);
-     const [headers, setHeaders] = useState([]);
-     const [ fullName, setFullName] = useState("");
-     const semester= useRef();
-     const acad_year = useRef();
-     const num_of_units = useRef();
-     const weightPerTerm = useRef();
-     const [cumulated_sum, setCumulatedSum] = useState();
-  
-     const { user, isAuthenticated } = useStore();
-     const navigate = useNavigate();     // navigation hook
+
+    const {REACT_APP_HOST_IP} = process.env
+    const [files, setFiles] = useState([]);
+    const [results, setResults] = useState([]);
+    const [ fullName, setFullName] = useState("");
+    const semester= useRef();
+    const acad_year = useRef();
+    const num_of_units = useRef();
+    const weightPerTerm = useRef();
+
+    const { user, isAuthenticated } = useStore();
+    const navigate = useNavigate();     // navigation hook
  
      useEffect(() => {
          if(!isAuthenticated) {
@@ -73,7 +71,6 @@
                  headers.push(array[10][i])
              }
          }
-         await setHeaders(headers);
          for(var j = 11; j < array.length; j++){
  
              if(array[j][1] != ''){
@@ -107,9 +104,7 @@
                  
                      courses = [];
                      term = {};
-  
-                     await setCourses(courses)
-                     
+                       
                      courses.push({course_code: array[j][1], grade: array[j][2], units: array[j][3], 
                      weight: Number(array[j][4]), cumulated: Number(array[j][5])})
                  // all courses under the current term will be appended until a new term is found
@@ -121,12 +116,10 @@
                  }
  
              }else{break;}
-             await setCumulatedSum(Number(array[j][5]))
+
              cumulative_sum = Number(array[j][5])
          }
- 
-         await setTermData(term_data)
- 
+  
          let data ={
              student_data: {
                  student_number:array[1][4], 
@@ -176,7 +169,7 @@
      }
  
      const sendData = async(data)=>{
-         fetch('http://localhost:3001/api/0.1/student',{
+         fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student',{
              method:'POST',
              credentials:'include',
              headers:{

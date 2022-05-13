@@ -9,20 +9,19 @@
  import useStore from '../hooks/authHook'
  import { useNavigate } from 'react-router-dom';
  import {VscSettings}  from 'react-icons/vsc';
- import DeletePopup from '../components/Popups/DeletePopup';
+ import DeleteConfirmPopup from '../components/Popups/DeleteConfirmPopup';
  import '../../css/view_users.css'
 
- export default function View_Users_Page ({todos, setTodos}){
+ export default function View_Users_Page (){
 
+    const {REACT_APP_HOST_IP} = process.env
     const [users, setUsers] = useState([]);
-    const[input,setInput] = useState("")
+    const [input,setInput] = useState("")
     const [pageState, setPage] = useState('0');
     const [viewValue, setViewValue] = useState("");
-    const [showConfirmation, setShowConfirmation] = useState(false)
+    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false)
     const [toDelete, setToDelete] = useState("")
 
-
-    
     const { user, isAuthenticated, setAuth } = useStore();
     const navigate = useNavigate();     // navigation hook
     const prev_view_state = useRef();
@@ -43,19 +42,23 @@
             navigate('/')
             alert("You are not logged in!")
         }else{
-            fetch("http://localhost:3001/api/0.1/user",
-            {
-                method: "GET",
-                credentials:'include'
-            })
-            .then(response => {return response.json()})
-            .then(json=>{
-                setUsers(json.result.output)
-                if(json.result.session){
-                    console.log("here")
-                    setAuth(user,json.result.session)
-                }            
-            })
+            if(user.user_role==="CHAIR/HEAD"){
+                fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/user",
+                {
+                    method: "GET",
+                    credentials:'include'
+                })
+                .then(response => {return response.json()})
+                .then(json=>{
+                    setUsers(json.result.output)
+                    if(json.result.session){
+                        setAuth(user,json.result.session)
+                    }            
+                })
+            }else{
+                navigate("/home")
+                alert("Must be an admin to access this page")
+            }
         }
      },[pageState]);
 
@@ -64,7 +67,7 @@
         if(prev_view_state.current != [viewValue]){
             prev_view_state.current = [viewValue];
             if (viewValue==="ALL"||viewValue===""){
-                fetch("http://localhost:3001/api/0.1/user",
+                fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/user",
                 {
                     method: "GET",
                     credentials:'include'
@@ -78,7 +81,7 @@
                     }
                 })
             } else {
-                fetch("http://localhost:3001/api/0.1/user/role/"+ [viewValue],
+                fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/user/role/"+ [viewValue],
                 {
                     method: "GET",
                     credentials:'include'
@@ -104,13 +107,13 @@
      const handleSubmit = (e) => {
         e.preventDefault();
     
-        let url = 'http:localhost:3001/api/0.1/user/search?name=';
+        let url = 'http:'+REACT_APP_HOST_IP+':3001/api/0.1/user/search?name=';
         
         //if a specific role is selected, url changes to view users by role
         if(viewValue === "CHAIR%2FHEAD" || viewValue === "OCS REP" || viewValue === "ACS" || viewValue === "UNIT REP" || viewValue === "MEMBER"){
-            url = 'http://localhost:3001/api/0.1/user/role/' + viewValue + '/search?name='
+            url = 'http://'+REACT_APP_HOST_IP+':3001/api/0.1/user/role/' + viewValue + '/search?name='
         }else{ //default search
-            url = 'http://localhost:3001/api/0.1/user/search?name='
+            url = 'http://'+REACT_APP_HOST_IP+':3001/api/0.1/user/search?name='
         }
 
         //if search input is empty, check if a user role is selected, else do the default search
@@ -118,9 +121,9 @@
             let url_role;
 
             if(viewValue === "CHAIR%2FHEAD" || viewValue === "OCS REP" || viewValue === "ACS" || viewValue === "UNIT REP" || viewValue === "MEMBER"){
-                url_role = 'http://localhost:3001/api/0.1/user/role/' + viewValue
+                url_role = 'http://'+REACT_APP_HOST_IP+':3001/api/0.1/user/role/' + viewValue
             }else{
-                url_role = 'http://localhost:3001/api/0.1/user'
+                url_role = 'http://'+REACT_APP_HOST_IP+':3001/api/0.1/user'
             }
     
             fetch(url_role,{
@@ -159,14 +162,14 @@
     }
 
     const onDelete=(todeluser)=>{
-        setShowConfirmation(true)
+        setShowDeleteConfirmation(true);
         setToDelete(todeluser);
     }
      const confirmDelete = async(decision) => {
-        setShowConfirmation(false)
+        setShowDeleteConfirmation(false)
         if(decision){
             let delete_id = toDelete.user.user_id
-            fetch('http://localhost:3001/api/0.1/user/'+ delete_id+'/'+user.user_id,{
+            fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/user/'+ delete_id+'/'+user.user_id,{
                 method: "DELETE",
                 credentials:'include',
                 headers:{
@@ -176,7 +179,8 @@
             .then(json=>{
    
                if(json.result.success){
-                   setPage(!pageState)            
+                    window.alert(json.result.message)
+                    setPage(!pageState)            
                }
             })
         }
@@ -201,34 +205,36 @@
                     <div className='view-users'>
                     <form>
                         <div className = 'view-users-header'>
-                        <p className="user-title" > Accounts</p>  <DropDown options={viewFilter} value = {viewValue} onChange={viewChange}/>
+                        <p className="user-title"> Accounts</p>  <DropDown options={viewFilter} value = {viewValue} onChange={viewChange}/>
                         </div>
-                        <div className="search-field">
+                        <hr className='line'/>
+
+                        <div className="users-search-field">
                             <input type = "text" name = "input" placeholder = "🔎 Search by name"
                             value = {input} onChange = {handleUserInput} className = "user-search" required></input>
-                            <button onClick={handleSubmit} className = "search-button"><i className = "icon"><VscSettings /></i></button>
+                            <button onClick={handleSubmit} className = "users-search-button"><i className = "search-icon"><VscSettings /></i></button>
                         </div>
                     </form>
-                    {users != undefined? users.map((user, i) => {
-                            if (i % 2 === 0) {
-                                return <span key={i}>
-                                    <div className="user-tile">
-                                        {user.last_name} <br></br>{user.first_name}<br></br> {user.user_role}
-                                    <button onClick={()=>{confirmDelete({user})}} className = "delete-button">Remove</button>
-                                    </div>
-                                </span>
-                            } else {
-                                return <span key={i}>
-                                    <div className="user-odd-tile">
-                                        {user.last_name} <br></br>{user.first_name}<br></br> {user.user_role}
-                                    <button onClick={()=>{onDelete({user})}} className = "delete-button">Remove</button>
-                                    </div>
-                                </span>
-                            }
-                    }): <div className="no-users">No users found.</div>}
+                    <div className='tile-page'>
+                        {users != undefined? users.map((user, i) => {
+                                if (i % 2 === 0) {
+                                    return <span key={i}>
+                                        <div className="user-tile">
+                                            {user.last_name} <br></br>{user.first_name}<br></br> {user.user_role}
+                                            <button onClick={()=>{onDelete({user})}} className = "delete-button">Remove</button>                                    </div>
+                                    </span>
+                                } else {
+                                    return <span key={i}>
+                                        <div className="user-odd-tile">
+                                            {user.last_name} <br></br>{user.first_name}<br></br> {user.user_role}
+                                        <button onClick={()=>{onDelete({user})}} className = "delete-button">Remove</button>
+                                        </div>
+                                    </span>
+                                }
+                        }): <div className="no-users">No users found.</div>}
+                    </div>
                 </div>
-                {showConfirmation===true? <DeletePopup props={{confirmDelete: confirmDelete.bind()}} />:""} 
-            </div>
+                {showDeleteConfirmation===true? <DeleteConfirmPopup props={{confirmDelete: confirmDelete.bind()}} />:""}</div>
             <Header />
             <Menu/>
             <Footer/>

@@ -8,6 +8,8 @@ import '../../css/settings.css'
 
 const Settings =()=>{
 
+    const {REACT_APP_HOST_IP} = process.env
+
     const[isToggled, setToggle] = useState(false);
     const[popType, setType] = useState("")
 
@@ -34,7 +36,7 @@ const Settings =()=>{
             if(new_uname ===""){
                 alert("Warning: field empty! Please input new username!")
             }else{
-                fetch('http://localhost:3001/api/0.1/user/'+user.user_id+'/username' ,{
+                fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/user/'+user.user_id+'/username' ,{
                     method: 'PATCH',
                     credentials:'include', 
                     headers:{
@@ -62,7 +64,7 @@ const Settings =()=>{
                 if(new_pass === confirm_pass){
                     
                     console.log(document.getElementById('current-password').value,new_pass, confirm_pass)
-                    fetch('http://localhost:3001/api/0.1/user/'+user.user_id+'/password' ,{
+                    fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/user/'+user.user_id+'/password' ,{
                         method: 'PATCH', 
                         credentials:'include',
                         headers:{

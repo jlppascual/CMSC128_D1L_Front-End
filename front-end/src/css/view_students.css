@@ -48,12 +48,12 @@ option{
     padding: 1px;
 }
 
-.search-icon{
+.student-search-icon{
     margin: 10px;
     color: whitesmoke;
 }
 
-.search-icon:hover{
+.student-search-icon:hover{
     fill: #DE9720;
 }
 
@@ -66,8 +66,6 @@ option{
     outline: none;
     padding-left: 15px;
 }
-
-
 
 .view-student-preview{
     margin-top: 10px;
@@ -104,14 +102,14 @@ option{
 
 .view-student-tbody{
     display: block;
-    height: 250px;
+    height: 260px;
     overflow-y: auto;
     padding-right: 30px;
     padding-left: 30px;
 }
 
 .view-student-element{
-    background-color: #fcfff6;
+    background-color: white;
     text-align: center;
     width: 100%;
 }

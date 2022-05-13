@@ -66,6 +66,7 @@
     float:left;
 }
 
+
 .user-odd-tile{
     font-family: Optima;
     width: 400px;
@@ -77,7 +78,7 @@
     display:flex;
 }
 
-.search-field{
+.users-search-field{
     border: 10px solid #00563F;
     background-color: #00563F;
     border-radius: 10px;
@@ -95,7 +96,7 @@
     font-size: 20px;
 }
 
-.search-button{
+.users-search-button{
     margin-top: 3px;
     border: none;
     position:absolute;
@@ -111,7 +112,7 @@
     color: lightgray;
 }
 
-.icon{
+.search-icon{
     font-size: 30px;
 }
 
@@ -142,4 +143,8 @@
     margin-left: auto;
     display: block;
     cursor:pointer;
+}
+
+.tile-page{
+    margin-bottom: 18%;
 }

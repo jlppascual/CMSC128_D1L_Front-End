@@ -1,5 +1,83 @@
-.view-print-preview{
+@media print{
+    @page { 
+        margin: 160px 0px;   
+        padding: 0;     
+      }
+      
+    body {
+    margin: 0;
+    padding: 0;
+    }
+   /* body {margin-top: 50mm; margin-bottom: 50mm; 
+        margin-left: 0mm; margin-right: 0mm} */
+       
+    .view-print-preview{
+        margin-top: 0.5in;
+        margin-bottom: 1in;
+        margin-left: 0.5in;
+        margin-right: 0.5in;
+    }
+
+    .view-print-table{
+        table-layout: fixed;
+        width:100%;
+        margin-left: auto;
+        margin-right: auto;
+        border-spacing: 0 5px;
+        border-collapse: collapse;
+        page-break-inside: auto;
+        
+    }
+
+    .watermark-text{
+        transform: rotate(-30deg);
+        margin-left: auto;
+        margin-right: auto;
+        color: #8D1436;
+        font-size: 130px;
+        opacity: 0.5;
+        position:fixed;
+        top: 30%;
+        left: 7%;
+    }
+    
+    .view-print-element{
+        page-break-inside: avoid;
+        page-break-after: auto;
+        margin-top: 50px;
+    }
+    
+    .view-print-thead{
+        text-align: center;
+        font-family: Palatino Linotype,Palatino LT STD;
+        font-size: 12px;
+    }
+    
+    .view-print-cell-header, .view-print-element td{
+        border: 1px solid black; 
+    }
+    
+    
+    .view-print-tbody{
+        font-size: 10px;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    
+    .name-cell{
+        text-align: left;
+    }
+    
+    .gwa-cell{
+        text-align: center;
+    }
+    
+    .degree-cell{
+        text-align: center;
+    }
+}
+/* .view-print-preview{
     margin: 5%;
+    overflow-y: hidden;
 }
 
 .view-print-table{
@@ -9,17 +87,26 @@
     margin-right: auto;
     border-spacing: 0 10px;
     border-collapse: collapse;
+    page-break-inside: auto;
+    
 }
+
+.view-print-element{
+    page-break-inside: avoid;
+    page-break-after: auto;
+}
+
 .view-print-thead{
     text-align: center;
     font-family: Palatino Linotype,Palatino LT STD;
     font-size: 12px;
-
 }
+
 
 .view-print-cell-header, .view-print-element td{
     border: 1px solid black; 
 }
+
 
 .view-print-tbody{
     font-size: 10px;
@@ -38,15 +125,10 @@
     text-align: center;
 }
 
-.watermark{
+.watermark-text{
     transform: rotate(-30deg);
     margin-left: auto;
     margin-right: auto;
-    position:fixed;
-
-}
-
-.watermark-text{
     color: #8D1436;
     font-size: 130px;
     opacity: 0.5;
@@ -54,3 +136,4 @@
     top: 30%;
     left: 7%;
 }
+ */
