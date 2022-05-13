@@ -9,7 +9,7 @@
  import Menu from '../components/Menu'
  import useStore from '../hooks/authHook';
  import '../../css/view_logs.css'
-import { BsSearch } from 'react-icons/bs';
+import { BsSearch, BsDownload } from 'react-icons/bs';
  
  const View_Logs=()=>{
 
@@ -238,7 +238,7 @@ import { BsSearch } from 'react-icons/bs';
                     <div className='view-logs-header'>
                     <p className="log-title">User Logs</p>
                         <ul className='filter-list'>
-                            <a download="asteris_logs.txt" href={downloadLink} className="text-download"> Download </a>
+                            <a download="asteris_logs.txt" href={downloadLink} className="text-download"> DOWNLOAD <i className='download-icon'><BsDownload/></i></a>
                            <li><DropDown value = {viewValue} options = {view_options} onChange = { viewChange } type="view"/></li>
                             {viewValue === "activity"? (
                                 <li><DropDown value = {activity} options = {activities} onChange = { handleActivity } type="activity"/></li>

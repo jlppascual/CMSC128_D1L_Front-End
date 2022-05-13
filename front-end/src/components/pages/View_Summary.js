@@ -203,12 +203,13 @@
         <div>
             <div className='view-summary-body'>
                 <div className='view-summary-header'>
-                    <span> Summary of Graduating Students</span>
+                    <span className='title'> Summary of Graduating Students</span>
                     <ul className="view-summary-list">
                         <li><DropDown options={orderFilter} value = {orderValue} onChange={orderChange} type={"order"}/></li>
                         <li><DropDown options={viewFilter} value = {viewValue} onChange={viewChange} type={"view"}/></li>
-                        <li><button onClick={handlePrint} className="print-button">  <AiFillPrinter/> </button> </li>            
                     </ul>
+                    <button className="print-button" onClick={handlePrint}> <i><AiFillPrinter/></i> </button>           
+
                 </div>    
 
                 <hr className='view-summary-line'/>
@@ -221,27 +222,30 @@
 
                 <div className='view-summary-preview'>
                     {record != undefined ? 
+                    <div className='table-wrap'>
                         <table className='view-summary-table'>
                             <thead className='view-summary-thead'>
-                                <tr>
-                                    <th className='view-summary-cell-header'>NAME</th>
-                                    <th className='view-summary-cell-header'>GWA</th>
-                                    <th className='view-summary-cell-header'>DEGREE PROGRAM</th>
+                                <tr className='header-row'>
+                                    <th className='summary-header'>NAME</th>
+                                    <th className='summary-header'>GWA</th>
+                                    <th className='summary-header'>DEGREE PROGRAM</th>
                                 </tr>
                             </thead>
                             <tbody className = 'view-summary-tbody'>
                                 {record.map((rec, i) => {
                                     return (
                                         <tr className='view-summary-element'>
-                                           <td className='view-summary-cell'> <a className = "summary-tile" href={'/student/'+rec.student_id}> {rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""}
+                                           <td className='view-summary-cell' style={{textAlign:'left', paddingLeft:'20px'}}><a className = "summary-tile" href={'/student/'+rec.student_id}> {rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""}
                                             {rec.suffix ? ', ' + rec.suffix : ''}</a></td>
                                             <td className='view-summary-cell'>{rec.gwa}</td>
-                                            <td className='view-summary-cell'>{rec.degree_program}</td>
+                                            <td className='view-summary-cell' style={{textAlign:'center', paddingRight:'90px'}}>{rec.degree_program}</td>
                                         </tr>
                                     );
                                 })}
                             </tbody>
-                        </table>: (<div>"No students saved"</div>)}
+                        </table></div>: (<div className='empty-students'>
+                    <p>No student records saved</p>
+                    </div>)}
                 </div>
                 <div style={{display:"none"}}><ComponentToPrint record={record} ref={componentRef}/></div> 
             </div>

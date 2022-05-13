@@ -51,23 +51,26 @@ const Add_User_Page=()=>{
     }
 
     const sendData=(user_details)=>{
-         fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/user', {
-             method: 'POST',
-             credentials:'include',
-             headers:{
-                 'Content-Type':'application/json'
-             },
-             body: JSON.stringify(user_details)
-         }).then((response) => {return response.json()})
-         .then(json =>
-            {if(json.result.success){
-                alert(json.result.message)
-            }else{
-                alert(json.result.message)
-            }}
-         )
-
-         clearInputs();
+        if(user_details.password !== user_details.confirm_password) {
+            alert("Passwords don't match!")
+        } else{
+            fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/user', {
+                method: 'POST',
+                credentials:'include',
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                body: JSON.stringify(user_details)
+            }).then((response) => {return response.json()})
+            .then(json =>
+               {if(json.result.success){
+                   alert(json.result.message)
+               }else{
+                   alert(json.result.message)
+               }}
+            )
+            clearInputs();
+        }
      }
 
      const clearInputs=()=>{

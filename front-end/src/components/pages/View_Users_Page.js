@@ -205,9 +205,11 @@
                     <div className='view-users'>
                     <form>
                         <div className = 'view-users-header'>
-                        <p className="user-title"> Accounts</p>  <DropDown options={viewFilter} value = {viewValue} onChange={viewChange}/>
+                        <p className="user-title"> Accounts</p>  
+                        <DropDown options={viewFilter} value = {viewValue} onChange={viewChange}/>
                         </div>
-                        <hr className='line'/>
+                        
+                        <hr className='users-line'/>
 
                         <div className="users-search-field">
                             <input type = "text" name = "input" placeholder = "🔎 Search by name"

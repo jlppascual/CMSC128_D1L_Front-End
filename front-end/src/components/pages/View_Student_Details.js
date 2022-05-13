@@ -65,7 +65,7 @@ const View_Student_Details =()=>{
         setShowDeleteConfirmation(false)
         if(decision){
             const student = state.student_details.student_id
-            await fetch('http://localhost:3001/api/0.1/student/'+student+'/'+user.user_id,{
+            await fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/'+student+'/'+user.user_id,{
                 method: "DELETE",
                 credentials:'include'
             }).then(response =>{ return response.json()})

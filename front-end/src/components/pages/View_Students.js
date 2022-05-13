@@ -153,12 +153,11 @@ const View_Students =()=>{
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        
+
         let url = 'http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/search?name=';
 
         if(searchValue === "student_number"){
             url = 'http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/search?student_number='
-
         }
 
         if(input === ""){
@@ -174,8 +173,9 @@ const View_Students =()=>{
             }else{
                 alert(json.result.message)
             }
-        })} else {
-        setViewValue("ALL")
+        })
+        } else {
+        if(viewValue !== ""){setViewValue("ALL")}
         fetch(url + [input]+"&&orderby="+[orderValue],{
             credentials:'include'
         })

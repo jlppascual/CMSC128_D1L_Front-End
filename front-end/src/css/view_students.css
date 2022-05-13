@@ -101,7 +101,7 @@ option{
 }
 
 .view-student-thead{
-    font-family: Palatino;
+    font-family: Palatino Linotype,Palatino LT STD;
     position: sticky;
     top: 0;
 }
