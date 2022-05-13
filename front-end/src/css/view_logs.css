@@ -148,13 +148,17 @@
     text-decoration: none;
     color: black;
     background-color: rgb(211, 211, 211);
-    padding: 3px;
-    border-radius: 10px;
-    font-size: 13px;
+    padding: 4px;
+    border-radius: 8px;
+    font-size: 12px;
     text-align: center;
     font-family: Helvetica;
 }
 
+.download-icon{
+    margin-top: 3%;
+    font-size: 11px;
+}
 .no-logs{
     margin-left: 33%;
     font-family: Optima;
