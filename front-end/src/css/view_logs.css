@@ -1,17 +1,6 @@
-.log-title{
-    text-align: left;
-    margin-top: 120px;
-    margin-left: 8%;
-    margin-bottom: 0;
-    color: #8D1436;
-    font-family: Palatino Linotype,Palatino LT STD;
-    font-size: 30px;}
-    
 .view-line{
-    width:80%;
-}
-.view-logs{
-    margin-left:80px;
+    text-align: center;
+    width: 70%
 }
 
 .view-logs-body{
@@ -19,16 +8,8 @@
     width: 100%;
     height:100%;
     position:fixed;
-    top:20px;
+    top:60px;
     overflow-y: scroll;
-}
-
-.view-logs-header{
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-    width: 940px;
-    margin-left: 80px;
 }
 
 .log-tile{
@@ -42,57 +23,58 @@
 }
 
 .view-log-preview{
-    margin-top: 1%;
+    margin-top: 15px;
+    padding-top: 15px;
     background-color: rgb(206, 206, 206);
     height: 50%;
     border-radius: 10px;
-    width: 80%;
-    margin-left: 10%;
-    padding-bottom: 2%;
+    width: 70%;
+    margin-left: 15%;
 }
 
+.table-wrap{
+    overflow-y:scroll;
+    margin-left: 2%;
+    width: 95%;
+    height: 90%;
+    padding-right: 15px;
+}
+
+.table-wrap::-webkit-scrollbar {
+    width: 10px;
+}
+
+.table-wrap::-webkit-scrollbar-thumb {
+    background-color: white;
+}
+
+
 .view-log-table{
-    height: 20%;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.header-row{
+    position: sticky;
+    top: 0;
 }
 
 .view-log-thead{
-    display: block;
-    font-family: Palatino;
-    margin-top: 10px;
-    text-align: left;
+    font-family: Palatino Linotype,Palatino LT STD;
+    position: sticky;
+    top: 0;
 }
 
-.user-header{
+.log-header{
+    background-color: rgb(206, 206, 206);
     text-align: center;
-    width: 25%;
-} 
-.time-header{
-    text-align: center;
-    padding: 7px;
-    width: 29%;
-} 
-
-.activity-header{
-    text-align: center;
-    padding: 7px;
-    width: 37%;
-
+    
+    padding-bottom: 10px;
+    padding-top: 0px;
+    position: sticky;
+    top: 0;
 } 
 
-.details-header{
-    text-align: center;
-    padding:10px;
-    width: 38%;
-
-} 
-
-.view-log-tbody{
-    display: block;
-    height: 250px;
-    overflow-y: auto;
-    padding-right: 30px;
-    padding-left: 30px;
-}
 
 .view-log-element{
     background-color: white;
@@ -117,15 +99,16 @@
     width: 28%;
 } 
 
-.details-cell{
+.log-cell{
     text-align: center;
-    padding: 7px;
-    width: 28%;
-} 
+    padding: 5px;
+    word-break: break-all;
+    width: 20%;
+}
 .filter-list{
     position:fixed;
-    left: 64%;
-    top: 19%;
+    right: 15%;
+    top: 120px;
     list-style-type:none;
 }
 
@@ -172,51 +155,49 @@
 }
 
 .search-button{
-    margin-top: 3px;
-    border: none;
-    position:absolute;
-    width: 60px;
-    color: #fcfff6;
+    margin: 10px;
+    color: whitesmoke;
     background-color: #00563F;
-    height: 39px;
-    border-radius: 10px;
-    cursor:pointer;
+    border:none;
+    outline:none;
+    cursor: pointer;
+    padding-top:5px;
+    padding-bottom: 0px;
 }
 
 .search-field{
-    border: 10px solid #00563F;
-    background-color: #00563F;
-    border-radius: 10px;
-    margin-left: 10%;
-    margin-bottom: 10px;
-    width: 79%;
-    position: relative;
+    background-color: #00563f;
+    margin: 5px;
+    height: 40px;
+    margin-left: 15%;
+    align-items: center;
+    display: flex;
+    border-radius: 8px;
+    width: 70%;
+    padding: 1px;
 }
 
 .input-search{
-    text-align: left;
-    width : 90%;
-    height: 18%;
-    font-family: Optima;
-    font-size: 20px;
+    height: 25px;
+    width: 96%;
+    margin-left: 5px;
+    border-radius: 7px;
+    border: none;
+    outline: none;
+    padding-left: 15px;
 }
 
 .search-button{
-    border: none;
-    position:absolute;
-    width: 60px;
-    color: #fcfff6;
+    margin: 10px;
+    color: whitesmoke;
     background-color: #00563F;
-    height: 10px;
-    border-radius: 10px;
-    cursor:pointer;
-    margin-left: 2%;
+    border:none;
+    outline:none;
+    cursor: pointer;
+    padding-top:5px;
+    padding-bottom: 0px;
 }
 .search-button:hover{
     color: lightgray;
-}
-
-.icon{
-    font-size: 20px;
 }
 

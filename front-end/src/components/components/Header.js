@@ -6,6 +6,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Dp from '../../images/dp_default.jpg';
+import Logo from '../../images/asteris-logo.png';
 import useStore from '../hooks/authHook';
 import '../../css/header.css'
 
@@ -27,6 +28,7 @@ const Header =()=>{
             else{
                 console.log(body);
                 navigate('/');
+                setAuth(null, false)
             }
         })
     }
@@ -54,7 +56,7 @@ const Header =()=>{
         <div className='header-main'>
         <div className='green-shape'></div>
         <div className='yellow-shape'></div>
-        <h1 className='header-name' onClick={()=> window.location.href='/home'}>ASTERIS</h1>
+        <h1 className='header-name' onClick={()=> window.location.href='/home'}><img src={Logo} alt="" className='asteris-logo'/></h1>
         <div className='header-right'>
             <span className='header-user'>{ userType }</span>
             <img src = {Dp} className={'header-dp'}/>

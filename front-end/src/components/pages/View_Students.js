@@ -194,10 +194,6 @@ const View_Students =()=>{
         })}
     }
 
-    const orderChange=(e)=>{
-        setOrderValue(e.target.value);
-    }
-
     const searchChange=(e)=>{
         setSearchValue(e.target.value);
     }
@@ -269,13 +265,12 @@ const View_Students =()=>{
             <div className='view-student-header'>
                 <ul className='view-student-list'>
                     <li><DropDown options={searchFilter} className='view-student-dropdown' value = {searchValue} onChange={searchChange} type ="search"/></li>
-                    <li><DropDown options={orderFilter} className='view-student-dropdown' value = {orderValue} onChange={orderChange} type = "order"/></li>
                     <li><DropDown options={viewFilter} className='view-student-dropdown' value = {viewValue} onChange={viewChange} type="view"/></li>
                 </ul>
             </div>
             <div className='view-student-search'>
                 <input type = "text" className = 'view-student-input' placeholder = "🔎 Search a student record" value = {input} onChange = {handleUserInput} required></input>
-                <a href='#' onClick={handleSubmit} ><BsSearch className='student-search-icon'/></a>      
+                <a onClick={handleSubmit} ><BsSearch className='student-search-icon'/></a>      
             </div>
             <div className='view-student-preview'>
                 {record != undefined ? 
@@ -283,7 +278,7 @@ const View_Students =()=>{
                     <table className='view-student-table'>
                         <thead className='view-student-thead'>
                             <tr className='header-row'>
-                                <th className='student-header' >NAME</th>
+                                <th className='student-header' style ={{textAlign:'left', paddingLeft: '20px'}}>NAME</th>
                                 <th className='student-header'>STUDENT NUMBER</th>
                                 <th className='student-header'>DEGREE PROGRAM</th>
                                 <th className='student-header'></th>
@@ -298,9 +293,9 @@ const View_Students =()=>{
                                 return (
                                     <tr key={i} className='view-student-element' style={{}}>
                                         
-                                        <td className='student-cell' onClick={()=> window.location.href='/student/'+rec.student_id}style ={{textAlign:'left', paddingLeft: '20px'}}>{rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""} {rec.suffix ? ', ' + rec.suffix : ''}</td>
-                                        <td className='student-cell' onClick={()=> window.location.href='/student/'+rec.student_id}>{rec.student_number}</td>
-                                        <td className='student-cell' onClick={()=> window.location.href='/student/'+rec.student_id}>{rec.degree_program}</td>
+                                        <td className='student-cell' onClick={()=> navigate('/student/'+rec.student_id)} style ={{textAlign:'left', paddingLeft: '20px'}}>{rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""} {rec.suffix ? ', ' + rec.suffix : ''}</td>
+                                        <td className='student-cell' onClick={()=> navigate('/student/'+rec.student_id)}>{rec.student_number}</td>
+                                        <td className='student-cell' onClick={()=> navigate('/student/'+rec.student_id)}>{rec.degree_program}</td>
                                         <td className='student-cell' style ={{textAlign:'right', paddingRight: '30px'}} onClick={()=>{onDelete(rec)}}><AiFillDelete className='view-student-delete-icon'/></td>
                                     </tr>                                        
                             );

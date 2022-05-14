@@ -29,7 +29,6 @@
 
     const viewFilter = [
         {label:'ALL', value:'ALL'}, 
-        {label:'CHAIR/HEAD', value:'CHAIR%2FHEAD'}, 
         {label:'OCS REP', value:'OCS REP'}, 
         {label:'ACS', value:'ACS'},
         {label:'UNIT REP', value:'UNIT REP'},
@@ -111,7 +110,7 @@
         let url = 'http:'+REACT_APP_HOST_IP+':3001/api/0.1/user/search?name=';
         
         //if a specific role is selected, url changes to view users by role
-        if(viewValue === "CHAIR%2FHEAD" || viewValue === "OCS REP" || viewValue === "ACS" || viewValue === "UNIT REP" || viewValue === "MEMBER"){
+        if(viewValue === "OCS REP" || viewValue === "ACS" || viewValue === "UNIT REP" || viewValue === "MEMBER"){
             url = 'http://'+REACT_APP_HOST_IP+':3001/api/0.1/user/role/' + viewValue + '/search?name='
         }else{ //default search
             url = 'http://'+REACT_APP_HOST_IP+':3001/api/0.1/user/search?name='
@@ -121,7 +120,7 @@
         if(input === ""){
             let url_role;
 
-            if(viewValue === "CHAIR%2FHEAD" || viewValue === "OCS REP" || viewValue === "ACS" || viewValue === "UNIT REP" || viewValue === "MEMBER"){
+            if( viewValue === "OCS REP" || viewValue === "ACS" || viewValue === "UNIT REP" || viewValue === "MEMBER"){
                 url_role = 'http://'+REACT_APP_HOST_IP+':3001/api/0.1/user/role/' + viewValue
             }else{
                 url_role = 'http://'+REACT_APP_HOST_IP+':3001/api/0.1/user'

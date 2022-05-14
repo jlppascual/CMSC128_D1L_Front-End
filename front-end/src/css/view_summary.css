@@ -3,15 +3,9 @@
     width: 100%;
     height: 100%;
     position:fixed;
-    top:40px;
+    top:60px;
 }
-.view-summary-header{
-    display: flex;
-    justify-content: space-between;
-    margin-top: 7%;
-    margin-left: 9.5%;
-    width: 90%;
-}
+
 .view-summary-header span{
     margin: 0;
     margin-left: 3%;
@@ -22,13 +16,13 @@
 
 .view-summary-list{
     position:fixed;
-    left: 69%;
-    top: 16.5%;
+    right: 15%;
+    top: 110px;
 }
 
 .view-summary-list li{
     display: inline-block;
-    margin: 0 5px;
+    margin: 10px 5px;
     outline:none;
 }
 
@@ -39,8 +33,8 @@
     background: none;
     border: none;
     outline: none;
-    margin-right: 60%;
-    margin-top: 10px;
+    margin-right: 15px;
+   margin-top: 10px;
 }
 
 .print-button:hover{
@@ -50,17 +44,17 @@
 .view-summary-search{
     background-color: #00563f;
     margin: 5px;
-    margin-left: 12.5%;
     height: 40px;
+    margin-left: 16.5%;
     align-items: center;
     display: flex;
-    align-items: center;
-    border-radius: 5px;
-    width: 75%;
+    border-radius: 8px;
+    width: 67%;
+    padding: 1px;
 }
 
 .view-summary-sicon{
-    margin-left: 12px;
+    margin: 10px;
     color: whitesmoke;
 }
 
@@ -69,18 +63,19 @@
 }
 
 .view-summary-line{
-    height: -1px;
-    margin-top: 0px;
-    width: 74%;
+    
+    text-align: center;
+    width: 67%;
 }
 
 .view-summary-input{
     height: 25px;
-    width: 153vh;
+    width: 96%;
     margin-left: 5px;
-    border-radius: 5px;
+    border-radius: 7px;
     border: none;
     outline: none;
+    padding-left: 15px;
 }
 
 .summary-dropdown{
@@ -88,26 +83,28 @@
     outline:none;
     border: none;
     border-radius: 10px;
-    padding: 2px;
+    padding: 3px;
     font-family: Helvetica; 
+    margin-top: -10px;
+    cursor: pointer;
 }
 
 .view-summary-preview{
     margin-top: 15px;
-    padding-top: 25px;
+    padding-top: 15px;
     background-color: rgb(206, 206, 206);
     height: 45%;
     border-radius: 8px;
-    width: 161vh;
-    margin-left: 12.5%;
+    width: 67%;
+    margin-left: 16.5%;
 }
 
 .table-wrap{
     overflow-y:scroll;
-    margin-left: 5%;
-    width: 90%;
+    margin-left: 2%;
+    width: 95%;
     height: 90%;
-    padding-right: 30px;
+    padding-right: 15px;
 }
 
 .table-wrap::-webkit-scrollbar {
@@ -129,7 +126,7 @@
 }
 
 .view-summary-thead{
-    font-family: Palatino;
+    font-family: Palatino Linotype,Palatino LT STD;
     position: sticky;
     top: 0;
 }
@@ -147,15 +144,15 @@
 }
 
 .view-summary-cell{
+    word-break: break-all;
     padding: 5px;
-    padding-right: 15px;
+    text-align: center;
     border-bottom: 10px solid rgb(206, 206, 206);
 } 
 
 .summary-header{
     background-color: rgb(206, 206, 206);
-    text-align: left;
-    padding-left: 65px;
+    text-align: center;
     padding-bottom: 10px;
     padding-top: 0px;
     position: sticky;
