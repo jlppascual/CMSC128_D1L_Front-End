@@ -199,7 +199,6 @@ const View_Student_Details =()=>{
     }
 
     const WarningPopup=({})=>{
-        console.log(state.warnings)
         return(
             <div className="warning-popup-box">
                 <h3 className='warning-header'>Record Warnings</h3>
@@ -240,7 +239,7 @@ const View_Student_Details =()=>{
             <div className='student-info-left'>
                 <div><b>Degree Program:</b> <span className='info-l'>{state.student_details.degree_program}</span></div>  <br/>
                 <div><b>Student No.:</b> <span className='info-l'>{state.student_details.student_number}</span></div> <br/>
-                <div><b>Latin Honor:</b> {state.student_details.latin_honor !== ""?<span name={"record-gwa"} className='info-l'> {state.student_details.latin_honor}</span>: <span name={"record-gwa"} className='info-l'>-</span>}</div><br/>
+                <div><b>Latin Honor:</b> {state.student_details.latin_honor !== ""?<span className='info-l'> {state.student_details.latin_honor}</span>: <span className='info-l'>-</span>}</div><br/>
             </div>
             <div className='student-info-right'>
                 <div><b>Total weights:</b> <span name={"record-cumulative"} className='info-r'>{state.record_details.cumulative_sum}</span></div>  <br/>

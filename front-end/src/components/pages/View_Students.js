@@ -1,10 +1,10 @@
 /**
  * author: Jem, Leila
  */
-import React, { useEffect, useState, useRef, Fragment } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {BsSearch}  from 'react-icons/bs';
-import {AiFillDelete, AiFillEye} from 'react-icons/ai';
+import {AiFillDelete} from 'react-icons/ai';
 import useStore from '../hooks/authHook'
 import '../../css/view_students.css'
 import Header from '../components/Header';
@@ -74,8 +74,7 @@ const View_Students =()=>{
             if(json.result.success){
                 setRecord(json.result.output)
             }else{
-              //**concern: if bulk adding and unsuccessful, madami need iclick na alert window/
-                console.log(json.result.message)
+                setRecord(undefined)
             }
         })}
     },[isAuthenticated, state]);
@@ -246,6 +245,18 @@ const View_Students =()=>{
             </label>
         );
     }
+    async function countWarning(student_id){
+        
+        let count = await fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/'+student_id,{
+            method:'GET',
+            credentials:'include'
+        }).then(response=> {return response.json()})
+        .then(json=>{
+            return json.result.output.warnings.length;
+        })
+        return(count)
+        
+    }
 
     return(
         <div>
@@ -262,16 +273,13 @@ const View_Students =()=>{
                     <li><DropDown options={viewFilter} className='view-student-dropdown' value = {viewValue} onChange={viewChange} type="view"/></li>
                 </ul>
             </div>
-            
-            <hr className='line'/>
-
             <div className='view-student-search'>
                 <input type = "text" className = 'view-student-input' placeholder = "🔎 Search a student record" value = {input} onChange = {handleUserInput} required></input>
                 <a href='#' onClick={handleSubmit} ><BsSearch className='student-search-icon'/></a>      
             </div>
             <div className='view-student-preview'>
                 {record != undefined ? 
-                    <div className='table-wrap'>
+                    <div className='student-table-wrap'>
                     <table className='view-student-table'>
                         <thead className='view-student-thead'>
                             <tr className='header-row'>
@@ -284,10 +292,13 @@ const View_Students =()=>{
                         
                         <tbody className = 'view-student-tbody'>
                             {record.map((rec, i) => {
-
+                                let bg_color = 'white';
+                                let count = countWarning(rec.student_id)
+                                if(count > 0) bg_color = 'rgba(141, 20, 54, 0.1)'
                                 return (
-                                    <tr key={i} className='view-student-element' >
-                                        <td className='student-cell' onClick={()=> window.location.href='/student/'+rec.student_id}style ={{textAlign:'left', paddingLeft: '20px'}}>{rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""} {rec.suffix ? ', ' + rec.suffix : ''}</td>
+                                    <tr key={i} className='view-student-element' style={{}}>
+                                        
+                                        <td className='student-cell' onClick={()=> window.location.href='/student/'+rec.student_id}style ={{textAlign:'left', paddingLeft: '20px', backgroundColor: bg_color}}>{rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""} {rec.suffix ? ', ' + rec.suffix : ''}</td>
                                         <td className='student-cell' onClick={()=> window.location.href='/student/'+rec.student_id}>{rec.student_number}</td>
                                         <td className='student-cell' onClick={()=> window.location.href='/student/'+rec.student_id}>{rec.degree_program}</td>
                                         <td className='student-cell' style ={{textAlign:'right', paddingRight: '30px'}} onClick={()=>{onDelete(rec)}}><AiFillDelete className='view-student-delete-icon'/></td>
