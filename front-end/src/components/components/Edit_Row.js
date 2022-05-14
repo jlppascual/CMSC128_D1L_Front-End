@@ -130,11 +130,11 @@ const Edit_Row = ( {func, course, term_index,index}) => {
     
     setInterval(function () {
         let a = document.getElementsByName("cumulated-"+term_index+"-"+index)[0]
-        if(a && course.cumulated !== a.value) {
+        if(a) {
             setCumulated(a.value)
         }
         func.updateCourse(updatedCourse);
-    }, 1000);
+    }, 100);
     
         
     return(

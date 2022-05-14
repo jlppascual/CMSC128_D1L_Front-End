@@ -8,7 +8,7 @@ import Read_Row from '../components/Read_Row';
 import Edit_Row from '../components/Edit_Row';
 import DeletePopup from '../components/Popups/DeletePopup';
 import DetailsPopup from '../components/Popups/DetailsPopup';
-import {BiEdit, BiTrash}  from 'react-icons/bi';
+import {BiEdit, BiTrash, BiArrowBack}  from 'react-icons/bi';
 import {RiAlertLine}  from 'react-icons/ri';
 import '../../css/studentdetails.css'
 
@@ -187,10 +187,10 @@ const View_Student_Details =()=>{
 
     const CancelPopup=({})=>{
         return(
-            <div className="popup-box">
+            <div className="cancel-popup-box">
                 <p className='cancel-text'>Are you sure you want to cancel editing?</p>
                 
-                <div className='buttons'>
+                <div className='cancel-edit-buttons'>
                     <button onClick={() => {setShowCancelConfirmation(false)}} className = 'no-btn'>No</button>
                     <button onClick={() => {setShowCancelConfirmation(false), setEditable(false);}} className = 'yes-btn'>Yes</button>
                 </div>
@@ -231,7 +231,12 @@ const View_Student_Details =()=>{
                     {state.warnings && state.warnings.length > 0? <span className="warning-badge">{state.warnings.length}</span>
                     : ""}
                 </div>
+                <i className = "back-icon" onClick={()=> navigate('/students')}><BiArrowBack size= {30} /></i>
                 <p className="student-name">{state.student_details.last_name}, {state.student_details.first_name} {state.student_details.middle_name} {state.student_details.suffix} </p>
+                {editable === true ? <span>
+                    <button type = "button" onClick={handleCancel} className="cancel-edit-btn" id="cancel-editing-btn">Cancel Editing</button>
+                    <button type = "button" onClick={handleUpdate} className="submit-edit-btn" id="submit-changes-btn">Submit Changes</button>
+                    </span>:""}
                 <hr className='student-line'></hr>
             </div>
             
@@ -298,10 +303,7 @@ const View_Student_Details =()=>{
             {showCancelConfirmation ? <CancelPopup />:""}
             {showWarnings ? <WarningPopup />:""}
             <div className = "bottom-space">
-                {editable === true ? <span>
-                    <button type = "button" onClick={handleCancel} className="cancel-edit-btn" id="cancel-editing-btn">Cancel Editing</button>
-                    <button type = "button" onClick={handleUpdate} className="submit-btn" id="submit-changes-btn">Submit Changes</button>
-                    </span>:""}
+                
             </div>
         </div>
         
