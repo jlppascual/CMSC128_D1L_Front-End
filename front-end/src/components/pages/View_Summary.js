@@ -2,6 +2,7 @@
  * author: Jem, Leila
  */
  import React, { useEffect, useState, useRef } from 'react';
+ import { useNavigate } from 'react-router-dom';
  import {BsSearch}  from 'react-icons/bs';
  import {AiFillPrinter} from 'react-icons/ai';
  import Header from '../components/Header';
@@ -15,6 +16,7 @@
 
     const {REACT_APP_HOST_IP} = process.env
     const [record, setRecord] = useState();
+    const navigate = useNavigate();     // hook for navigation
     const [state, changeState]= useState('0');
     const [orderValue, setOrderValue] = useState("");
     const [viewValue, setViewValue] = useState("");
@@ -64,7 +66,7 @@
             if(json.result.success){
                 setRecord(json.result.output)
             }else{
-                alert(json.result.message)
+                setRecord(undefined)
             }
         }) 
     },[state]);
@@ -155,7 +157,7 @@
                 if(json.result.success){
                     setRecord(json.result.output)
                 }else{
-                    alert(json.result.message)
+                    setRecord(undefined)
                 }
             })
         } else {
@@ -169,7 +171,7 @@
                     setRecord(json.result.output);
                 }
                 else{
-                    alert(json.result.message) // Message: No results found
+                    setRecord(undefined)
                 }
             })}
     }
@@ -191,7 +193,7 @@
         return(
             <label>
                 <select className='summary-dropdown' value={value} onChange={onChange}>
-                    { type==="view"?  <option value = "" disabled>VIEW BY</option>: <option value = "" disabled>ORDER BY</option> }
+                    { type==="view"?  <option value = "" disabled hidden>VIEW BY</option>: <option value = "" disabled hidden>ORDER BY</option> }
                     {options.map((option,i)=>(
                       <option key={i} value = {option.value}>{option.label}</option>
                     ))}
@@ -202,22 +204,25 @@
         return(
         <div>
             <div className='view-summary-body'>
+            
+            <p className='title'> Summary of Graduating Students</p>
+            <hr className='view-summary-line'/>
                 <div className='view-summary-header'>
-                    <span className='title'> Summary of Graduating Students</span>
+                    
+                    
                     <ul className="view-summary-list">
+                    <li><i className="print-button" onClick={handlePrint}><AiFillPrinter/></i></li>
                         <li><DropDown options={orderFilter} value = {orderValue} onChange={orderChange} type={"order"}/></li>
                         <li><DropDown options={viewFilter} value = {viewValue} onChange={viewChange} type={"view"}/></li>
                     </ul>
-                    <button className="print-button" onClick={handlePrint}> <i><AiFillPrinter/></i> </button>           
+                               
 
                 </div>    
-
-                <hr className='view-summary-line'/>
 
                 <div className="view-summary-search">
                     <input type = "text" className = "view-summary-input" placeholder = "🔎 Search by Name"
                     value = {input} onChange = {handleUserInput} required></input>
-                    <a href="#"onClick={handleSubmit}><BsSearch className='view-summary-sicon'/></a>  
+                    <a onClick={handleSubmit}><BsSearch className='view-summary-sicon'/></a>  
                 </div>
 
                 <div className='view-summary-preview'>
@@ -226,28 +231,30 @@
                         <table className='view-summary-table'>
                             <thead className='view-summary-thead'>
                                 <tr className='header-row'>
-                                    <th className='summary-header'>NAME</th>
-                                    <th className='summary-header'>GWA</th>
+                                    <th className='summary-header' style={{textAlign:'left', paddingLeft:'20px'}}>NAME</th>
                                     <th className='summary-header'>DEGREE PROGRAM</th>
+                                    <th className='summary-header'>GWA</th>
+                                    <th className='summary-header'>LATIN HONOR</th>
                                 </tr>
                             </thead>
                             <tbody className = 'view-summary-tbody'>
                                 {record.map((rec, i) => {
                                     return (
-                                        <tr className='view-summary-element'>
-                                           <td className='view-summary-cell' style={{textAlign:'left', paddingLeft:'20px'}}><a className = "summary-tile" href={'/student/'+rec.student_id}> {rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""}
-                                            {rec.suffix ? ', ' + rec.suffix : ''}</a></td>
-                                            <td className='view-summary-cell'>{rec.gwa}</td>
-                                            <td className='view-summary-cell' style={{textAlign:'center', paddingRight:'90px'}}>{rec.degree_program}</td>
+                                        <tr className='view-summary-element' key = {i}>
+                                           <td className='view-summary-cell' onClick={()=> navigate('/student/'+rec.student_id)} style={{textAlign:'left', paddingLeft:'20px'}}>{rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""}
+                                            {rec.suffix ? ', ' + rec.suffix : ''}</td>
+                                            <td className='view-summary-cell' onClick={()=> navigate('/student/'+rec.student_id)} >{rec.degree_program}</td>
+                                            <td className='view-summary-cell' onClick={()=> navigate('/student/'+rec.student_id)} >{rec.gwa}</td>
+                                            <td className='view-summary-cell' onClick={()=> navigate('/student/'+rec.student_id)} >{rec.latin_honor}</td>
                                         </tr>
                                     );
                                 })}
                             </tbody>
                         </table></div>: (<div className='empty-students'>
-                    <p>No student records saved</p>
+                    <p>No student candidates for graduation</p>
                     </div>)}
                 </div>
-                <div style={{display:"none"}}><ComponentToPrint record={record} ref={componentRef}/></div> 
+                <div style={{display:"none"}}><ComponentToPrint record={record} ref={componentRef} /></div> 
             </div>
             <Header/>
             <Menu/>

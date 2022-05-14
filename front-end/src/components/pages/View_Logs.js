@@ -15,12 +15,17 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
 
     const {REACT_APP_HOST_IP} = process.env
     const navigate = useNavigate();
-    const[input, setInput] = useState("");
+    const [pageState, setPage] = useState(false)
+    const [input, setInput] = useState("");
     const [downloadLink, setDownloadLink] = useState('')
-    const[logs, changeLogs] = useState([]);
-    const[viewValue, setViewValue] = useState("");
+    const [logs, changeLogs] = useState([]);
+    const [viewValue, setViewValue] = useState("");
     const [activity, setActivity] = useState("");
+    const [users,setUsers] = useState([]);
+    const [chosenUser, setChosenUser] = useState("");
+    const [emptyLogs, setEmptyMessage] = useState("");
     const { user, isAuthenticated } = useStore();
+    
 
 
     const view_options = [
@@ -43,94 +48,27 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
 
     ]
 
-    const viewChange=(e)=>{
-        e.preventDefault();
-        setViewValue(e.target.value);
-    }
-
-
-    const handleUserInput=(e)=>{
-        setInput(e.target.value);
-    }
-
-    const handleActivity=(e)=>{
-        setActivity(e.target.value);
-    }
-
-    const makeTextFile=()=>{
-        let data=[];
-
-        {logs != [] ? (
-            logs.map((log, i)=>{
-                var timestamp = log.time_stamp.replace("T", " ").replace("Z", " ");
-                var details = (log.details!==null? log.details:"")
-                data.push(i+1 + ". " + timestamp + " " + log.activity_type + details+"\n")
-            })
-        ):("")}
-
-        const file = new Blob([data.join("\n")],{type:"text/plain"});
-        // this part avoids memory leaks
-        if (downloadLink !== '') window.URL.revokeObjectURL(downloadLink)
-
-        // update the download link state
-        setDownloadLink(window.URL.createObjectURL(file))
-    }
-
-    const handleSubmit=()=>{
-        if (input != ""){
-            fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log/date/"+ input,
-            {
-                method: 'GET',
-                credentials:'include'
-            }).then(response => {return response.json()})
-            .then(json=>{
-                if(json.result.success){
-                    changeLogs(json.result.output)
-                    // console.log(json.result.output)
-                }else{
-                    alert(json.result.message)
-                }
-            })
-        }else{
-            fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log",
-            {
-                method: "GET",
-                credentials:'include'
-            })
-            .then(response => {return response.json()})
-            .then(json=>{
-                if(json.result.success){
-                    changeLogs(json.result.output)
-                    // getUser(logs)
-                }else{
-                    alert(json.result.message)
-                }
-            })           
-        }
- 
-    }
-
      useEffect(()=>{
         if(!isAuthenticated) {
             navigate('/')
             alert("You are not logged in!")
         }else{
             if(user.user_role === "CHAIR/HEAD"){
-                fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log",
-                {
-                    method: "GET",
-                    credentials:'include'
-                })
-                .then(response => {return response.json()})
-                .then(json=>{
-                    if(json.result.success){
-                        changeLogs(json.result.output)
-                        // getUser(logs)
-                        // console.log(json.result.output)
-                    }else{
-                        alert(json.result.message)
-                    }
-                })
+                fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/user/all",
+                    {
+                        method: "GET",
+                        credentials:'include'
+                    })
+                    .then(response => {return response.json()})
+                    .then(json=>{
+                        if(json.result.success){
+                            formatUsers(json.result.output)
+                            setPage(!pageState);
+                        }
+                                
+                    })
+                
+                
             }else{
                 navigate('/home')
                 alert("Must be an admin to access this page")
@@ -141,22 +79,44 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
      //create a text file of logs
      useEffect(()=>{
          makeTextFile()
+         
      },[logs])
+
+     useEffect(()=>{
+        fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log",
+        {
+            method: "GET",
+            credentials:'include'
+        })
+        .then(response => {return response.json()})
+        .then(json=>{
+            if(json.result.success){
+                formatLogs(json.result.output)
+            }else{
+                changeLogs([])
+                //setEmptyMessage(json.result.message)
+            }
+        })
+     },[pageState])
 
      useEffect(()=>{
         
         if (viewValue==="user"){
-            fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log/user/"+user.user_id,
+
+            console.log(chosenUser)
+            fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log/user/"+chosenUser,
             {
                 credentials:'include'
             })
             .then(response => {return response.json()})
             .then(json=>{
                 if(json.result.success){
-                    changeLogs(json.result.output)
+                    formatLogs(json.result.output)
+                    
                     // getUser(logs)
                 }else{
-                    alert(json.result.message)
+                    changeLogs([])
+                    //setEmptyMessage(json.result.message)
                 }
             })
         }else if(viewValue==="activity"){
@@ -167,10 +127,12 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
             .then(response => {return response.json()})
             .then(json=>{
                 if(json.result.success){
-                    changeLogs(json.result.output)
+                    formatLogs(json.result.output)
+                    
                     // getUser(logs)
                 }else{
-                    alert(json.result.message)
+                    changeLogs([])
+                    //setEmptyMessage(json.result.message)
                 }
             })
         }else{
@@ -182,20 +144,128 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
             .then(response => {return response.json()})
             .then(json=>{
                 if(json.result.success){
-                    console.log(json.result.output)
-                    changeLogs(json.result.output)
+                    formatLogs(json.result.output)
+                    
                 }else{
-                    alert(json.result.message)
+                    changeLogs([])
+                    //setEmptyMessage(json.result.message)
                 }
             })
         }
-        },[viewValue, activity]);
+        },[viewValue, activity,chosenUser]);
+        
+        const formatUsers = (users) =>{
+            let user_list = []
+            if(users !== []){
+                users.forEach(user => {
+                    user_list.push({
+                        label: user.first_name+" "+user.last_name,
+                        value: user.user_id})
+                });
+            }
+            setUsers(user_list)
+        }
+    
+        const formatLogs = (logs) => {
+            console.log(logs,users)
+            if(logs && users){
+                for (let i = 0; i < logs.length; i++) {
+                    for (let j = 0; j < users.length; j++) {
+                        console.log(logs[i].user_id)
+                        console.log(users[j].value)
+                        if(logs[i].user_id === users[j].value){
+                            console.log(users[j].value)
+                            logs[i]['user_name'] = users[j].label
+                            console.log(logs[i])
+                            break
+                        }
+                        
+                        
+                    }
+                }
+            }
+            changeLogs(logs)
+        }
+    
+        const viewChange=(e)=>{
+            e.preventDefault();
+            setViewValue(e.target.value);
+        }
+    
+    
+        const handleUserInput=(e)=>{
+            setInput(e.target.value);
+        }
+    
+        const handleActivity=(e)=>{
+            setActivity(e.target.value);
+        }
+    
+        const handleUser=(e)=>{
+            setChosenUser(e.target.value);
+        }
+    
+        const makeTextFile=()=>{
+            let data=[];
+    
+            {logs != [] ? (
+                logs.map((log, i)=>{
+                    var timestamp = log.time_stamp.replace("T", " ").replace("Z", " ");
+                    var details = (log.details!==null? log.details:"")
+                    data.push(i+1 + ". " + timestamp + " " + log.activity_type + details+"\n")
+                })
+            ):("")}
+    
+            const file = new Blob([data.join("\n")],{type:"text/plain"});
+            // this part avoids memory leaks
+            if (downloadLink !== '') window.URL.revokeObjectURL(downloadLink)
+    
+            // update the download link state
+            setDownloadLink(window.URL.createObjectURL(file))
+        }
+    
+        const handleSubmit=()=>{
+            if (input != ""){
+                fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log/date/"+ input,
+                {
+                    method: 'GET',
+                    credentials:'include'
+                }).then(response => {return response.json()})
+                .then(json=>{
+                    if(json.result.success){
+                        formatLogs(json.result.output)
+                        
+                        // console.log(json.result.output)
+                    }else{
+                        changeLogs([])
+                        //setEmptyMessage(json.result.message)
+                    }
+                })
+            }else{
+                fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log",
+                {
+                    method: "GET",
+                    credentials:'include'
+                })
+                .then(response => {return response.json()})
+                .then(json=>{
+                    if(json.result.success){
+                        formatLogs(json.result.output)
+                        
+                        // getUser(logs)
+                    }else{
+                        changeLogs([])
+                        //setEmptyMessage(json.result.message)
+                    }
+                })           
+            }
+        }
 
      const DropDown =({value,options,onChange, type})=>{
         return(
             <label>
                 <select className="view-dropdown"  value={value} onChange={onChange}>
-                    {type === "search"? <option value = "" disabled>search by</option>: type==="view"?  <option value = "" disabled>VIEW BY</option>: <option value = "" disabled>SELECT ACTIVITY</option> }
+                    {type === "search"? <option value = "" disabled hidden>search by</option>: type==="view"?  <option value = "" disabled hidden>VIEW BY</option>:type==="activity"? <option value = "" disabled hidden>SELECT ACTIVITY</option>: type === "user"? <option value = "" disabled hidden>SELECT USER</option>:""}
                     {options.map((option,i)=>(
                       <option key={i} value = {option.value}>{option.label}</option>
                     ))}
@@ -234,51 +304,65 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
         // console.log(logs),
         <div>
             <div className='view-logs-body'>
-                <div className='view-logs'>
-                    <div className='view-logs-header'>
-                    <p className="log-title">User Logs</p>
-                        <ul className='filter-list'>
-                            <a download="asteris_logs.txt" href={downloadLink} className="text-download"> DOWNLOAD <i className='download-icon'><BsDownload/></i></a>
-                           <li><DropDown value = {viewValue} options = {view_options} onChange = { viewChange } type="view"/></li>
-                            {viewValue === "activity"? (
-                                <li><DropDown value = {activity} options = {activities} onChange = { handleActivity } type="activity"/></li>
-                            ): ""}
-                        </ul> 
-                    </div>
-                    <hr className='view-line'></hr>
+                <p className="title">User Logs</p>
+                <hr className='view-line'></hr>
+                
+                <div className='view-logs-header'>
+                
+                    <ul className='filter-list'>
+                        <a download="asteris_logs.txt" href={downloadLink} className="text-download"> DOWNLOAD <i className='download-icon'><BsDownload/></i></a>
+                        <li><DropDown value = {viewValue} options = {view_options} onChange = { viewChange } type="view"/></li>
+                        {viewValue === "activity"? (
+                            <li><DropDown value = {activity} options = {activities} onChange = { handleActivity } type="activity"/></li>
+                        ): viewValue === "user"? (
+                            <li><DropDown value = {chosenUser} options = {users} onChange = { handleUser } type="user"/></li>
+                        ): ""}
+                    </ul> 
+                </div>
+                    
 
                     <div className="search-field">
                         <input type = "text" name = "input" placeholder = "🔎 Search by YYYY-MM-DD"
                         value = {input} onChange = {handleUserInput} className = "input-search" required></input>
-                        <button onClick={handleSubmit} className = "search-button"><i className = "icon"><BsSearch /></i></button>
+                        <a onClick={handleSubmit} ><BsSearch className='student-search-icon'/></a>
+                        
                     </div>   
 
                     <div className ='view-log-preview'>
+                    {logs !== [] ? 
+                    <div className='table-wrap'>
                         <table className='view-log-table'>
                         <thead className='view-log-thead'>
-                            <tr>
-                            <th className='user-header'>USER</th>
-                                <th className='time-header'>TIME</th>
-                                <th className='activity-header'>ACTIVITY</th>
-                                <th className='details-header'>DETAILS</th>
+                            <tr className='header-row'>
+                                <th className='log-header'>USER</th>
+                                <th className='log-header'>DATE TIME</th>
+                                <th className='log-header'>ACTIVITY</th>
+                                <th className='log-header'>SUBJECT</th>
+                                <th className='log-header'>DETAILS</th>
                             </tr>
                         </thead>
                         <tbody className = 'view-log-tbody'>
-                            {logs != [] ? logs.map((log, i)=>{
-                                var timestamp = log.time_stamp.replace("T", " ").replace("Z", " ");
+                                
+                                {logs.map((log, i)=>{
+                                var time_stamp = log.time_stamp.split(" ")
                                 return (
-                                <tr className='view-log-element'>
-                                <span key={i}><td className="user-cell">{i+1}. {log.user_id} </td>
-                                <td className='time-cell'>{timestamp}</td>
-                                <td className='activity-cell'>{log.activity_type}</td>
-                                <td className='details-cell'> {log.details!==null? log.details:""}</td>
-                                </span>
+                                <tr className='view-log-element' key={i}>
+                                <td className="log-cell">{log.user_name}</td>
+                                <td className='log-cell'>{time_stamp[0]}<br /> {time_stamp[1]}</td>
+                                <td className='log-cell'>{log.activity_type}</td>
+                                <td className='log-cell'> {log.subject_entity!==null? log.subject_entity:"-"}</td>
+                                <td className='log-cell'> {log.details!==null? log.details:"-"}</td>
+                               
                                 </tr>)
-                            }): <div className='no-logs'> No logs existing </div>}
+                                })}
                             </tbody>
                         </table>
+                        <p>{logs.length}</p>
+                    </div>
+                    : 
+                    <div className='no-logs'>No logs to display{emptyLogs} </div>}
                     </div> 
-                </div>
+                    
             </div>
             <Header/> 
             <Menu />
