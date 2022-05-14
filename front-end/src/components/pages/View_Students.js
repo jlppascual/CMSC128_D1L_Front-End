@@ -279,7 +279,7 @@ const View_Students =()=>{
             </div>
             <div className='view-student-preview'>
                 {record != undefined ? 
-                    <div className='table-wrap'>
+                    <div className='student-table-wrap'>
                     <table className='view-student-table'>
                         <thead className='view-student-thead'>
                             <tr className='header-row'>
@@ -294,7 +294,6 @@ const View_Students =()=>{
                             {record.map((rec, i) => {
                                 let bg_color = 'white';
                                 let count = countWarning(rec.student_id)
-                                console.log(count)
                                 if(count > 0) bg_color = 'rgba(141, 20, 54, 0.1)'
                                 return (
                                     <tr key={i} className='view-student-element' style={{}}>
