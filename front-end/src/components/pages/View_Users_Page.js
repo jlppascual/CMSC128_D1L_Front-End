@@ -11,6 +11,7 @@
  import {VscSettings}  from 'react-icons/vsc';
  import DeleteConfirmPopup from '../components/Popups/DeleteConfirmPopup';
  import '../../css/view_users.css'
+ import USER from '../../images/dp_default.jpg'
 
  export default function View_Users_Page (){
 
@@ -165,7 +166,7 @@
         setShowDeleteConfirmation(true);
         setToDelete(todeluser);
     }
-     const confirmDelete = async(decision) => {
+     const confirmDelete = async(decision,details) => {
         setShowDeleteConfirmation(false)
         if(decision){
             let delete_id = toDelete.user.user_id
@@ -174,7 +175,10 @@
                 credentials:'include',
                 headers:{
                     'Content-Type':'application/json'
-                }
+                },
+                body: JSON.stringify({
+                    details
+                })
             }).then(response =>{ return response.json()})
             .then(json=>{
    
@@ -190,7 +194,7 @@
         return(
             <label>
                 <select className='view-user-dropdown' value={value} onChange={onChange}>
-                    {<option className='option' value = "" disabled>VIEW BY</option>}
+                    {<option className='option' value = "" disabled hidden>VIEW BY</option>}
                     {options.map((option,i)=>(
                         <option key={i} value = {option.value}>{option.label}</option>
                     ))}
@@ -201,41 +205,56 @@
 
         return(
             <div>
-                 <div className="view-users-body">
-                    <div className='view-users'>
-                    <form>
-                        <div className = 'view-users-header'>
-                        <p className="user-title"> Accounts</p>  
-                        <DropDown options={viewFilter} value = {viewValue} onChange={viewChange}/>
-                        </div>
-                        
-                        <hr className='users-line'/>
+                
+                <div className="view-users-body">
+                
+                <div className='top-header'>
+                <p className="title"> Accounts</p>  
+                <hr className='users-line'/>
 
-                        <div className="users-search-field">
-                            <input type = "text" name = "input" placeholder = "🔎 Search by name"
-                            value = {input} onChange = {handleUserInput} className = "user-search" required></input>
-                            <button onClick={handleSubmit} className = "users-search-button"><i className = "search-icon"><VscSettings /></i></button>
-                        </div>
-                    </form>
-                    <div className='tile-page'>
-                        {users != undefined? users.map((user, i) => {
-                                if (i % 2 === 0) {
-                                    return <span key={i}>
-                                        <div className="user-tile">
-                                            {user.last_name} <br></br>{user.first_name}<br></br> {user.user_role}
-                                            <button onClick={()=>{onDelete({user})}} className = "delete-button">Remove</button>                                    </div>
-                                    </span>
-                                } else {
-                                    return <span key={i}>
-                                        <div className="user-odd-tile">
-                                            {user.last_name} <br></br>{user.first_name}<br></br> {user.user_role}
-                                        <button onClick={()=>{onDelete({user})}} className = "delete-button">Remove</button>
-                                        </div>
-                                    </span>
-                                }
-                        }): <div className="no-users">No users found.</div>}
-                    </div>
+                
+                <ul className='view-user-header'>
+                    <li><DropDown options={viewFilter} value = {viewValue} onChange={viewChange}/></li>
+                </ul>
+                
+                
+                <div className="users-search-field">
+                    <input type = "text" name = "input" placeholder = "🔎 Search by name"
+                    value = {input} onChange = {handleUserInput} className = "user-search" required></input>
+                    <button onClick={handleSubmit} className = "users-search-button"><i className = "search-icon"><VscSettings /></i></button>
                 </div>
+                </div>
+               
+                <div className='tile-page'>
+                    {users != undefined? users.map((user, i) => {
+                            if (i % 2 === 0) {
+                                return <span key={i}>
+                                    <div className="user-tile">
+                                    <img src = {USER} className='user-dp'/>
+                                    <div className='user-name'>
+                                        {user.first_name} {user.last_name}<br />
+                                        <span>{user.user_role}</span>
+                                    </div>
+                                        <button onClick={()=>{onDelete({user})}} className = "delete-button">Remove</button>                                    </div>
+                                </span>
+                            } else {
+                                return <span key={i}>
+                                    <div className="user-odd-tile">
+                                    <img src = {USER} className='user-dp'/>
+                                    <div className='user-name'>
+                                        {user.first_name} {user.last_name}<br />
+                                        <span>{user.user_role}</span>
+                                    </div>
+                                    <button onClick={()=>{onDelete({user})}} className = "delete-button">Remove</button>
+                                    </div>
+                                </span>
+                            }
+                    }): <div className="no-users">
+                        <p>No users found.</p>
+                        <button onClick={()=> navigate('/users/new')}> Add User Account</button>
+                        </div>}
+                </div>
+                
                 {showDeleteConfirmation===true? <DeleteConfirmPopup props={{confirmDelete: confirmDelete.bind()}} />:""}</div>
             <Header />
             <Menu/>
