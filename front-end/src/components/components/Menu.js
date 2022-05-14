@@ -52,8 +52,8 @@ function Menubar(){
                     })}
                     <br /> <br />
                     {user && user.user_role == "CHAIR/HEAD"? 
-                    (<div className='entity-title'>{user_title}</div>,
-                    SidebarDataUser.map((item, index) => {
+                    (<div><div className='entity-title'>User</div>
+                    {SidebarDataUser.map((item, index) => {
                         return(
                             <li key={index} className={item.cName}>
                                 <Link to={item.path}>
@@ -62,7 +62,7 @@ function Menubar(){
                                 </Link>
                             </li>
                         );
-                    })) : ""}              
+                    })}</div>) : ""}              
                 </ul>
             </nav>
         </IconContext.Provider>
