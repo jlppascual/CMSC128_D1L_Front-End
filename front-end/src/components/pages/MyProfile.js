@@ -80,6 +80,10 @@ const MyProfile =()=>{
                     })
                  }).then(response=>{return response.json()})
                     .then(json=>{
+                        if (json.result.session.silentRefresh) {
+                            setAuth(json.result.session.user, json.result.session.silentRefresh)
+                        }
+
                         if(json.result.success){
                             setToggle(!isToggled)
                             alert(json.result.message)
@@ -111,6 +115,10 @@ const MyProfile =()=>{
                         })
                      }).then(response=>{return response.json()})
                         .then(json=>{
+                            if (json.result.session.silentRefresh) {
+                                setAuth(json.result.session.user, json.result.session.silentRefresh)
+                            }
+
                             if(json.result.success){
                                 setToggle(!isToggled)
                                 alert(json.result.message)

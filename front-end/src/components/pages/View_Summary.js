@@ -2,6 +2,7 @@
  * author: Jem, Leila
  */
  import React, { useEffect, useState, useRef } from 'react';
+ import useStore from '../hooks/authHook';
  import { useNavigate } from 'react-router-dom';
  import {BsSearch}  from 'react-icons/bs';
  import {AiFillPrinter} from 'react-icons/ai';
@@ -23,6 +24,7 @@
     const [input, setInput] = useState("")
     const prev_order_state = useRef();
     const prev_view_state = useRef();
+    const { setAuth } = useStore();
 
     const orderFilter = [
         {label: 'NAME', value:'name'},
@@ -63,6 +65,9 @@
         })
         .then(response => {return response.json()})
         .then(json=>{
+            if (json.result.session.silentRefresh) {
+                setAuth(json.result.session.user, json.result.session.silentRefresh)
+            }
             if(json.result.success){
                 setRecord(json.result.output)
             }else{
@@ -97,6 +102,9 @@
                 })
                 .then(response => {return response.json()})
                 .then(json=>{
+                    if (json.result.session.silentRefresh) {
+                        setAuth(json.result.session.user, json.result.session.silentRefresh)
+                    }
                     if(json.result.success){
                         setRecord(json.result.output)
                     }else{
@@ -120,6 +128,9 @@
                 })
                 .then(response => {return response.json()})
                 .then(json=>{
+                    if (json.result.session.silentRefresh) {
+                        setAuth(json.result.session.user, json.result.session.silentRefresh)
+                    }
                     if(json.result.success){
                         setRecord(json.result.output)
                     }else{
@@ -134,6 +145,9 @@
             })
             .then(response => {return response.json()})
             .then(json=>{
+                if (json.result.session.silentRefresh) {
+                    setAuth(json.result.session.user, json.result.session.silentRefresh)
+                }
                 if(json.result.success){
                     setRecord(json.result.output)
                 }else{
@@ -145,6 +159,7 @@
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
         if(input === ""){
                 fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/summary?orderby="+[orderValue],
             {
@@ -153,7 +168,9 @@
             })
             .then(response => {return response.json()})
             .then(json=>{
-                console.log(json)
+                if (json.result.session.silentRefresh) {
+                    setAuth(json.result.session.user, json.result.session.silentRefresh)
+                }               
                 if(json.result.success){
                     setRecord(json.result.output)
                 }else{
@@ -161,19 +178,21 @@
                 }
             })
         } else {
-        setViewValue("ALL")
         fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/summary/search?name=' +[input]+'&&orderby='+[orderValue],{
             credentials:'include'
         })
-            .then((response) => {return response.json()})
-            .then(json => {
-                if(json.result.success){
-                    setRecord(json.result.output);
-                }
-                else{
-                    setRecord(undefined)
-                }
-            })}
+        .then((response) => {return response.json()})
+        .then(json => {
+            if (json.result.session.silentRefresh) {
+                setAuth(json.result.session.user, json.result.session.silentRefresh)
+            }
+            if(json.result.success){
+                setRecord(json.result.output);
+            }
+            else{
+                setRecord(undefined)
+            }
+        })}
     }
 
     const orderChange=(e)=>{
@@ -187,6 +206,7 @@
     const handleUserInput = (e) => {
         const value = e.target.value;
         setInput(value);
+        setViewValue("ALL")
     }
 
     const DropDown =({value,options,onChange, type})=>{

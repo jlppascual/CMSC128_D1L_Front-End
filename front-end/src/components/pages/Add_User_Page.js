@@ -14,22 +14,18 @@ const Add_User_Page=()=>{
 
     const {REACT_APP_HOST_IP} = process.env
 
-    const { user, isAuthenticated } = useStore();
+    const { user, setAuth } = useStore();
     const navigate = useNavigate();     // navigation hook
 
     const [userRole, setRole] = useState("");
 
     useEffect(() => {
-        if(!isAuthenticated) {
-            navigate('/')
-            alert("You are not logged in!")
-        }else{
-            if(user.user_role !=="CHAIR/HEAD"){
-                navigate("/home")
-                alert("Must be an admin to access this page")
-            }
+        if(user.user_role !=="CHAIR/HEAD"){
+            navigate("/home")
+            alert("Must be an admin to access this page")
         }
-    },[isAuthenticated])
+        
+    },)
 
     const readInput = async (e) =>{
         e.preventDefault();
@@ -62,8 +58,11 @@ const Add_User_Page=()=>{
                 },
                 body: JSON.stringify(user_details)
             }).then((response) => {return response.json()})
-            .then(json =>
-               {if(json.result.success){
+            .then(json =>{
+                if (json.result.session.silentRefresh) {
+                    setAuth(json.result.session.user, json.result.session.silentRefresh)
+                }
+                if(json.result.success){
                    alert(json.result.message)
                    clearInputs();
                }else{

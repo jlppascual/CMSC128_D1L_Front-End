@@ -30,31 +30,29 @@ const View_Student_Details =()=>{
 
     let new_courses=[]
 
-    const { user, isAuthenticated } = useStore();
+    const { user, setAuth } = useStore();
     const navigate = useNavigate();     // navigation hook
 
     useEffect(()=>{
-        if(!isAuthenticated) {
-            navigate('/')
-            alert("You are not logged in!")}
-        else{
-            const link = window.location.href
-            const id = link.slice(link.lastIndexOf('/')+1,link.length)
-            // console.log(id)
-            fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/'+id,{
-                method:'GET',
-                credentials:'include'
-            }).then(response=> {return response.json()})
-            .then(json=>{
-                setState(
-                    {student_details:json.result.output.record,
-                    record_details:json.result.output.record.record_data,
-                    term_details:json.result.output.record.record_data.term_data,
-                    course_details:json.result.output.record.record_data.term_data.course_data,
-                    warnings:json.result.output.warnings })         
-            })
-        }
-    },[isAuthenticated, pageState])
+        const link = window.location.href
+        const id = link.slice(link.lastIndexOf('/')+1,link.length)
+        // console.log(id)
+        fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/'+id,{
+            method:'GET',
+            credentials:'include'
+        }).then(response=> {return response.json()})
+        .then(json=>{
+            if (json.result.session.silentRefresh) {
+                setAuth(json.result.session.user, json.result.session.silentRefresh)
+            }
+            setState(
+                {student_details:json.result.output.record,
+                record_details:json.result.output.record.record_data,
+                term_details:json.result.output.record.record_data.term_data,
+                course_details:json.result.output.record.record_data.term_data.course_data,
+                warnings:json.result.output.warnings })         
+        })
+    },[pageState])
     
     const handleDelete=(event)=>{
         event.preventDefault();
@@ -70,6 +68,9 @@ const View_Student_Details =()=>{
                 credentials:'include'
             }).then(response =>{ return response.json()})
             .then(json=>{
+                if (json.result.session.silentRefresh) {
+                    setAuth(json.result.session.user, json.result.session.silentRefresh)
+                }
                 if(json.result.success){
                     window.alert(json.result.message)
                     navigate('/students')
@@ -140,6 +141,9 @@ const View_Student_Details =()=>{
             })
             .then((response) => {return response.json()})
             .then(json => {
+                if (json.result.session.silentRefresh) {
+                    setAuth(json.result.session.user, json.result.session.silentRefresh)
+                }
                 if(json.result.success){
                     const student = state.student_details
                     const full_name = student.first_name+" "+student.last_name+", "+student.degree_program+":\n"

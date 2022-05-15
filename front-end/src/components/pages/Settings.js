@@ -4,7 +4,6 @@ import Header from '../components/Header'
 import Footer from '../components/Footer'
 import Menu from '../components/Menu'
 import useStore from '../hooks/authHook'
-import '../../css/settings.css'
 
 const Settings =()=>{
 
@@ -13,16 +12,8 @@ const Settings =()=>{
     const[isToggled, setToggle] = useState(false);
     const[popType, setType] = useState("")
 
-    const { user, isAuthenticated } = useStore();
-    const navigate = useNavigate();     // navigation hook
+    const { user, setAuth } = useStore();
  
-    useEffect(() =>{
-        if(!isAuthenticated) {
-            navigate('/')
-            alert("You are not logged in!")
-        }},[])
-
-
     const settings_list=[
         {label:"change username", value:'username'},
         {label:"change password", value:'password'}
@@ -47,6 +38,9 @@ const Settings =()=>{
                     })
                  }).then(response=>{return response.json()})
                     .then(json=>{
+                        if (json.result.session.silentRefresh) {
+                            setAuth(json.result.session.user, json.result.session.silentRefresh)
+                        }
                         if(json.result.success){
                             setToggle(!isToggled)
                             alert(json.result.message)
@@ -76,6 +70,9 @@ const Settings =()=>{
                         })
                      }).then(response=>{return response.json()})
                         .then(json=>{
+                            if (json.result.session.silentRefresh) {
+                                setAuth(json.result.session.user, json.result.session.silentRefresh)
+                            }
                             if(json.result.success){
                                 setToggle(!isToggled)
                                 alert(json.result.message)
@@ -137,10 +134,6 @@ const Settings =()=>{
     return(
         <div>
             <div className='settings-container'>
-            {/* <div className='top-box'>
-                <p className='header'>Settings</p>
-                <hr className="line"></hr>
-            </div> */}
                 <div className="settings-box">
                     <ul>
                         {settings_list.map((foo,i)=>{
