@@ -15,7 +15,6 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
 
     const {REACT_APP_HOST_IP} = process.env
     const navigate = useNavigate();
-    const [pageState, setPage] = useState(false)
     const [input, setInput] = useState("");
     const [downloadLink, setDownloadLink] = useState('')
     const [logs, changeLogs] = useState([]);
@@ -26,7 +25,6 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
     const [chosenUser, setChosenUser] = useState("");
     const [emptyLogs, setEmptyMessage] = useState("");
     const { user, setAuth } = useStore();
-    
 
     const view_options = [
         {label: "ALL", value: "all" },
@@ -61,26 +59,25 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
                     if(json.result.success){
                         formatUsers(json.result.output)
                         
-                    }
-                            
+                    }          
                 })
-            fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/all",
-            {
-                method: "GET",
-                credentials:'include'
-            })
-            .then(response => {return response.json()})
-            .then(json=>{
-                setStudents(json.result.output)
-                setPage(!pageState);
-                
-            })
+                fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/all",
+                {
+                    method: "GET",
+                    credentials:'include'
+                })
+                .then(response => {return response.json()})
+                .then(json=>{
+                    if(json.result.success){
+                        setStudents(json.result.output)
+                    }          
+                })
         }else{
             navigate('/home')
             alert("Must be an admin to access this page")
-        }
-        
+        }  
      },[user])
+
 
      //create a text file of logs
      useEffect(()=>{
@@ -89,7 +86,6 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
          
      },[logs])
 
-    
 
      useEffect(()=>{
         
@@ -100,10 +96,9 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
         })
         .then(response => {return response.json()})
         .then(json=>{
-            if (json.result.session.silentRefresh) {
-                setAuth(json.result.session.user, json.result.session.silentRefresh)
-            }
-
+            // if (json.result.session.silentRefresh) {
+            //     setAuth(json.result.session.user, json.result.session.silentRefresh)
+            // }
             if(json.result.success){
                 formatLogs(json.result.output)
             }else{
@@ -111,7 +106,7 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
                 
             }
         })
-     },[pageState])
+     },[students,users])
 
      useEffect(()=>{
 

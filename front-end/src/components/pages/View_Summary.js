@@ -11,7 +11,6 @@
  import Menu from '../components/Menu'
  import { useReactToPrint } from 'react-to-print';
  import ComponentToPrint from '../components/ComponentToPrint'
- import useStore from '../hooks/authHook';
  import '../../css/view_summary.css'
  
  const View_Summary =()=>{
