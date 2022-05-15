@@ -208,7 +208,7 @@
                 <div className="view-users-body">
                 
                 <div className='top-header'>
-                <p className="title"> Accounts</p>  
+                <p className="title"> Accounts{users?<span> {users.length}</span>:""}</p>  
                 <hr className='users-line'/>
 
                 
@@ -228,21 +228,21 @@
                     {users != undefined? users.map((user, i) => {
                             if (i % 2 === 0) {
                                 return <span key={i}>
-                                    <div className="user-tile">
-                                    <img src = {USER} className='user-dp'/>
-                                    <div className='user-name'>
+                                    <div className="user-tile" >
+                                    <img src = {USER} className='user-dp' onClick={()=> navigate('/user/'+user.user_id)}/>
+                                    <div className='user-name' onClick={()=> navigate('/user/'+user.user_id)}>
                                         {user.first_name} {user.last_name}<br />
-                                        <span>{user.user_role}</span>
+                                        <span onClick={()=> navigate('/user/'+user.user_id)}>{user.user_role}</span>
                                     </div>
                                         <button onClick={()=>{onDelete({user})}} className = "delete-button">Remove</button>                                    </div>
                                 </span>
                             } else {
                                 return <span key={i}>
-                                    <div className="user-odd-tile">
-                                    <img src = {USER} className='user-dp'/>
-                                    <div className='user-name'>
+                                    <div className="user-odd-tile" >
+                                    <img src = {USER} className='user-dp' />
+                                    <div className='user-name' onClick={()=> navigate('/user/'+user.user_id)}>
                                         {user.first_name} {user.last_name}<br />
-                                        <span>{user.user_role}</span>
+                                        <span onClick={()=> navigate('/user/'+user.user_id)}>{user.user_role}</span >
                                     </div>
                                     <button onClick={()=>{onDelete({user})}} className = "delete-button">Remove</button>
                                     </div>

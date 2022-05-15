@@ -62,11 +62,8 @@ const Header =()=>{
             <img src = {Dp} className={'header-dp'}/>
             <Dropdown>
                 <div className={'header-dropdown'}>
-                    <Link to = '/' className={'header-dropitem'}>
+                    <Link to = '/profile' className={'header-dropitem'}>
                         Profile
-                    </Link>
-                    <Link to = '/settings' className={'header-dropitem'}>
-                        Settings
                     </Link>
                     <div onClick= {userLogout} className={'header-dropitem'}>
                         Logout

@@ -258,7 +258,7 @@ const View_Students =()=>{
         <div>
         <div className='view-student-body'>
         
-            <p className="title">Student Records</p>
+            <p className="title">Student Records {record?<span> {record.length}</span>:""}</p>
 
             <hr className='add-line'></hr>      
 
@@ -304,7 +304,7 @@ const View_Students =()=>{
                         {showConfirmation===true? <DeletePopup props={{confirmDelete: confirmDelete.bind()}} />:""}
                     </table></div>:
                 <div className='empty-students'>
-                    <p>No student records saved</p>
+                    <p>No student records to display</p>
                     <button onClick={()=> navigate('/student/new')}> Add Student Records</button>
                     </div>
                 }

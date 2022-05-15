@@ -146,7 +146,6 @@
                  term_data
              }
          }
-         console.log(data.record_data)
          setFullName(data.first_name+" "+data.last_name+ " " + data.degree_program)
  
          return data
@@ -155,8 +154,14 @@
      const parseData = async(content)=>{
         
          //separates file content by new line
+         if(!content) {
+             alert('Invalid file/format')
+            return}
          let rows = content.slice(content.indexOf('\n')+1).split('\n');
- 
+         if(!rows || rows[0].split(",")[1] !== "STUDENT INFORMATION"){
+             alert('Invalid file/format')
+             return;
+         }
          //returns filecontent in an array of strings splited by ','
          let array = rows.map(row =>{
              //separate each line content by a comma
@@ -171,7 +176,7 @@
          if(results.length > 0){
              results.map(async(result) => {
                  let data = await parseData(result);
-                 await sendData(data);
+                 if(data) await sendData(data);
              });
              
          }

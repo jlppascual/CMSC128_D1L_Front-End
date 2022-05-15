@@ -7,6 +7,7 @@
     
 }
 
+
 .title{
     text-align: left;
     margin-top: 85px;
@@ -14,8 +15,14 @@
     color: #8D1436;
     font-family: Palatino Linotype,Palatino LT STD;
     font-size: 30px;
+    margin-bottom: 10px;
 }
 
+.title span{
+    color: gray;
+    font-size: 20px;
+    font-family: Segoe UI;
+}
 .add-line{
     text-align: center;
     width: 67%
@@ -78,7 +85,7 @@ label{
     left:53%;
     padding:15px;
     padding-top:3px;
-    overflow-y: scroll;
+    overflow-y: auto;
     background: rgb(212, 212, 212);
     width: 25%;
     height:280px;

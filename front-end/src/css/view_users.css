@@ -99,6 +99,12 @@
     display:flex;
     float:left;
     height: 55px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.user-tile:hover{
+    background-color: rgb(245, 245, 245);
 }
 
 .user-name{
@@ -122,6 +128,12 @@
     margin-bottom:10px;
     display:flex;
     height: 55px;
+    cursor:pointer;
+    border-radius: 10px;
+}
+
+.user-odd-tile:hover{
+    background-color: rgb(245, 245, 245);
 }
 
 .user-odd-tile span{

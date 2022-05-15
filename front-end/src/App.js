@@ -9,7 +9,8 @@ import Add_User from './components/pages/Add_User_Page'
 import View_User from './components/pages/View_Users_Page'
 import View_Logs from './components/pages/View_Logs'
 import View_Summary from './components/pages/View_Summary'
-import Settings from './components/pages/Settings'
+import User_Profile from './components/pages/UserProfile'
+import My_Profile from './components/pages/MyProfile'
 
 
 
@@ -26,7 +27,8 @@ function App() {
         <Route path='/users/new' element={<RequireAuth children={<Add_User/>}/>}/>
         <Route path='/users' element={<RequireAuth children={<View_User/>}/>}/>
         <Route path='/logs' element={<RequireAuth children={<View_Logs/>}/>}/>
-        <Route path='/settings' element={<RequireAuth children={<Settings/>}/>}/>
+        <Route path='/user/:id' element={<RequireAuth children={<User_Profile/>}/>}/>
+        <Route path='/profile' element={<RequireAuth children={<My_Profile/>}/>}/>
 
       </Routes>
     </BrowserRouter>
