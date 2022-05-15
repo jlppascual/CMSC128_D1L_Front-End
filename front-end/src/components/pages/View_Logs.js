@@ -25,8 +25,6 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
     const [chosenUser, setChosenUser] = useState("");
     const [emptyLogs, setEmptyMessage] = useState("");
     const { user, setAuth } = useStore();
-    
-
 
     const view_options = [
         {label: "ALL", value: "all" },
@@ -49,6 +47,7 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
     ]
 
      useEffect(()=>{
+
         if(user.user_role === "CHAIR/HEAD"){
             fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/user/all",
                 {
@@ -67,14 +66,16 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
         }  
      },[pageState])
 
+
      //create a text file of logs
      useEffect(()=>{
          console.log("here")
          makeTextFile()
+         
      },[logs])
 
      useEffect(()=>{
-         console.log("here")
+
         fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log",
         {
             method: "GET",
@@ -85,6 +86,7 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
             if (json.result.session.silentRefresh) {
                 setAuth(json.result.session.user, json.result.session.silentRefresh)
             }
+
             if(json.result.success){
                 formatLogs(json.result.output)
             }else{
@@ -94,7 +96,7 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
      },[pageState])
 
      useEffect(()=>{
-        console.log("here")
+
         if (viewValue==="user"){
             fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log/user/"+chosenUser,
             {
@@ -149,6 +151,7 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
             })
         }
         },[viewValue, activity, chosenUser]);
+
         
         const formatUsers = (users) =>{
             let user_list = []
@@ -224,6 +227,7 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
                     if (json.result.session.silentRefresh) {
                         setAuth(json.result.session.user, json.result.session.silentRefresh)
                     }
+
                     if(json.result.success){
                         formatLogs(json.result.output)
                     }else{
@@ -242,6 +246,7 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
                     if (json.result.session.silentRefresh) {
                         setAuth(json.result.session.user, json.result.session.silentRefresh)
                     }
+
                     if(json.result.success){
                         formatLogs(json.result.output)
                     }else{
