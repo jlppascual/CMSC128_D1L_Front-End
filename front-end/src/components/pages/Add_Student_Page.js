@@ -19,17 +19,9 @@
     const semester= useRef();
     const acad_year = useRef();
     const num_of_units = useRef();
-    const weightPerTerm = useRef();
 
-    const { user, isAuthenticated } = useStore();
+    const { user, setAuth } = useStore();
     const navigate = useNavigate();     // navigation hook
-
- 
-     useEffect(() => {
-         if(!isAuthenticated) {
-             navigate('/')
-             alert("You are not logged in!")}
-     },[isAuthenticated])
  
  
      //https://stackoverflow.com/a/67296403
@@ -146,7 +138,6 @@
                  term_data
              }
          }
-         console.log(data.record_data)
          setFullName(data.first_name+" "+data.last_name+ " " + data.degree_program)
  
          return data
@@ -155,8 +146,14 @@
      const parseData = async(content)=>{
         
          //separates file content by new line
+         if(!content) {
+             alert('Invalid file/format')
+            return}
          let rows = content.slice(content.indexOf('\n')+1).split('\n');
- 
+         if(!rows || rows[0].split(",")[1] !== "STUDENT INFORMATION"){
+             alert('Invalid file/format')
+             return;
+         }
          //returns filecontent in an array of strings splited by ','
          let array = rows.map(row =>{
              //separate each line content by a comma
@@ -171,7 +168,7 @@
          if(results.length > 0){
              results.map(async(result) => {
                  let data = await parseData(result);
-                 await sendData(data);
+                 if(data) await sendData(data);
              });
              
          }
@@ -191,6 +188,9 @@
              })
          }).then((response) => {return response.json()})
          .then(json => {
+            if (json.result.session.silentRefresh) {
+                setAuth(json.result.session.user, json.result.session.silentRefresh)
+            }
              if(json.result.success){
                  const student = json.result.output.record
                  const full_name = student.first_name+" "+student.last_name+", "+student.degree_program+":\n"

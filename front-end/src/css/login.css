@@ -31,7 +31,7 @@ body{
 }
 .univ-name{
     margin-top: 6%;
-    font-family: "Palatino";
+    font-family: Palatino Linotype,Palatino LT STD ;
     font-size: 20px;
 }
 
@@ -54,7 +54,7 @@ body{
     text-align: center;
     font-family: 'Segoe UI';
     background-color: #ffffff;
-    height: 55%;
+    height: 350px;
     width: 20%;
     border-radius: 15px;
     position: absolute;
@@ -64,21 +64,20 @@ body{
 }
 
 .login-form h2{
-    margin-top:30px;
+    margin-top:10%;
 }
 
 
 .form-field{
-    padding: 5px;
+    padding: 7px;
     padding-left: 15px;
     width: 70%;
-    height: 25px;
+    height: 7%;
     background-color: #F3F3F3;
     outline: none;
     border:none;
     font-family: 'Helvetica';
-    margin-top: 23px;
-    margin-bottom: 15px;
+    margin-top: 8%;
 }
 
 .submit-btn{
@@ -86,7 +85,7 @@ body{
     outline:none;
     width: 40%;
     height: 35px;
-    margin-top: 50px;
+    margin-top: 12%;
     font-size: 15px;
     background-color: #00563F;
     border-radius: 10px;

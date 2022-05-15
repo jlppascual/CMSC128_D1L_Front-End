@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 
 const Edit_Row = ( {func, course, term_index,index}) => {
     const [course_code, setCourse] = useState(course.course_code);
@@ -11,6 +11,7 @@ const Edit_Row = ( {func, course, term_index,index}) => {
     let bg_color;
     {index % 2 === 0? bg_color = 'rgba(0, 86, 63, 0.2)': bg_color = 'white'}
 
+   
     const updatedCourse =
         {course_code: course_code,
         course_id: course.course_id,
@@ -25,10 +26,8 @@ const Edit_Row = ( {func, course, term_index,index}) => {
         bg_color = 'rgba(141, 20, 54, 0.3)'
     } 
     
-    func.updateCourse(updatedCourse);
-    
-    
     const computeCumulated =  (curr_weight) => {
+    
         if(isNaN(curr_weight)) curr_weight = 0
         weight = Number(curr_weight)
         setWeight(weight)
@@ -128,7 +127,16 @@ const Edit_Row = ( {func, course, term_index,index}) => {
         document.getElementsByName("record-units")[0].innerHTML = total_units
         document.getElementsByName("record-gwa")[0].innerHTML = parseFloat((cumulative/total_units).toFixed(4))
     }
-   
+    
+    setInterval(function () {
+        let a = document.getElementsByName("cumulated-"+term_index+"-"+index)[0]
+        if(a) {
+            setCumulated(a.value)
+        }
+        func.updateCourse(updatedCourse);
+    }, 1000);
+    
+        
     return(
         <tr>
             <td>
@@ -169,6 +177,7 @@ const Edit_Row = ( {func, course, term_index,index}) => {
                 <input
                     className="edit-cell"
                     type = "text"
+                    id = {"weight-"+term_index+"-"+index}
                     name = {"weight-"+term_index+"-"+index}
                     value = {weight}
                     style = {{backgroundColor: bg_color}}
@@ -180,9 +189,11 @@ const Edit_Row = ( {func, course, term_index,index}) => {
                 <input
                     className="edit-cell"
                     type = "text"
+                    id={"cumulated-"+term_index+"-"+index}
                     name = {"cumulated-"+term_index+"-"+index}
                     value = {cumulated}
                     style = {{backgroundColor: bg_color}}
+                    onChange = {(e)=> {setCumulated(e.target.value)}}
                     disabled
                 ></input>
                 

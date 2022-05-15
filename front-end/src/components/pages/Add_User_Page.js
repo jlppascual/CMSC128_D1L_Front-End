@@ -14,22 +14,18 @@ const Add_User_Page=()=>{
 
     const {REACT_APP_HOST_IP} = process.env
 
-    const { user, isAuthenticated } = useStore();
+    const { user, setAuth } = useStore();
     const navigate = useNavigate();     // navigation hook
 
     const [userRole, setRole] = useState("");
 
     useEffect(() => {
-        if(!isAuthenticated) {
-            navigate('/')
-            alert("You are not logged in!")
-        }else{
-            if(user.user_role !=="CHAIR/HEAD"){
-                navigate("/home")
-                alert("Must be an admin to access this page")
-            }
+        if(user.user_role !=="CHAIR/HEAD"){
+            navigate("/home")
+            alert("Must be an admin to access this page")
         }
-    },[isAuthenticated])
+        
+    },)
 
     const readInput = async (e) =>{
         e.preventDefault();
@@ -62,14 +58,18 @@ const Add_User_Page=()=>{
                 },
                 body: JSON.stringify(user_details)
             }).then((response) => {return response.json()})
-            .then(json =>
-               {if(json.result.success){
+            .then(json =>{
+                if (json.result.session.silentRefresh) {
+                    setAuth(json.result.session.user, json.result.session.silentRefresh)
+                }
+                if(json.result.success){
                    alert(json.result.message)
+                   clearInputs();
                }else{
                    alert(json.result.message)
                }}
             )
-            clearInputs();
+            
         }
      }
 
@@ -93,22 +93,24 @@ const Add_User_Page=()=>{
             <div className='add-user-body'>
             <form className='signup-field'>
                 <h2> Create Account </h2>
-                    <input type="text" className = "field" id="first_name" placeholder="🔘 First Name"></input><br />
-                    <input type="text" className = "field" id="last_name" placeholder="🔘 Last Name"></input><br />
-                    <select className = "rolefield" id="user_role" value={userRole} onChange={handleChange}>
-                        <option value="" disabled selected hidden>🔽 User Role</option>
-                        <option value="ocs rep">OCS Rep</option>
-                        <option value="acs">ACS</option>
-                        <option value="unit rep">Unit Rep</option>
-                        <option value="member">Member</option>
-                    </select><br />
-                    <input type="text" className = "field" id="username" placeholder="🔘 Username" /><br />
-                    <input type="password" className = "field" id="password"placeholder = "🔘 Password"/><br />
-                    <input type="password" className = "field" id="confirm_password" placeholder = "🔘 Confirm Password"/><br />
-                    <input type="text" className = "field" id="email"placeholder = "🔘 Email"/><br />
-                    <input type="text" className = "field" id="phone_number"placeholder = "🔘 Phone Number"/><br />
-                    <input type="submit" value="Confirm" className='confirm-button' onClick={readInput}/>
+                <input type="text" className = "field" id="first_name" placeholder="◯ First Name" required></input><br />
+                <input type="text" className = "field" id="last_name" placeholder="◯ Last Name" required></input><br />
+                <select className = "rolefield" id="user_role" value={userRole} onChange={handleChange}>
+                    <option value=""disabled defaultValue hidden >▽ User Role</option>
+                    <option value="ocs rep">OCS Rep</option>
+                    <option value="acs">ACS</option>
+                    <option value="unit rep">Unit Rep</option>
+                    <option value="member">Member</option>
+                </select><br />
+                <input type="text" className = "field" id="username" placeholder="◯ Username" required /><br />
+                <input type="password" className = "field" id="password"placeholder = "◯ Password" required/><br />
+                <input type="password" className = "field" id="confirm_password" placeholder = "◯ Confirm Password" required/><br />
+                <input type="text" className = "field" id="email"placeholder = "◯ Email" required/><br />
+                <input type="text" className = "field" id="phone_number"placeholder = "◯ Phone Number"/><br />
+                <div className='create-user-buttons'>
                     <input type="reset" value="Reset" className='reset-button'/>
+                    <input type="submit" value="Confirm" className='confirm-button' onClick={readInput}/>
+                </div>
             </form>
             </div>
             <Menu/>

@@ -8,8 +8,8 @@
 
 .view-student-list{
     position:fixed;
-    left: 58%;
-    top: 110px;
+    right: 15%;
+    top: 120px;
 }
 
 .view-student-list li{
@@ -23,7 +23,7 @@
     outline:none;
     border: none;
     border-radius: 10px;
-    padding: 2px;
+    padding: 3px;
     font-family: Helvetica;
     cursor: pointer;
 }
@@ -60,7 +60,7 @@ option{
 
 .view-student-input{
     height: 25px;
-    width: 185vh;
+    width: 96%;
     margin-left: 5px;
     border-radius: 7px;
     border: none;
@@ -70,7 +70,7 @@ option{
 
 .view-student-preview{
     margin-top: 15px;
-    padding-top: 25px;
+    padding-top: 15px;
     background-color: rgb(206, 206, 206);
     height: 45%;
     border-radius: 8px;
@@ -79,19 +79,19 @@ option{
     
 }
 
-.table-wrap{
+.student-table-wrap{
     overflow-y:scroll;
-    margin-left: 5%;
-    width: 90%;
+    margin-left: 2%;
+    width: 95%;
     height: 90%;
-    padding-right: 30px;
+    padding-right: 15px;
 }
 
-.table-wrap::-webkit-scrollbar {
+.student-table-wrap::-webkit-scrollbar {
     width: 10px;
 }
 
-.table-wrap::-webkit-scrollbar-thumb {
+.student-table-wrap::-webkit-scrollbar-thumb {
     background-color: white;
 }
 
@@ -113,8 +113,7 @@ option{
 
 .student-header{
     background-color: rgb(206, 206, 206);
-    text-align: left;
-    padding-left: 35px;
+    text-align: center;
     padding-bottom: 10px;
     padding-top: 0px;
     position: sticky;
@@ -133,8 +132,9 @@ option{
 }
 
 .student-cell{
+    word-break: break-all;
+    text-align: center;
     padding: 5px;
-    padding-right: 15px;
     border-bottom: 10px solid rgb(206, 206, 206);
 } 
 

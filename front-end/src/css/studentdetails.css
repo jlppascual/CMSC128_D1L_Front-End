@@ -18,12 +18,25 @@
     background-color: white;
 }
 
+.back-icon{
+    position: fixed;
+    left: 16%;
+    margin-top: 66px;
+    cursor: pointer;
+    color: gray;
+}
+
+.back-icon:hover{
+    color: rgb(80, 80, 80);
+}
+
+
 .student-name{
     text-align: left;
     margin-top: 60px;
-    margin-left: 16.5%;
+    margin-left: 19%;
     color: #8D1436;
-    font-family: Palatino;
+    font-family: Palatino Linotype;
     font-size: 30px;
     margin-bottom:0px;
 }
@@ -70,7 +83,7 @@
 
 .icons{
     float:right;
-    margin-top: 60px;
+    margin-top: 70px;
     margin-right: 17%
 }
 
@@ -138,19 +151,31 @@
     bottom:0px;
 }
 
-.submit-btn{
-    margin-top: 10px;
+.submit-edit-btn{
+    border:none;
+    outline:none;
+    
+    
+    
+    font-size: 15px;
+    background-color: #00563F;
+    color:#fcfff6;
+    font-weight: bold;
+
+    margin-top: 0px;
     border-radius: 5px;
-    margin-left: 0.7%;
-    width: 33%;
+    margin-left: 43%;
+    width: 12%;
     cursor:pointer;
+    height: 30px;
+    padding:2px;
 }
 .cancel-edit-btn{
     border-radius: 5px;
-    margin-left: 16.6%;
-    width: 33%;
+    margin-left: 16.5%;
+    width: 12%;
     cursor:pointer;
-    padding:4px;
+    padding:2px;
     border:none;
     outline:none;
     background-color: rgb(128, 128, 128);
@@ -158,28 +183,29 @@
     font-size: 15px;
     font-family: Helvetica;
     font-weight: bold;
-    height: 35px;
+    height: 30px;
 }
 
-.popup-box{
+.cancel-popup-box{
     position: fixed;
     top: 40%;
-    left: 39%;
-    width: 22%;
-    height: 20%;
+    left: 37%;
+    width: 24%;
     background-color:white;
     box-shadow: 0px 0px 2px 2px #888888;
     border-radius: 10px;
     text-align: center;
+    padding: 15px;
+    padding-bottom:25px;
+    
 }
 
 .cancel-text{
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
-.buttons{
-    text-align: left;
-    margin: 25px;
+.cance-edit-buttons{
+    text-align: center;
 }
 .yes-btn{
     cursor: pointer;
@@ -199,7 +225,6 @@
     outline:none;
     border:none;
     border-radius: 5px;
-    margin-left: 16%;
     margin-right: 10%;
     
 }

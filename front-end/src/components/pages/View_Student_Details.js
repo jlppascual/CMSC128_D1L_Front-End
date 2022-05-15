@@ -8,7 +8,7 @@ import Read_Row from '../components/Read_Row';
 import Edit_Row from '../components/Edit_Row';
 import DeletePopup from '../components/Popups/DeletePopup';
 import DetailsPopup from '../components/Popups/DetailsPopup';
-import {BiEdit, BiTrash}  from 'react-icons/bi';
+import {BiEdit, BiTrash, BiArrowBack}  from 'react-icons/bi';
 import {RiAlertLine}  from 'react-icons/ri';
 import '../../css/studentdetails.css'
 
@@ -30,31 +30,29 @@ const View_Student_Details =()=>{
 
     let new_courses=[]
 
-    const { user, isAuthenticated } = useStore();
+    const { user, setAuth } = useStore();
     const navigate = useNavigate();     // navigation hook
 
     useEffect(()=>{
-        if(!isAuthenticated) {
-            navigate('/')
-            alert("You are not logged in!")}
-        else{
-            const link = window.location.href
-            const id = link.slice(link.lastIndexOf('/')+1,link.length)
-            // console.log(id)
-            fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/'+id,{
-                method:'GET',
-                credentials:'include'
-            }).then(response=> {return response.json()})
-            .then(json=>{
-                setState(
-                    {student_details:json.result.output.record,
-                    record_details:json.result.output.record.record_data,
-                    term_details:json.result.output.record.record_data.term_data,
-                    course_details:json.result.output.record.record_data.term_data.course_data,
-                    warnings:json.result.output.warnings })         
-            })
-        }
-    },[isAuthenticated, pageState])
+        const link = window.location.href
+        const id = link.slice(link.lastIndexOf('/')+1,link.length)
+        // console.log(id)
+        fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/'+id,{
+            method:'GET',
+            credentials:'include'
+        }).then(response=> {return response.json()})
+        .then(json=>{
+            if (json.result.session.silentRefresh) {
+                setAuth(json.result.session.user, json.result.session.silentRefresh)
+            }
+            setState(
+                {student_details:json.result.output.record,
+                record_details:json.result.output.record.record_data,
+                term_details:json.result.output.record.record_data.term_data,
+                course_details:json.result.output.record.record_data.term_data.course_data,
+                warnings:json.result.output.warnings })         
+        })
+    },[pageState])
     
     const handleDelete=(event)=>{
         event.preventDefault();
@@ -70,6 +68,9 @@ const View_Student_Details =()=>{
                 credentials:'include'
             }).then(response =>{ return response.json()})
             .then(json=>{
+                if (json.result.session.silentRefresh) {
+                    setAuth(json.result.session.user, json.result.session.silentRefresh)
+                }
                 if(json.result.success){
                     window.alert(json.result.message)
                     navigate('/students')
@@ -140,6 +141,9 @@ const View_Student_Details =()=>{
             })
             .then((response) => {return response.json()})
             .then(json => {
+                if (json.result.session.silentRefresh) {
+                    setAuth(json.result.session.user, json.result.session.silentRefresh)
+                }
                 if(json.result.success){
                     const student = state.student_details
                     const full_name = student.first_name+" "+student.last_name+", "+student.degree_program+":\n"
@@ -187,10 +191,10 @@ const View_Student_Details =()=>{
 
     const CancelPopup=({})=>{
         return(
-            <div className="popup-box">
+            <div className="cancel-popup-box">
                 <p className='cancel-text'>Are you sure you want to cancel editing?</p>
                 
-                <div className='buttons'>
+                <div className='cancel-edit-buttons'>
                     <button onClick={() => {setShowCancelConfirmation(false)}} className = 'no-btn'>No</button>
                     <button onClick={() => {setShowCancelConfirmation(false), setEditable(false);}} className = 'yes-btn'>Yes</button>
                 </div>
@@ -199,7 +203,6 @@ const View_Student_Details =()=>{
     }
 
     const WarningPopup=({})=>{
-        console.log(state.warnings)
         return(
             <div className="warning-popup-box">
                 <h3 className='warning-header'>Record Warnings</h3>
@@ -232,7 +235,12 @@ const View_Student_Details =()=>{
                     {state.warnings && state.warnings.length > 0? <span className="warning-badge">{state.warnings.length}</span>
                     : ""}
                 </div>
+                <i className = "back-icon" onClick={()=> navigate('/students')}><BiArrowBack size= {30} /></i>
                 <p className="student-name">{state.student_details.last_name}, {state.student_details.first_name} {state.student_details.middle_name} {state.student_details.suffix} </p>
+                {editable === true ? <span>
+                    <button type = "button" onClick={handleCancel} className="cancel-edit-btn" id="cancel-editing-btn">Cancel Editing</button>
+                    <button type = "button" onClick={handleUpdate} className="submit-edit-btn" id="submit-changes-btn">Submit Changes</button>
+                    </span>:""}
                 <hr className='student-line'></hr>
             </div>
             
@@ -240,7 +248,7 @@ const View_Student_Details =()=>{
             <div className='student-info-left'>
                 <div><b>Degree Program:</b> <span className='info-l'>{state.student_details.degree_program}</span></div>  <br/>
                 <div><b>Student No.:</b> <span className='info-l'>{state.student_details.student_number}</span></div> <br/>
-                <div><b>Latin Honor:</b> {state.student_details.latin_honor !== ""?<span name={"record-gwa"} className='info-l'> {state.student_details.latin_honor}</span>: <span name={"record-gwa"} className='info-l'>-</span>}</div><br/>
+                <div><b>Latin Honor:</b> {state.student_details.latin_honor !== ""?<span className='info-l'> {state.student_details.latin_honor}</span>: <span className='info-l'>-</span>}</div><br/>
             </div>
             <div className='student-info-right'>
                 <div><b>Total weights:</b> <span name={"record-cumulative"} className='info-r'>{state.record_details.cumulative_sum}</span></div>  <br/>
@@ -299,10 +307,7 @@ const View_Student_Details =()=>{
             {showCancelConfirmation ? <CancelPopup />:""}
             {showWarnings ? <WarningPopup />:""}
             <div className = "bottom-space">
-                {editable === true ? <span>
-                    <button type = "button" onClick={handleCancel} className="cancel-edit-btn" id="cancel-editing-btn">Cancel Editing</button>
-                    <button type = "button" onClick={handleUpdate} className="submit-btn" id="submit-changes-btn">Submit Changes</button>
-                    </span>:""}
+                
             </div>
         </div>
         

@@ -1,10 +1,10 @@
 /**
  * author: Jem, Leila
  */
-import React, { useEffect, useState, useRef, Fragment } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {BsSearch}  from 'react-icons/bs';
-import {AiFillDelete, AiFillEye} from 'react-icons/ai';
+import {AiFillDelete} from 'react-icons/ai';
 import useStore from '../hooks/authHook'
 import '../../css/view_students.css'
 import Header from '../components/Header';
@@ -23,13 +23,9 @@ const View_Students =()=>{
     const [input, setInput] = useState("")
     const [showConfirmation, setShowConfirmation] = useState("")
     const [toDelete, setToDelete] = useState("")
-
     const prev_order_state = useRef();
     const prev_view_state = useRef();
-    const orderFilter = [
-        {label: 'NAME', value:'name'},
-        {label:'GWA',value:'gwa'}
-    ]
+ 
     const searchFilter = [
         {label: 'NAME', value:'name'},
         {label:'STUDENT NUMBER',value:'student_number'}
@@ -53,18 +49,15 @@ const View_Students =()=>{
     prev_order_state.current = [orderValue];
     prev_view_state.current = [viewValue];
 
-    const { user, isAuthenticated } = useStore();
+    const { user, setAuth } = useStore();
 
     const navigate = useNavigate();     // navigation hook
 
 
     //if state changes, this function is executed
-        useEffect(()=>{
-        if(!isAuthenticated) {
-            navigate('/')
-            alert("You are not logged in!")
-        }else{
-            fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student?orderby="+[orderValue],
+    useEffect(()=>{
+
+        fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student?orderby="+[orderValue],
         {
             method: "GET",
             credentials:'include'
@@ -74,11 +67,10 @@ const View_Students =()=>{
             if(json.result.success){
                 setRecord(json.result.output)
             }else{
-              //**concern: if bulk adding and unsuccessful, madami need iclick na alert window/
-                console.log(json.result.message)
+                setRecord(undefined)
             }
-        })}
-    },[isAuthenticated, state]);
+        })
+    },[state]);
 
     //if orderValue changes, this function is executed
     useEffect(()=>{
@@ -92,6 +84,9 @@ const View_Students =()=>{
                 })
                 .then(response => {return response.json()})
                 .then(json=>{
+                    if (json.result.session.silentRefresh) {
+                        setAuth(json.result.session.user, json.result.session.silentRefresh)
+                    }
                     if(json.result.success){
                         setRecord(json.result.output)
                     }else{
@@ -106,6 +101,9 @@ const View_Students =()=>{
                 })
                 .then(response => {return response.json()})
                 .then(json=>{
+                    if (json.result.session.silentRefresh) {
+                        setAuth(json.result.session.user, json.result.session.silentRefresh)
+                    }
                     if(json.result.success){
                         setRecord(json.result.output)
                     }else{
@@ -128,6 +126,9 @@ const View_Students =()=>{
                 })
                 .then(response => {return response.json()})
                 .then(json=>{
+                    if (json.result.session.silentRefresh) {
+                        setAuth(json.result.session.user, json.result.session.silentRefresh)
+                    }
                     if(json.result.success){
                         setRecord(json.result.output)
                     }else{
@@ -142,6 +143,9 @@ const View_Students =()=>{
             })
             .then(response => {return response.json()})
             .then(json=>{
+                if (json.result.session.silentRefresh) {
+                    setAuth(json.result.session.user, json.result.session.silentRefresh)
+                }
                 if(json.result.success){
                     setRecord(json.result.output)
                 }else{
@@ -168,19 +172,24 @@ const View_Students =()=>{
         })
         .then(response => {return response.json()})
         .then(json=>{
+            if (json.result.session.silentRefresh) {
+                setAuth(json.result.session.user, json.result.session.silentRefresh)
+            }
             if(json.result.success){
                 setRecord(json.result.output)
             }else{
                 alert(json.result.message)
             }
-        })
-        } else {
+        })} else {
         if(viewValue !== ""){setViewValue("ALL")}
         fetch(url + [input]+"&&orderby="+[orderValue],{
             credentials:'include'
         })
         .then((response) => {return response.json()})
         .then(json => {
+            if (json.result.session.silentRefresh) {
+                setAuth(json.result.session.user, json.result.session.silentRefresh)
+            }
             if(json.result.success){
                 // Contains the list of match users
                 if(searchValue === "student_number"){
@@ -195,10 +204,6 @@ const View_Students =()=>{
         })}
     }
 
-    const orderChange=(e)=>{
-        setOrderValue(e.target.value);
-    }
-
     const searchChange=(e)=>{
         setSearchValue(e.target.value);
     }
@@ -211,6 +216,7 @@ const View_Students =()=>{
     const handleUserInput = (e) => {
         const value = e.target.value;
         setInput(value);
+        setViewValue("ALL")
     }
 
     const confirmDelete= async(decision) =>{
@@ -222,6 +228,9 @@ const View_Students =()=>{
                 credentials:'include'
             }).then(response =>{ return response.json()})
             .then(json=>{
+                if (json.result.session.silentRefresh) {
+                    setAuth(json.result.session.user, json.result.session.silentRefresh)
+                }
                 if(json.result.success){
                     window.alert(json.result.message)
                     changeState(!state)
@@ -229,6 +238,7 @@ const View_Students =()=>{
             })
         }
     }
+
     const onDelete=(student)=>{
         setShowConfirmation(true)
         setToDelete(student);
@@ -247,35 +257,44 @@ const View_Students =()=>{
         );
     }
 
+    async function countWarning(student_id){
+        
+        let count = await fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/'+student_id,{
+            method:'GET',
+            credentials:'include'
+        }).then(response=> {return response.json()})
+        .then(json=>{
+            return json.result.output.warnings.length;
+        })
+        return(count)
+        
+    }
+
     return(
         <div>
         <div className='view-student-body'>
         
-            <p className="title">Student Records</p>
+            <p className="title">Student Records {record?<span> {record.length}</span>:""}</p>
 
             <hr className='add-line'></hr>      
 
             <div className='view-student-header'>
                 <ul className='view-student-list'>
                     <li><DropDown options={searchFilter} className='view-student-dropdown' value = {searchValue} onChange={searchChange} type ="search"/></li>
-                    <li><DropDown options={orderFilter} className='view-student-dropdown' value = {orderValue} onChange={orderChange} type = "order"/></li>
                     <li><DropDown options={viewFilter} className='view-student-dropdown' value = {viewValue} onChange={viewChange} type="view"/></li>
                 </ul>
             </div>
-            
-            <hr className='line'/>
-
             <div className='view-student-search'>
                 <input type = "text" className = 'view-student-input' placeholder = "🔎 Search a student record" value = {input} onChange = {handleUserInput} required></input>
-                <a href='#' onClick={handleSubmit} ><BsSearch className='student-search-icon'/></a>      
+                <a onClick={handleSubmit} ><BsSearch className='student-search-icon'/></a>      
             </div>
             <div className='view-student-preview'>
                 {record != undefined ? 
-                    <div className='table-wrap'>
+                    <div className='student-table-wrap'>
                     <table className='view-student-table'>
                         <thead className='view-student-thead'>
                             <tr className='header-row'>
-                                <th className='student-header' >NAME</th>
+                                <th className='student-header' style ={{textAlign:'left', paddingLeft: '20px'}}>NAME</th>
                                 <th className='student-header'>STUDENT NUMBER</th>
                                 <th className='student-header'>DEGREE PROGRAM</th>
                                 <th className='student-header'></th>
@@ -284,12 +303,15 @@ const View_Students =()=>{
                         
                         <tbody className = 'view-student-tbody'>
                             {record.map((rec, i) => {
-
+                                let bg_color = 'white';
+                                let count = countWarning(rec.student_id)
+                                if(count > 0) bg_color = 'rgba(141, 20, 54, 0.1)'
                                 return (
-                                    <tr key={i} className='view-student-element' >
-                                        <td className='student-cell' onClick={()=> window.location.href='/student/'+rec.student_id}style ={{textAlign:'left', paddingLeft: '20px'}}>{rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""} {rec.suffix ? ', ' + rec.suffix : ''}</td>
-                                        <td className='student-cell' onClick={()=> window.location.href='/student/'+rec.student_id}>{rec.student_number}</td>
-                                        <td className='student-cell' onClick={()=> window.location.href='/student/'+rec.student_id}>{rec.degree_program}</td>
+                                    <tr key={i} className='view-student-element' style={{}}>
+                                        
+                                        <td className='student-cell' onClick={()=> navigate('/student/'+rec.student_id)} style ={{textAlign:'left', paddingLeft: '20px'}}>{rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""} {rec.suffix ? ', ' + rec.suffix : ''}</td>
+                                        <td className='student-cell' onClick={()=> navigate('/student/'+rec.student_id)}>{rec.student_number}</td>
+                                        <td className='student-cell' onClick={()=> navigate('/student/'+rec.student_id)}>{rec.degree_program}</td>
                                         <td className='student-cell' style ={{textAlign:'right', paddingRight: '30px'}} onClick={()=>{onDelete(rec)}}><AiFillDelete className='view-student-delete-icon'/></td>
                                     </tr>                                        
                             );
@@ -298,7 +320,7 @@ const View_Students =()=>{
                         {showConfirmation===true? <DeletePopup props={{confirmDelete: confirmDelete.bind()}} />:""}
                     </table></div>:
                 <div className='empty-students'>
-                    <p>No student records saved</p>
+                    <p>No student records to display</p>
                     <button onClick={()=> navigate('/student/new')}> Add Student Records</button>
                     </div>
                 }

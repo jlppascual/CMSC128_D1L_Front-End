@@ -7,15 +7,22 @@
     
 }
 
+
 .title{
     text-align: left;
     margin-top: 85px;
     margin-left: 16.5%;
     color: #8D1436;
-    font-family: Palatino;
+    font-family: Palatino Linotype,Palatino LT STD;
     font-size: 30px;
+    margin-bottom: 10px;
 }
 
+.title span{
+    color: gray;
+    font-size: 20px;
+    font-family: Segoe UI;
+}
 .add-line{
     text-align: center;
     width: 67%
@@ -35,7 +42,7 @@ label{
 .plus-sign{
     position:fixed;
     top: 320px;
-    left: 34.2%;
+    left: 33%;
     font-size: 60px;
     color: white;
 }
@@ -46,8 +53,8 @@ label{
     background-color: rgb(212, 212, 212);
     position:relative;
     top: 210px;
-    left: 19%;
-    margin-right:15px;
+    left: 20%;
+    margin-right:10px;
 }
 
 .submit-button{
@@ -57,7 +64,7 @@ label{
     height: 35px;
     position:absolute;
     top:460px;
-    left:53.5%;
+    left:53%;
     font-size: 15px;
     background-color: #00563F;
     border-radius: 10px;
@@ -75,10 +82,10 @@ label{
     text-align: left;
     position:relative;
     top:-15px;
-    left:53.5%;
+    left:53%;
     padding:15px;
     padding-top:3px;
-    overflow-y: scroll;
+    overflow-y: auto;
     background: rgb(212, 212, 212);
     width: 25%;
     height:280px;
