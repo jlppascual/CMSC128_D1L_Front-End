@@ -54,7 +54,7 @@ body{
     text-align: center;
     font-family: 'Segoe UI';
     background-color: #ffffff;
-    height: 60%;
+    height: 350px;
     width: 20%;
     border-radius: 15px;
     position: absolute;
@@ -69,10 +69,10 @@ body{
 
 
 .form-field{
-    padding: 5px;
+    padding: 7px;
     padding-left: 15px;
     width: 70%;
-    height: 25px;
+    height: 7%;
     background-color: #F3F3F3;
     outline: none;
     border:none;

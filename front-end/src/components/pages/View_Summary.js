@@ -205,7 +205,7 @@
         <div>
             <div className='view-summary-body'>
             
-            <p className='title'> Summary of Graduating Students</p>
+            <p className='title'> Summary of Graduating Students {record?<span> {record.length}</span>:""}</p>
             <hr className='view-summary-line'/>
                 <div className='view-summary-header'>
                     

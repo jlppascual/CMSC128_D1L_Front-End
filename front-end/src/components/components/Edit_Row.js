@@ -134,7 +134,7 @@ const Edit_Row = ( {func, course, term_index,index}) => {
             setCumulated(a.value)
         }
         func.updateCourse(updatedCourse);
-    }, 100);
+    }, 1000);
     
         
     return(

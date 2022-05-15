@@ -67,8 +67,6 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
                         }
                                 
                     })
-                
-                
             }else{
                 navigate('/home')
                 alert("Must be an admin to access this page")
@@ -93,8 +91,7 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
             if(json.result.success){
                 formatLogs(json.result.output)
             }else{
-                changeLogs([])
-                //setEmptyMessage(json.result.message)
+                setEmptyMessage(json.result.message)
             }
         })
      },[pageState])
@@ -102,8 +99,6 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
      useEffect(()=>{
         
         if (viewValue==="user"){
-
-            console.log(chosenUser)
             fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log/user/"+chosenUser,
             {
                 credentials:'include'
@@ -112,11 +107,9 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
             .then(json=>{
                 if(json.result.success){
                     formatLogs(json.result.output)
-                    
-                    // getUser(logs)
                 }else{
-                    changeLogs([])
-                    //setEmptyMessage(json.result.message)
+                    formatLogs(undefined)
+                    setEmptyMessage(json.result.message)
                 }
             })
         }else if(viewValue==="activity"){
@@ -128,11 +121,9 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
             .then(json=>{
                 if(json.result.success){
                     formatLogs(json.result.output)
-                    
-                    // getUser(logs)
                 }else{
-                    changeLogs([])
-                    //setEmptyMessage(json.result.message)
+                    formatLogs(undefined)
+                    setEmptyMessage(json.result.message)
                 }
             })
         }else{
@@ -145,10 +136,9 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
             .then(json=>{
                 if(json.result.success){
                     formatLogs(json.result.output)
-                    
                 }else{
-                    changeLogs([])
-                    //setEmptyMessage(json.result.message)
+                    formatLogs(undefined)
+                    setEmptyMessage(json.result.message)
                 }
             })
         }
@@ -167,20 +157,13 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
         }
     
         const formatLogs = (logs) => {
-            console.log(logs,users)
             if(logs && users){
                 for (let i = 0; i < logs.length; i++) {
                     for (let j = 0; j < users.length; j++) {
-                        console.log(logs[i].user_id)
-                        console.log(users[j].value)
-                        if(logs[i].user_id === users[j].value){
-                            console.log(users[j].value)
+                        if(logs[i].user_id === users[j].value){ 
                             logs[i]['user_name'] = users[j].label
-                            console.log(logs[i])
                             break
                         }
-                        
-                        
                     }
                 }
             }
@@ -208,7 +191,7 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
         const makeTextFile=()=>{
             let data=[];
     
-            {logs != [] ? (
+            {logs != undefined ? (
                 logs.map((log, i)=>{
                     var timestamp = log.time_stamp.replace("T", " ").replace("Z", " ");
                     var details = (log.details!==null? log.details:"")
@@ -234,11 +217,9 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
                 .then(json=>{
                     if(json.result.success){
                         formatLogs(json.result.output)
-                        
-                        // console.log(json.result.output)
                     }else{
-                        changeLogs([])
-                        //setEmptyMessage(json.result.message)
+                        formatLogs(undefined)
+                        setEmptyMessage(json.result.message)
                     }
                 })
             }else{
@@ -251,11 +232,9 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
                 .then(json=>{
                     if(json.result.success){
                         formatLogs(json.result.output)
-                        
-                        // getUser(logs)
                     }else{
-                        changeLogs([])
-                        //setEmptyMessage(json.result.message)
+                        formatLogs(undefined)
+                        setEmptyMessage(json.result.message)
                     }
                 })           
             }
@@ -274,37 +253,11 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
         );
     }
 
-    // const getUser=()=>{
-    //     if(logs!== undefined || logs !== []){
-    //         changeLogs(logs.map((log, i)=>{      
-    //             fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/user/"+log.user_id,{
-    //                 credentials:'include'
-    //             })
-    //             .then(response => {return response.json()})
-    //             .then(json=>{
-    //                 if(json.result.success){
-    //                     let name = json.result.output.last_name+", "+json.result.output.first_name
-    //                     log["activity_type"] = log.activity_type;
-    //                     log["details"]=log.details;
-    //                     log["prev_version"]=log.prev_version;
-    //                     log["subject_entity"]=log.subject_entity;
-    //                     log["subject_id"]=log.subject_id;
-    //                     log["time_stamp"]=log.time_stamp;
-    //                     log["user_id"]=log.user_id;
-    //                     log["user_name"]=name;
-    //                 }else{
-    //                     // console.log(json.result.message)
-    //                 }
-    //             }) 
-    //         }))
-    //     }
-    // }
-
     return(
-        // console.log(logs),
+
         <div>
             <div className='view-logs-body'>
-                <p className="title">User Logs</p>
+                <p className="title">User Logs {logs?<span> {logs.length}</span>:""}</p>
                 <hr className='view-line'></hr>
                 
                 <div className='view-logs-header'>
@@ -329,7 +282,7 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
                     </div>   
 
                     <div className ='view-log-preview'>
-                    {logs !== [] ? 
+                    {logs !==undefined ? 
                     <div className='table-wrap'>
                         <table className='view-log-table'>
                         <thead className='view-log-thead'>
@@ -357,10 +310,9 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
                                 })}
                             </tbody>
                         </table>
-                        <p>{logs.length}</p>
                     </div>
                     : 
-                    <div className='no-logs'>No logs to display{emptyLogs} </div>}
+                    <div className='no-logs'>{emptyLogs} </div>}
                     </div> 
                     
             </div>
