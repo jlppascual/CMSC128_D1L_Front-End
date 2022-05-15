@@ -322,3 +322,13 @@
     top: 65px;
     right: 16.5%;
   }
+
+.deleted-watermark{
+    position:fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(141, 20, 54, 0.4);
+    font-weight: 600;
+    font-size: 300%;
+}

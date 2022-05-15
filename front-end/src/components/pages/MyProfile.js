@@ -7,7 +7,7 @@ import useStore from '../hooks/authHook'
 import '../../css/profile.css'
 import USER from '../../images/dp_default.jpg'
 import {HiMail}  from 'react-icons/hi';
-import {RiPhoneFill,RiSettings5Line,RiArrowRightSLine}  from 'react-icons/ri';
+import {RiPhoneFill,RiSettings5Line}  from 'react-icons/ri';
 
 const MyProfile =()=>{
 
@@ -254,15 +254,6 @@ const MyProfile =()=>{
             <Menu/>
             <Footer/>
         </div>
-            {/* <div className='settings-container'>
-            {/* <div className='top-box'>
-                <p className='header'>Settings</p>
-                <hr className="line"></hr>
-            </div> 
-                <div className="settings-box">
-                    
-                </div>
-            </div> */}
 
             <Header/>
             <Menu/>

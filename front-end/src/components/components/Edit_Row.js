@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 
-const Edit_Row = ( {func, course, term_index,index}) => {
+const Edit_Row = ( { course, term_index,index}) => {
     const [course_code, setCourse] = useState(course.course_code);
     const [grade, setGrade] = useState(course.grade);
     const [units, setUnits] = useState(course.units);
@@ -10,16 +10,6 @@ const Edit_Row = ( {func, course, term_index,index}) => {
     let prevCumulated = 0
     let bg_color;
     {index % 2 === 0? bg_color = 'rgba(0, 86, 63, 0.2)': bg_color = 'white'}
-
-   
-    const updatedCourse =
-        {course_code: course_code,
-        course_id: course.course_id,
-        term_id: course.term_id,
-        grade: grade,
-        units: units,
-        weight: weight,
-        cumulated: cumulated};
 
     // Check for empty fields
     if (course_code === "" || grade === "" || units === "" ){
@@ -128,15 +118,6 @@ const Edit_Row = ( {func, course, term_index,index}) => {
         document.getElementsByName("record-gwa")[0].innerHTML = parseFloat((cumulative/total_units).toFixed(4))
     }
     
-    setInterval(function () {
-        let a = document.getElementsByName("cumulated-"+term_index+"-"+index)[0]
-        if(a) {
-            setCumulated(a.value)
-        }
-        func.updateCourse(updatedCourse);
-    }, 1000);
-    
-        
     return(
         <tr>
             <td>
@@ -145,6 +126,7 @@ const Edit_Row = ( {func, course, term_index,index}) => {
                     type = "text"
                     required = "required"
                     placeholder= "Enter Course Code"
+                    name = {"code-"+term_index+"-"+index}
                     value = {course_code}
                     style = {{backgroundColor: bg_color}}
                     onChange = {(e)=> {setCourse(e.target.value)}}
@@ -156,6 +138,7 @@ const Edit_Row = ( {func, course, term_index,index}) => {
                     type = "text"
                     required = "required"
                     placeholder= "Enter Grade"
+                    name = {"grade-"+term_index+"-"+index}
                     value = {grade}
                     style = {{backgroundColor: bg_color}}
                     onChange = {(e)=> {setGrade(e.target.value),computeCumulated(Number(e.target.value)*Number(units))}}
