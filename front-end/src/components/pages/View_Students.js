@@ -256,6 +256,18 @@ const View_Students =()=>{
             </label>
         );
     }
+    async function countWarning(student_id){
+        
+        let count = await fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/'+student_id,{
+            method:'GET',
+            credentials:'include'
+        }).then(response=> {return response.json()})
+        .then(json=>{
+            return json.result.output.warnings.length;
+        })
+        return(count)
+        
+    }
 
     async function countWarning(student_id){
         
