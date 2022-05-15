@@ -5,10 +5,10 @@ class ComponentToPrint extends React.Component{
     constructor(props){
         super(props)
     }
+   
     render(){
         return(
             <div className='view-print-preview'>
-
             {this.props.record != undefined ? 
                 <table className='view-print-table'>
                     <span className="watermark-text">ASTERIS</span>

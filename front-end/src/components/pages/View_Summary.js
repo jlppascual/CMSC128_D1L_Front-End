@@ -25,6 +25,7 @@
     const prev_order_state = useRef();
     const prev_view_state = useRef();
     const { setAuth } = useStore();
+    const [fileName, setFileName] = useState();
 
     const orderFilter = [
         {label: 'NAME', value:'name'},
@@ -54,10 +55,12 @@
     const componentRef = useRef();
     const handlePrint = useReactToPrint({
         content: () => componentRef.current,
+        documentTitle: fileName
     });
 
     //if state changes, this function is executed
      useEffect(()=>{
+        getDate();
         fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/summary?orderby="+[orderValue],
         {
             method: "GET",
@@ -78,6 +81,7 @@
 
     //if orderValue changes, this function is executed
     useEffect(()=>{
+        getDate();
         if(prev_order_state.current != [orderValue]){
             prev_order_state.current = [orderValue];
             if(viewValue === "ALL" || viewValue===""){
@@ -118,6 +122,7 @@
 
     //if viewValue changes, this function is executed
     useEffect(()=>{
+        getDate();
         if(prev_view_state.current != [viewValue]){
             prev_view_state.current = [viewValue];
             if (viewValue==="ALL"){
@@ -159,6 +164,7 @@
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        getDate();
 
         if(input === ""){
                 fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/summary?orderby="+[orderValue],
@@ -193,6 +199,17 @@
                 setRecord(undefined)
             }
         })}
+    }
+
+    const getDate=()=>{
+        var today = new Date();
+        let day = today.getDate();
+        let month = today.getMonth();
+        let year = today.getFullYear();
+        let time =  today.toLocaleString('en-US', {hour: 'numeric', hour12:true, minute: 'numeric'})
+        let date = year + "_" + (month+1) + "_" + day + "_" + time 
+        // await setFileName("CAS_graduating_students"+"("+date+")")
+        setFileName("CAS_graduating_students"+"("+date+")")
     }
 
     const orderChange=(e)=>{
@@ -274,7 +291,7 @@
                     <p>No student candidates for graduation</p>
                     </div>)}
                 </div>
-                <div style={{display:"none"}}><ComponentToPrint record={record} ref={componentRef} /></div> 
+                <div style={{display:"none"}}><ComponentToPrint record={record} documentTitle={fileName} ref={componentRef} /></div> 
             </div>
             <Header/>
             <Menu/>
