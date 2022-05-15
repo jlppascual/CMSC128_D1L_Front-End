@@ -23,7 +23,7 @@
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false)
     const [toDelete, setToDelete] = useState("")
 
-    const { user, isAuthenticated, setAuth } = useStore();
+    const { user, setAuth } = useStore();
     const navigate = useNavigate();     // navigation hook
     const prev_view_state = useRef();
 
@@ -38,28 +38,24 @@
     prev_view_state.current = [viewValue];
  
     useEffect(() =>{
-        if(!isAuthenticated) {
-            navigate('/')
-            alert("You are not logged in!")
+        if(user.user_role==="CHAIR/HEAD"){
+            fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/user",
+            {
+                method: "GET",
+                credentials:'include'
+            })
+            .then(response => {return response.json()})
+            .then(json=>{
+                setUsers(json.result.output)
+                if(json.result.session){
+                    setAuth(user,json.result.session)
+                }            
+            })
         }else{
-            if(user.user_role==="CHAIR/HEAD"){
-                fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/user",
-                {
-                    method: "GET",
-                    credentials:'include'
-                })
-                .then(response => {return response.json()})
-                .then(json=>{
-                    setUsers(json.result.output)
-                    if(json.result.session){
-                        setAuth(user,json.result.session)
-                    }            
-                })
-            }else{
-                navigate("/home")
-                alert("Must be an admin to access this page")
-            }
+            navigate("/home")
+            alert("Must be an admin to access this page")
         }
+        
      },[pageState]);
 
      //if viewValue changes, this function is executed
@@ -74,6 +70,9 @@
                 })
                 .then(response => {return response.json()})
                 .then(json=>{
+                    if (json.result.session.silentRefresh) {
+                        setAuth(json.result.session.user, json.result.session.silentRefresh)
+                    }
                     if(json.result.success){
                         setUsers(json.result.output)
                     }else{
@@ -88,6 +87,9 @@
                 })
                 .then(response => {return response.json()})
                 .then(json=>{
+                    if (json.result.session.silentRefresh) {
+                        setAuth(json.result.session.user, json.result.session.silentRefresh)
+                    }
                     if(json.result.success){
                         setUsers(json.result.output)
                     

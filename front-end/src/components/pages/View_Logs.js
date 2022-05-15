@@ -28,7 +28,6 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
     const { user, setAuth } = useStore();
     
 
-
     const view_options = [
         {label: "ALL", value: "all" },
         {label: "ACTIVITY" , value: "activity" },
@@ -85,6 +84,7 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
 
      //create a text file of logs
      useEffect(()=>{
+         console.log("here")
          makeTextFile()
          
      },[logs])
@@ -100,6 +100,10 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
         })
         .then(response => {return response.json()})
         .then(json=>{
+            if (json.result.session.silentRefresh) {
+                setAuth(json.result.session.user, json.result.session.silentRefresh)
+            }
+
             if(json.result.success){
                 formatLogs(json.result.output)
             }else{
@@ -110,7 +114,7 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
      },[pageState])
 
      useEffect(()=>{
-        
+
         if (viewValue==="user"){
             fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log/user/"+chosenUser,
             {
@@ -118,6 +122,9 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
             })
             .then(response => {return response.json()})
             .then(json=>{
+                if (json.result.session.silentRefresh) {
+                    setAuth(json.result.session.user, json.result.session.silentRefresh)
+                }
                 if(json.result.success){
                     formatLogs(json.result.output)
                 }else{
@@ -132,6 +139,9 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
             })
             .then(response => {return response.json()})
             .then(json=>{
+                if (json.result.session.silentRefresh) {
+                    setAuth(json.result.session.user, json.result.session.silentRefresh)
+                }
                 if(json.result.success){
                     formatLogs(json.result.output)
                 }else{
@@ -147,6 +157,9 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
             })
             .then(response => {return response.json()})
             .then(json=>{
+                if (json.result.session.silentRefresh) {
+                    setAuth(json.result.session.user, json.result.session.silentRefresh)
+                }
                 if(json.result.success){
                     formatLogs(json.result.output)
                 }else{
@@ -155,7 +168,8 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
                 }
             })
         }
-        },[viewValue, activity,chosenUser]);
+        },[viewValue, activity, chosenUser]);
+
         
         const formatUsers = (users) =>{
             let user_list = []
@@ -237,6 +251,10 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
                     credentials:'include'
                 }).then(response => {return response.json()})
                 .then(json=>{
+                    if (json.result.session.silentRefresh) {
+                        setAuth(json.result.session.user, json.result.session.silentRefresh)
+                    }
+
                     if(json.result.success){
                         formatLogs(json.result.output)
                     }else{
@@ -252,6 +270,10 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
                 })
                 .then(response => {return response.json()})
                 .then(json=>{
+                    if (json.result.session.silentRefresh) {
+                        setAuth(json.result.session.user, json.result.session.silentRefresh)
+                    }
+
                     if(json.result.success){
                         formatLogs(json.result.output)
                     }else{

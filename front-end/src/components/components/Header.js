@@ -6,7 +6,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Dp from '../../images/dp_default.jpg';
-import Logo from '../../images/asteris-logo.png';
+import Logo from '../../images/asteris-logo.webp';
 import useStore from '../hooks/authHook';
 import '../../css/header.css'
 

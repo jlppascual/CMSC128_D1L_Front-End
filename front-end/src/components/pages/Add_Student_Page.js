@@ -19,17 +19,9 @@
     const semester= useRef();
     const acad_year = useRef();
     const num_of_units = useRef();
-    const weightPerTerm = useRef();
 
-    const { user, isAuthenticated } = useStore();
+    const { user, setAuth } = useStore();
     const navigate = useNavigate();     // navigation hook
-
- 
-     useEffect(() => {
-         if(!isAuthenticated) {
-             navigate('/')
-             alert("You are not logged in!")}
-     },[isAuthenticated])
  
  
      //https://stackoverflow.com/a/67296403
@@ -196,6 +188,9 @@
              })
          }).then((response) => {return response.json()})
          .then(json => {
+            if (json.result.session.silentRefresh) {
+                setAuth(json.result.session.user, json.result.session.silentRefresh)
+            }
              if(json.result.success){
                  const student = json.result.output.record
                  const full_name = student.first_name+" "+student.last_name+", "+student.degree_program+":\n"

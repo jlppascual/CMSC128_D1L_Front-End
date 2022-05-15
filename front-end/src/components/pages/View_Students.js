@@ -23,13 +23,9 @@ const View_Students =()=>{
     const [input, setInput] = useState("")
     const [showConfirmation, setShowConfirmation] = useState("")
     const [toDelete, setToDelete] = useState("")
-
     const prev_order_state = useRef();
     const prev_view_state = useRef();
-    const orderFilter = [
-        {label: 'NAME', value:'name'},
-        {label:'GWA',value:'gwa'}
-    ]
+ 
     const searchFilter = [
         {label: 'NAME', value:'name'},
         {label:'STUDENT NUMBER',value:'student_number'}
@@ -53,18 +49,15 @@ const View_Students =()=>{
     prev_order_state.current = [orderValue];
     prev_view_state.current = [viewValue];
 
-    const { user, isAuthenticated } = useStore();
+    const { user, setAuth } = useStore();
 
     const navigate = useNavigate();     // navigation hook
 
 
     //if state changes, this function is executed
-        useEffect(()=>{
-        if(!isAuthenticated) {
-            navigate('/')
-            alert("You are not logged in!")
-        }else{
-            fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student?orderby="+[orderValue],
+    useEffect(()=>{
+
+        fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student?orderby="+[orderValue],
         {
             method: "GET",
             credentials:'include'
@@ -76,8 +69,8 @@ const View_Students =()=>{
             }else{
                 setRecord(undefined)
             }
-        })}
-    },[isAuthenticated, state]);
+        })
+    },[state]);
 
     //if orderValue changes, this function is executed
     useEffect(()=>{
@@ -91,6 +84,9 @@ const View_Students =()=>{
                 })
                 .then(response => {return response.json()})
                 .then(json=>{
+                    if (json.result.session.silentRefresh) {
+                        setAuth(json.result.session.user, json.result.session.silentRefresh)
+                    }
                     if(json.result.success){
                         setRecord(json.result.output)
                     }else{
@@ -105,6 +101,9 @@ const View_Students =()=>{
                 })
                 .then(response => {return response.json()})
                 .then(json=>{
+                    if (json.result.session.silentRefresh) {
+                        setAuth(json.result.session.user, json.result.session.silentRefresh)
+                    }
                     if(json.result.success){
                         setRecord(json.result.output)
                     }else{
@@ -127,6 +126,9 @@ const View_Students =()=>{
                 })
                 .then(response => {return response.json()})
                 .then(json=>{
+                    if (json.result.session.silentRefresh) {
+                        setAuth(json.result.session.user, json.result.session.silentRefresh)
+                    }
                     if(json.result.success){
                         setRecord(json.result.output)
                     }else{
@@ -141,6 +143,9 @@ const View_Students =()=>{
             })
             .then(response => {return response.json()})
             .then(json=>{
+                if (json.result.session.silentRefresh) {
+                    setAuth(json.result.session.user, json.result.session.silentRefresh)
+                }
                 if(json.result.success){
                     setRecord(json.result.output)
                 }else{
@@ -167,19 +172,24 @@ const View_Students =()=>{
         })
         .then(response => {return response.json()})
         .then(json=>{
+            if (json.result.session.silentRefresh) {
+                setAuth(json.result.session.user, json.result.session.silentRefresh)
+            }
             if(json.result.success){
                 setRecord(json.result.output)
             }else{
                 alert(json.result.message)
             }
-        })
-        } else {
+        })} else {
         if(viewValue !== ""){setViewValue("ALL")}
         fetch(url + [input]+"&&orderby="+[orderValue],{
             credentials:'include'
         })
         .then((response) => {return response.json()})
         .then(json => {
+            if (json.result.session.silentRefresh) {
+                setAuth(json.result.session.user, json.result.session.silentRefresh)
+            }
             if(json.result.success){
                 // Contains the list of match users
                 if(searchValue === "student_number"){
@@ -206,6 +216,7 @@ const View_Students =()=>{
     const handleUserInput = (e) => {
         const value = e.target.value;
         setInput(value);
+        setViewValue("ALL")
     }
 
     const confirmDelete= async(decision) =>{
@@ -217,6 +228,9 @@ const View_Students =()=>{
                 credentials:'include'
             }).then(response =>{ return response.json()})
             .then(json=>{
+                if (json.result.session.silentRefresh) {
+                    setAuth(json.result.session.user, json.result.session.silentRefresh)
+                }
                 if(json.result.success){
                     window.alert(json.result.message)
                     changeState(!state)
@@ -224,6 +238,7 @@ const View_Students =()=>{
             })
         }
     }
+
     const onDelete=(student)=>{
         setShowConfirmation(true)
         setToDelete(student);
@@ -241,6 +256,19 @@ const View_Students =()=>{
             </label>
         );
     }
+    async function countWarning(student_id){
+        
+        let count = await fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/'+student_id,{
+            method:'GET',
+            credentials:'include'
+        }).then(response=> {return response.json()})
+        .then(json=>{
+            return json.result.output.warnings.length;
+        })
+        return(count)
+        
+    }
+
     async function countWarning(student_id){
         
         let count = await fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/'+student_id,{

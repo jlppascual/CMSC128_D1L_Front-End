@@ -43,6 +43,10 @@ const UserProfile =()=>{
             })
             .then(response => {return response.json()})
             .then(json=>{
+                if (json.result.session.silentRefresh) {
+                    setAuth(json.result.session.user, json.result.session.silentRefresh)
+                }
+
                 setUserLogs(json.result.output)
                 if(json.result.session){
                     setAuth(user,json.result.session)

@@ -2,6 +2,7 @@
  * author: Jem, Leila
  */
  import React, { useEffect, useState, useRef } from 'react';
+ import useStore from '../hooks/authHook';
  import { useNavigate } from 'react-router-dom';
  import {BsSearch}  from 'react-icons/bs';
  import {AiFillPrinter} from 'react-icons/ai';
@@ -25,6 +26,9 @@
     const prev_order_state = useRef();
     const prev_view_state = useRef();
     const {user} = useStore()
+    const { setAuth } = useStore();
+    const [fileName, setFileName] = useState();
+
     const orderFilter = [
         {label: 'NAME', value:'name'},
         {label:'GWA',value:'gwa'}
@@ -52,9 +56,10 @@
     // for printing
     const componentRef = useRef();
     const handlePrint = useReactToPrint({
-            content: () => componentRef.current,
-        });
-        // fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log/print",{
+        content: () => componentRef.current,
+        documentTitle: fileName
+    });
+    // fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log/print",{
         //     method: "POST",
         //     credentials:'include',
         //     body:JSON.stringify({
@@ -62,12 +67,10 @@
         //     })
         //     .then(response => {return response.json()}) 
         // })
-    
-    
-    
 
     //if state changes, this function is executed
      useEffect(()=>{
+        getDate();
         fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/summary?orderby="+[orderValue],
         {
             method: "GET",
@@ -75,6 +78,9 @@
         })
         .then(response => {return response.json()})
         .then(json=>{
+            if (json.result.session.silentRefresh) {
+                setAuth(json.result.session.user, json.result.session.silentRefresh)
+            }
             if(json.result.success){
                 setRecord(json.result.output)
             }else{
@@ -85,6 +91,7 @@
 
     //if orderValue changes, this function is executed
     useEffect(()=>{
+        getDate();
         if(prev_order_state.current != [orderValue]){
             prev_order_state.current = [orderValue];
             if(viewValue === "ALL" || viewValue===""){
@@ -109,6 +116,9 @@
                 })
                 .then(response => {return response.json()})
                 .then(json=>{
+                    if (json.result.session.silentRefresh) {
+                        setAuth(json.result.session.user, json.result.session.silentRefresh)
+                    }
                     if(json.result.success){
                         setRecord(json.result.output)
                     }else{
@@ -122,6 +132,7 @@
 
     //if viewValue changes, this function is executed
     useEffect(()=>{
+        getDate();
         if(prev_view_state.current != [viewValue]){
             prev_view_state.current = [viewValue];
             if (viewValue==="ALL"){
@@ -132,6 +143,9 @@
                 })
                 .then(response => {return response.json()})
                 .then(json=>{
+                    if (json.result.session.silentRefresh) {
+                        setAuth(json.result.session.user, json.result.session.silentRefresh)
+                    }
                     if(json.result.success){
                         setRecord(json.result.output)
                     }else{
@@ -146,6 +160,9 @@
             })
             .then(response => {return response.json()})
             .then(json=>{
+                if (json.result.session.silentRefresh) {
+                    setAuth(json.result.session.user, json.result.session.silentRefresh)
+                }
                 if(json.result.success){
                     setRecord(json.result.output)
                 }else{
@@ -157,6 +174,8 @@
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        getDate();
+
         if(input === ""){
                 fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/summary?orderby="+[orderValue],
             {
@@ -165,7 +184,9 @@
             })
             .then(response => {return response.json()})
             .then(json=>{
-                console.log(json)
+                if (json.result.session.silentRefresh) {
+                    setAuth(json.result.session.user, json.result.session.silentRefresh)
+                }               
                 if(json.result.success){
                     setRecord(json.result.output)
                 }else{
@@ -173,19 +194,32 @@
                 }
             })
         } else {
-        setViewValue("ALL")
         fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/summary/search?name=' +[input]+'&&orderby='+[orderValue],{
             credentials:'include'
         })
-            .then((response) => {return response.json()})
-            .then(json => {
-                if(json.result.success){
-                    setRecord(json.result.output);
-                }
-                else{
-                    setRecord(undefined)
-                }
-            })}
+        .then((response) => {return response.json()})
+        .then(json => {
+            if (json.result.session.silentRefresh) {
+                setAuth(json.result.session.user, json.result.session.silentRefresh)
+            }
+            if(json.result.success){
+                setRecord(json.result.output);
+            }
+            else{
+                setRecord(undefined)
+            }
+        })}
+    }
+
+    const getDate=()=>{
+        var today = new Date();
+        let day = today.getDate();
+        let month = today.getMonth();
+        let year = today.getFullYear();
+        let time =  today.toLocaleString('en-US', {hour: 'numeric', hour12:true, minute: 'numeric'})
+        let date = year + "_" + (month+1) + "_" + day + "_" + time 
+        // await setFileName("CAS_graduating_students"+"("+date+")")
+        setFileName("CAS_graduating_students"+"("+date+")")
     }
 
     const orderChange=(e)=>{
@@ -199,6 +233,7 @@
     const handleUserInput = (e) => {
         const value = e.target.value;
         setInput(value);
+        setViewValue("ALL")
     }
 
     const DropDown =({value,options,onChange, type})=>{
@@ -266,7 +301,7 @@
                     <p>No student candidates for graduation</p>
                     </div>)}
                 </div>
-                <div style={{display:"none"}}><ComponentToPrint user = {user} record={record} ref={componentRef} /></div> 
+                <div style={{display:"none"}}><ComponentToPrint user = {user} record={record} documentTitle={fileName} ref={componentRef} /></div> 
             </div>
             <Header/>
             <Menu/>
