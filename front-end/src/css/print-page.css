@@ -1,6 +1,6 @@
 @media print{
     @page { 
-        margin: 160px 0px;   
+        margin: 15px 0px;   
         padding: 0;     
       }
       
@@ -35,26 +35,41 @@
         margin-right: auto;
         color: #8D1436;
         font-size: 130px;
-        opacity: 0.5;
+        opacity: 0.4;
         position:fixed;
         top: 30%;
-        left: 7%;
+        left: 19%;
+    }
+    .system-watermark{
+        
+        margin-top:-10px;
+        left:15px;
+    }
+
+    .user-watermark{
+       margin-top:2px;
+        left:15px;
+    }
+    .date-watermark{
+        margin-left:15px;
     }
     
     .view-print-element{
         page-break-inside: avoid;
         page-break-after: auto;
-        margin-top: 50px;
+        margin-top: 20px;
+        font-size: 16px;
     }
     
     .view-print-thead{
         text-align: center;
         font-family: Palatino Linotype,Palatino LT STD;
-        font-size: 12px;
+        font-size: 16px;
     }
     
     .view-print-cell-header, .view-print-element td{
         border: 1px solid black; 
+        padding:5px;
     }
     
     
@@ -65,14 +80,17 @@
     
     .name-cell{
         text-align: left;
+        padding: 5px;
     }
     
     .gwa-cell{
         text-align: center;
+        padding: 5px;
     }
     
     .degree-cell{
         text-align: center;
+        padding: 5px;
     }
 }
 /* .view-print-preview{

@@ -14,7 +14,7 @@ const Header =()=>{
 
     const[userType, setType]=useState();
     const navigate = useNavigate();     // hook for navigation
-    const {user, host} = useStore();
+    const {user, host, setAuth} = useStore();
     
     const userLogout=()=>{ 
         

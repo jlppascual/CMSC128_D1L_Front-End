@@ -177,3 +177,13 @@
     font-size: 22px;
     color: #8D1436
 }
+
+.deleted-user-watermark{
+    position:fixed;
+    left: 50%;
+    top: 15%;
+    transform: translate(-50%, -50%);
+    color: rgba(141, 20, 54, 0.4);
+    font-weight: 600;
+    font-size: 300%;
+}

@@ -10,6 +10,7 @@
  import Menu from '../components/Menu'
  import { useReactToPrint } from 'react-to-print';
  import ComponentToPrint from '../components/ComponentToPrint'
+ import useStore from '../hooks/authHook';
  import '../../css/view_summary.css'
  
  const View_Summary =()=>{
@@ -23,7 +24,7 @@
     const [input, setInput] = useState("")
     const prev_order_state = useRef();
     const prev_view_state = useRef();
-
+    const {user} = useStore()
     const orderFilter = [
         {label: 'NAME', value:'name'},
         {label:'GWA',value:'gwa'}
@@ -51,8 +52,19 @@
     // for printing
     const componentRef = useRef();
     const handlePrint = useReactToPrint({
-        content: () => componentRef.current,
-    });
+            content: () => componentRef.current,
+        });
+        // fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log/print",{
+        //     method: "POST",
+        //     credentials:'include',
+        //     body:JSON.stringify({
+        //         user_id: user.user_id
+        //     })
+        //     .then(response => {return response.json()}) 
+        // })
+    
+    
+    
 
     //if state changes, this function is executed
      useEffect(()=>{
@@ -209,9 +221,9 @@
             <hr className='view-summary-line'/>
                 <div className='view-summary-header'>
                     
-                    
+                <i className="print-button" onClick={handlePrint}><AiFillPrinter/></i>
                     <ul className="view-summary-list">
-                    <li><i className="print-button" onClick={handlePrint}><AiFillPrinter/></i></li>
+                    
                         <li><DropDown options={orderFilter} value = {orderValue} onChange={orderChange} type={"order"}/></li>
                         <li><DropDown options={viewFilter} value = {viewValue} onChange={viewChange} type={"view"}/></li>
                     </ul>
@@ -254,7 +266,7 @@
                     <p>No student candidates for graduation</p>
                     </div>)}
                 </div>
-                <div style={{display:"none"}}><ComponentToPrint record={record} ref={componentRef} /></div> 
+                <div style={{display:"none"}}><ComponentToPrint user = {user} record={record} ref={componentRef} /></div> 
             </div>
             <Header/>
             <Menu/>
