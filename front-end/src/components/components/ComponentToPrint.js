@@ -10,13 +10,17 @@ class ComponentToPrint extends React.Component{
         }
        
     }
+   
     render(){
         console.log(this.state.user)
         return(
             <div className='view-print-preview'>
+<<<<<<< HEAD
                 <span className="system-watermark">ASTERIS CAS - UPLB</span> <span className="date-watermark">{new Date().toLocaleString()}</span><br />
                 <p className="user-watermark">{this.state.user.first_name} {this.state.user.last_name}</p>
                 
+=======
+>>>>>>> 1074e3a4fe6322b1d5c5967704ce1dd8dd3c4956
             {this.props.record != undefined ? 
                 <table className='view-print-table'>
                     <span className="watermark-text">ASTERIS</span>

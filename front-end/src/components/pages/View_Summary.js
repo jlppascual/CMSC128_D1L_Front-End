@@ -25,8 +25,7 @@
     const [input, setInput] = useState("")
     const prev_order_state = useRef();
     const prev_view_state = useRef();
-    const {user} = useStore()
-    const { setAuth } = useStore();
+    const { user,setAuth } = useStore();
     const [fileName, setFileName] = useState();
 
     const orderFilter = [
