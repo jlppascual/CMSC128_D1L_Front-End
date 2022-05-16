@@ -10,7 +10,7 @@
  import useStore from '../hooks/authHook';
  import '../../css/view_logs.css'
 import { BsSearch, BsDownload } from 'react-icons/bs';
- 
+
  const View_Logs=()=>{
 
     const {REACT_APP_HOST_IP} = process.env
@@ -23,7 +23,8 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
     const [users,setUsers] = useState([]);
     const [students, setStudents] = useState([]);
     const [chosenUser, setChosenUser] = useState("");
-    const [emptyLogs, setEmptyMessage] = useState("");
+    const [emptyLogs, setEmptyMessage] = useState("Loading logs...");
+    const [pageState, setPage] = useState(false)
     const { user, setAuth } = useStore();
     
 
@@ -44,12 +45,10 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
         {label: "ADD STUDENT", value: "Added%20a%20student%20record"},
         {label: "EDIT STUDENT", value: "Edited%20a%20student%20record"},
         {label: "DELETE STUDENT", value: "Deleted%20a%20student%20record"},
-        {label: "ADDED USER", value: "Created%20a%20user%20account"},
-
     ]
 
      useEffect(()=>{
-
+        console.log("here")
         if(user.user_role === "CHAIR/HEAD"){
             fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/user/all",
                 {
@@ -63,8 +62,8 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
                     }
                     if(json.result.success){
                         formatUsers(json.result.output)
-                        
-                    }          
+
+                    }
                 })
                 fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/all",
                 {
@@ -75,13 +74,14 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
                 .then(json=>{
                     if(json.result.success){
                         setStudents(json.result.output)
-                    }          
+                        setPage(!pageState)
+                    }
                 })
         }else{
             navigate('/home')
             alert("Must be an admin to access this page")
-        }  
-     },[user])
+        }
+     },[user.user_role])
 
      //create a text file of logs
      useEffect(()=>{
@@ -104,13 +104,14 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
                 formatLogs(json.result.output)
             }else{
                 setEmptyMessage(json.result.message)
-                
+
             }
         })
-     },[users])
+     },[pageState])
 
 
      useEffect(()=>{
+        console.log("here")
         if (viewValue==="user"){
             fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log/user/"+chosenUser,
             {
@@ -165,7 +166,7 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
             })
         }
         },[viewValue, activity, chosenUser]);
-        
+
         const formatUsers = (users) =>{
             let user_list = []
             if(users !== []){
@@ -177,50 +178,54 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
             }
             setUsers(user_list)
         }
-    
+
         const formatLogs = (logs) => {
-            if(logs && students && users){
+            if(logs && students && students.length > 0 && users && users.length > 0){
                 for (let i = 0; i < logs.length; i++) {
                     for (let j = 0; j < students.length; j++) {
-                        if(logs[i].subject_entity==="Student" && logs[i].subject_id === students[j].student_id){ 
+                        if(logs[i].subject_entity==="Student" && logs[i].subject_id === students[j].student_id){
                             logs[i]['subject_name'] = students[j].first_name +" "+ students[j].last_name
                             break
                         }
                     }
                     for (let j = 0; j < users.length; j++) {
-                        if(logs[i].user_id === users[j].value){ 
+                        if(logs[i].user_id === users[j].value){
                             logs[i]['user_name'] = users[j].label
                         }
-                        if(logs[i].subject_entity==="User" && logs[i].subject_id === users[j].value){ 
+                        if(logs[i].subject_entity==="User" && logs[i].subject_id === users[j].value){
                             logs[i]['subject_name'] = users[j].label
                         }
                     }
                 }
+                changeLogs(logs)
             }
-            changeLogs(logs)
+            else{
+                changeLogs(undefined)
+                setEmptyMessage("Loading logs...")
+            }
         }
-    
+
         const viewChange=(e)=>{
             e.preventDefault();
             setViewValue(e.target.value);
         }
-    
-    
+
+
         const handleUserInput=(e)=>{
             setInput(e.target.value);
         }
-    
+
         const handleActivity=(e)=>{
             setActivity(e.target.value);
         }
-    
+
         const handleUser=(e)=>{
             setChosenUser(e.target.value);
         }
-    
+
         const makeTextFile=()=>{
             let data=[];
-    
+
             {logs != undefined ? (
                 logs.map((log, i)=>{
                     var user_name = log.user_name
@@ -229,15 +234,15 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
                     data.push(i+1 + ". " + user_name +"    "+ log.time_stamp + "    " + log.activity_type + "    " +subject_name+ "    "+ details+"\n")
                 })
             ):("")}
-    
+
             const file = new Blob([data.join("\n")],{type:"text/plain"});
             // this part avoids memory leaks
             if (downloadLink !== '') window.URL.revokeObjectURL(downloadLink)
-    
+
             // update the download link state
             setDownloadLink(window.URL.createObjectURL(file))
         }
-    
+
         const handleSubmit=()=>{
             if (input != ""){
                 fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log/date/"+ input,
@@ -246,9 +251,11 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
                     credentials:'include'
                 }).then(response => {return response.json()})
                 .then(json=>{
-                    if (json.result.session.silentRefresh) {
-                        setAuth(json.result.session.user, json.result.session.silentRefresh)
-                    }
+
+                    // if (json.result.session.silentRefresh) {
+                    //     setAuth(json.result.session.user, json.result.session.silentRefresh)
+                    // }
+
                     if(json.result.success){
                         formatLogs(json.result.output)
                     }else{
@@ -264,16 +271,17 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
                 })
                 .then(response => {return response.json()})
                 .then(json=>{
-                    if (json.result.session.silentRefresh) {
-                        setAuth(json.result.session.user, json.result.session.silentRefresh)
-                    }
+
+                    // if (json.result.session.silentRefresh) {
+                    //     setAuth(json.result.session.user, json.result.session.silentRefresh)
+                    // }
                     if(json.result.success){
                         formatLogs(json.result.output)
                     }else{
                         formatLogs(undefined)
                         setEmptyMessage(json.result.message)
                     }
-                })           
+                })
             }
         }
 
@@ -296,9 +304,9 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
             <div className='view-logs-body'>
                 <p className="title" style = {{marginLeft:'15%'}}>User Logs {logs?<span> {logs.length}</span>:""}</p>
                 <hr className='view-line'></hr>
-                
+
                 <div className='view-logs-header'>
-                
+
                     <ul className='filter-list'>
                         <a download={"asteris_logs ("+new Date().toLocaleString()+").txt"} href={downloadLink} className="text-download"> DOWNLOAD <i className='download-icon'><BsDownload/></i></a>
                         <li><DropDown value = {viewValue} options = {view_options} onChange = { viewChange } type="view"/></li>
@@ -307,19 +315,19 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
                         ): viewValue === "user"? (
                             <li><DropDown value = {chosenUser} options = {users} onChange = { handleUser } type="user"/></li>
                         ): ""}
-                    </ul> 
+                    </ul>
                 </div>
-                    
+
 
                     <div className="search-field">
                         <input type = "text" name = "input" placeholder = "🔎 Search by YYYY-MM-DD"
                         value = {input} onChange = {handleUserInput} className = "input-search" required></input>
                         <a onClick={handleSubmit} ><BsSearch className='student-search-icon'/></a>
-                        
-                    </div>   
+
+                    </div>
 
                     <div className ='view-log-preview'>
-                    {logs !==undefined ? 
+                    {logs !==undefined ?
                     <div className='table-wrap'>
                         <table className='view-log-table'>
                         <thead className='view-log-thead'>
@@ -332,7 +340,7 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
                             </tr>
                         </thead>
                         <tbody className = 'view-log-tbody'>
-                                
+
                                 {logs.map((log, i)=>{
                                 var time_stamp = log.time_stamp.split(" ")
                                 return (
@@ -347,23 +355,22 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
                                 :
                                 <td className='subject-cell'>-</td>}
                                 <td className='log-cell'> {log.details!==null? log.details:"-"}</td>
-                               
+
                                 </tr>)
                                 })}
                             </tbody>
                         </table>
                     </div>
-                    : 
+                    :
                     <div className='no-logs'>{emptyLogs} </div>}
-                    </div> 
-                    
+                    </div>
+
             </div>
-            <Header/> 
+            <Header/>
             <Menu />
             <Footer/>
-    </div> 
+    </div>
     )
 
  }
  export default View_Logs;
- 
