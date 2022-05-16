@@ -16,19 +16,17 @@ const View_Student_Details =()=>{
     const[pageState, setPage] = useState(false)
     const[editable, setEditable] = useState(false);
     const {REACT_APP_HOST_IP} = process.env
-    const[warnings, setWarnings] = useState(false);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState("")
     const [showCancelConfirmation, setShowCancelConfirmation] = useState("")
     const [showEditConfirmation, setShowEditConfirmation] = useState("")
     const [showWarnings, setShowWarnings] = useState(false)
+    const [new_courses, setNewCourses] = useState([])
     
     const [state, setState]= useState({
         student_details:[],
         record_details:[],
         term_details:[],        
     })
-
-    let new_courses=[]
 
     const { user, setAuth } = useStore();
     const navigate = useNavigate();     // navigation hook
@@ -100,12 +98,17 @@ const View_Student_Details =()=>{
         
     }
     
-    const handleUpdate=async(event)=>{
-        event.preventDefault();
-        if (!isCompleteFields(new_courses)){
+    const handleUpdate=()=>{
+        if (!isCompleteFields()){
             alert("Please complete missing fields")
         }
-        else setShowEditConfirmation(true)
+        else if(!checkChanges()){
+            alert("Please apply changes first")
+        }
+        else {
+            setNewCourses(getCourses())
+            setShowEditConfirmation(true)
+        }
         
     }
     const confirmEdit = async(decision,details)=>{
@@ -122,8 +125,6 @@ const View_Student_Details =()=>{
                 new_terms,
                 new_record,
             }
-            console.log(details)
-            console.log(updatedStudent)
 
            fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/"+ state.student_details.student_id, {
 
@@ -173,21 +174,72 @@ const View_Student_Details =()=>{
         return {terms,record}
     }
 
-    const isCompleteFields = (courses) =>{
-        let flag = true;
-        for (let i = 0; i < courses.length; i++) {
-            if (courses[i].course_code === "" || courses[i].grade === "" || courses[i].units === "" ){
-                flag = false;
-                break;
+    const isCompleteFields = () =>{
+        let temp;
+        const terms = state.term_details
+        for (let i = 0; i < terms.length; i++) {
+            for (let j = 0; j < terms[i].course_data.length; j++) {
+                temp = document.getElementsByName("code-"+i+"-"+j)[0]
+                if(!temp) return false
+                else if(temp && temp.value === "") return false
+                temp = document.getElementsByName("grade-"+i+"-"+j)[0]
+                if(!temp) return false
+                else if(temp && temp.value === "") return false
+                temp = document.getElementsByName("units-"+i+"-"+j)[0]
+                if(!temp) return false
+                else if(temp && temp.value === "") return false
             }
         }
-        return flag;
+        return true
+
+        // for (let i = 0; i < courses.length; i++) {
+        //     if (courses[i].course_code === "" || courses[i].grade === "" || courses[i].units === "" ){
+        //         flag = false;
+        //         return flag;
+        //     }
+        // }
+        // return flag;
     }
 
-    const updateCourse=(updatedCourse)=>{
-        new_courses = new_courses.filter(course => course.course_id !== updatedCourse.course_id)
-        new_courses.push(updatedCourse)
+    const checkChanges = () =>{
+       let temp;
+        const terms = state.term_details
+        for (let i = 0; i < terms.length; i++) {
+            for (let j = 0; j < terms[i].course_data.length; j++) {
+                
+                temp = document.getElementsByName("code-"+i+"-"+j)[0]
+                if(temp && temp.value !== terms[i].course_data[j].course_code) return true
+                temp = document.getElementsByName("grade-"+i+"-"+j)[0]
+                if(temp && temp.value !== terms[i].course_data[j].grade) return true
+                temp = document.getElementsByName("units-"+i+"-"+j)[0]
+                if(temp && temp.value !== terms[i].course_data[j].units) return true
+                temp = document.getElementsByName("weight-"+i+"-"+j)[0]
+                if(temp && temp.value !== terms[i].course_data[j].weight.toString()) return true
+                temp = document.getElementsByName("cumulated-"+i+"-"+j)[0]
+                if(temp && temp.value !== terms[i].course_data[j].cumulated.toString()) return true
+            }
+        }
+        return false
     }
+
+    const getCourses = () =>{
+        let courses = [];
+         const terms = state.term_details
+         for (let i = 0; i < terms.length; i++) {
+             for (let j = 0; j < terms[i].course_data.length; j++) {
+                 courses.push({
+                    course_id: terms[i].course_data[j].course_id,
+                    term_id: terms[i].course_data[j].term_id,
+                    course_code: document.getElementsByName("code-"+i+"-"+j)[0].value,
+                    grade: document.getElementsByName("grade-"+i+"-"+j)[0].value,
+                    units: document.getElementsByName("units-"+i+"-"+j)[0].value,
+                    weight: Number(document.getElementsByName("weight-"+i+"-"+j)[0].value),
+                    cumulated: Number(document.getElementsByName("cumulated-"+i+"-"+j)[0].value)
+                 })
+             }
+         }
+         return courses
+     }
 
     const CancelPopup=({})=>{
         return(
@@ -226,17 +278,23 @@ const View_Student_Details =()=>{
     return(
         <div>
         <div className='details-body'>
-            
+            {state.student_details.isDeleted? <div className='deleted-watermark'>DELETED STUDENT RECORD</div>:""}
             <div className = "top-header">
+                {!state.student_details.isDeleted?
                 <div className='icons'>
                     <i className = "icon" onClick={handleEdit}><BiEdit size= {25}/></i>
                     <i className = "icon" onClick={handleDelete}><BiTrash size= {25}/></i>
                     <i className = "icon" onClick={handleWarnings}><RiAlertLine size= {25}/></i>
                     {state.warnings && state.warnings.length > 0? <span className="warning-badge">{state.warnings.length}</span>
                     : ""}
-                </div>
-                <i className = "back-icon" onClick={()=> navigate('/students')}><BiArrowBack size= {30} /></i>
+                </div>:""
+                }
+                {!state.student_details.isDeleted?
+                <i className = "back-icon" onClick={()=> navigate('/students')}><BiArrowBack size= {30} /></i>:""}
+                {!state.student_details.isDeleted?
                 <p className="student-name">{state.student_details.last_name}, {state.student_details.first_name} {state.student_details.middle_name} {state.student_details.suffix} </p>
+                : <p className="student-name" style={{marginLeft:'16.5%'}}>{state.student_details.last_name}, {state.student_details.first_name} {state.student_details.middle_name} {state.student_details.suffix} </p>
+                }
                 {editable === true ? <span>
                     <button type = "button" onClick={handleCancel} className="cancel-edit-btn" id="cancel-editing-btn">Cancel Editing</button>
                     <button type = "button" onClick={handleUpdate} className="submit-edit-btn" id="submit-changes-btn">Submit Changes</button>
@@ -282,7 +340,7 @@ const View_Student_Details =()=>{
                             {term.course_data!=[]? term.course_data.map((course,index)=>(
                                 <Fragment key={index}>
                                     {editable === true ? (
-                                    <Edit_Row func={{updateCourse: updateCourse.bind()}} term_index = {i} course = {course} index = {index}/>
+                                    <Edit_Row  term_index = {i} course = {course} index = {index}/>
                                     ) : (
                                     <Read_Row course = {course} index = {index}/>
                                     ) }

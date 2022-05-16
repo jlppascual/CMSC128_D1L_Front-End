@@ -6,7 +6,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Dp from '../../images/dp_default.jpg';
-import Logo from '../../images/asteris-logo.png';
+import Logo from '../../images/asteris-logo.webp';
 import useStore from '../hooks/authHook';
 import '../../css/header.css'
 
@@ -14,7 +14,7 @@ const Header =()=>{
 
     const[userType, setType]=useState();
     const navigate = useNavigate();     // hook for navigation
-    const {user, host} = useStore();
+    const {user, host, setAuth} = useStore();
     
     const userLogout=()=>{ 
         

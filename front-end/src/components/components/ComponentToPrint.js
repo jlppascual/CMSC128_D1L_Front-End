@@ -4,14 +4,22 @@ import '../../css/print-page.css'
 class ComponentToPrint extends React.Component{
     constructor(props){
         super(props)
+        this.state = {
+            user: this.props.user
+        }
     }
    
     render(){
+        console.log(this.state.user)
         return(
             <div className='view-print-preview'>
+                <span className="system-watermark">ASTERIS CAS - UPLB</span> <span className="date-watermark">{new Date().toLocaleString()}</span><br />
+                <p className="user-watermark">{this.state.user.first_name} {this.state.user.last_name}</p>
+                
             {this.props.record != undefined ? 
                 <table className='view-print-table'>
                     <span className="watermark-text">ASTERIS</span>
+                    
                     <thead className='view-print-thead'>
                         <tr>
                             <th className='view-print-cell-header'>NAME</th>

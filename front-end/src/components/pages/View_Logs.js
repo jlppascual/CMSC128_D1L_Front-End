@@ -15,13 +15,13 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
 
     const {REACT_APP_HOST_IP} = process.env
     const navigate = useNavigate();
-    const [pageState, setPage] = useState(false)
     const [input, setInput] = useState("");
     const [downloadLink, setDownloadLink] = useState('')
     const [logs, changeLogs] = useState([]);
     const [viewValue, setViewValue] = useState("");
     const [activity, setActivity] = useState("");
     const [users,setUsers] = useState([]);
+    const [students, setStudents] = useState([]);
     const [chosenUser, setChosenUser] = useState("");
     const [emptyLogs, setEmptyMessage] = useState("");
     const { user, setAuth } = useStore();
@@ -49,6 +49,7 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
     ]
 
      useEffect(()=>{
+
         if(user.user_role === "CHAIR/HEAD"){
             fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/user/all",
                 {
@@ -62,13 +63,25 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
                     }
                     if(json.result.success){
                         formatUsers(json.result.output)
+                        
+                    }          
+                })
+                fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/all",
+                {
+                    method: "GET",
+                    credentials:'include'
+                })
+                .then(response => {return response.json()})
+                .then(json=>{
+                    if(json.result.success){
+                        setStudents(json.result.output)
                     }          
                 })
         }else{
             navigate('/home')
             alert("Must be an admin to access this page")
         }  
-     },[pageState])
+     },[user])
 
      //create a text file of logs
      useEffect(()=>{
@@ -76,6 +89,7 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
      },[logs])
 
      useEffect(()=>{
+
         fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log",
         {
             method: "GET",
@@ -90,9 +104,11 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
                 formatLogs(json.result.output)
             }else{
                 setEmptyMessage(json.result.message)
+                
             }
         })
      },[users])
+
 
      useEffect(()=>{
         if (viewValue==="user"){
@@ -163,12 +179,20 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
         }
     
         const formatLogs = (logs) => {
-            if(logs && users){
+            if(logs && students && users){
                 for (let i = 0; i < logs.length; i++) {
+                    for (let j = 0; j < students.length; j++) {
+                        if(logs[i].subject_entity==="Student" && logs[i].subject_id === students[j].student_id){ 
+                            logs[i]['subject_name'] = students[j].first_name +" "+ students[j].last_name
+                            break
+                        }
+                    }
                     for (let j = 0; j < users.length; j++) {
                         if(logs[i].user_id === users[j].value){ 
                             logs[i]['user_name'] = users[j].label
-                            break
+                        }
+                        if(logs[i].subject_entity==="User" && logs[i].subject_id === users[j].value){ 
+                            logs[i]['subject_name'] = users[j].label
                         }
                     }
                 }
@@ -199,9 +223,10 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
     
             {logs != undefined ? (
                 logs.map((log, i)=>{
-                    var timestamp = log.time_stamp.replace("T", " ").replace("Z", " ");
+                    var user_name = log.user_name
+                    var subject_name = (log.subject_name? log.subject_name:"")
                     var details = (log.details!==null? log.details:"")
-                    data.push(i+1 + ". " + timestamp + " " + log.activity_type + details+"\n")
+                    data.push(i+1 + ". " + user_name +"    "+ log.time_stamp + "    " + log.activity_type + "    " +subject_name+ "    "+ details+"\n")
                 })
             ):("")}
     
@@ -269,13 +294,13 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
 
         <div>
             <div className='view-logs-body'>
-                <p className="title">User Logs {logs?<span> {logs.length}</span>:""}</p>
+                <p className="title" style = {{marginLeft:'15%'}}>User Logs {logs?<span> {logs.length}</span>:""}</p>
                 <hr className='view-line'></hr>
                 
                 <div className='view-logs-header'>
                 
                     <ul className='filter-list'>
-                        <a download="asteris_logs.txt" href={downloadLink} className="text-download"> DOWNLOAD <i className='download-icon'><BsDownload/></i></a>
+                        <a download={"asteris_logs ("+new Date().toLocaleString()+").txt"} href={downloadLink} className="text-download"> DOWNLOAD <i className='download-icon'><BsDownload/></i></a>
                         <li><DropDown value = {viewValue} options = {view_options} onChange = { viewChange } type="view"/></li>
                         {viewValue === "activity"? (
                             <li><DropDown value = {activity} options = {activities} onChange = { handleActivity } type="activity"/></li>
@@ -312,10 +337,15 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
                                 var time_stamp = log.time_stamp.split(" ")
                                 return (
                                 <tr className='view-log-element' key={i}>
-                                <td className="log-cell">{log.user_name}</td>
+                                {log.user_id === user.user_id? <td className='subject-cell' onClick ={()=>{navigate('/profile')}} >{log.user_name}</td>
+                                :<td className='subject-cell' onClick ={()=>{navigate('/user/'+log.user_id)}} >{log.user_name}</td>
+                                }
                                 <td className='log-cell'>{time_stamp[0]}<br /> {time_stamp[1]}</td>
                                 <td className='log-cell'>{log.activity_type}</td>
-                                <td className='log-cell'> {log.subject_entity!==null? log.subject_entity:"-"}</td>
+                                {log.subject_name && log.subject_entity === "User"? <td className='subject-cell' onClick ={()=>{navigate('/user/'+log.subject_id)}}>  <span>{log.subject_name}</span></td>
+                                : log.subject_name && log.subject_entity === "Student"? <td className='subject-cell' onClick ={()=>{navigate('/student/'+log.subject_id)}}>  <span>{log.subject_name}</span></td>
+                                :
+                                <td className='subject-cell'>-</td>}
                                 <td className='log-cell'> {log.details!==null? log.details:"-"}</td>
                                
                                 </tr>)

@@ -211,7 +211,7 @@
  
      return(
      <div>
-         <Header/>
+         
          
          <div className='body'>
              <form>
@@ -235,6 +235,7 @@
                  <br/><br/>          
              </form>
          </div>
+         <Header/>
          <Menu />
          <Footer/>
      </div>
