@@ -48,7 +48,7 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
     ]
 
      useEffect(()=>{
-        console.log("here")
+
         if(user.user_role === "CHAIR/HEAD"){
             fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/user/all",
                 {
@@ -72,6 +72,9 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
                 })
                 .then(response => {return response.json()})
                 .then(json=>{
+                    if (json.result.session.silentRefresh) {
+                        setAuth(json.result.session.user, json.result.session.silentRefresh)
+                    }
                     if(json.result.success){
                         setStudents(json.result.output)
                         setPage(!pageState)
@@ -111,7 +114,7 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
 
 
      useEffect(()=>{
-        console.log("here")
+
         if (viewValue==="user"){
             fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log/user/"+chosenUser,
             {
