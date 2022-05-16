@@ -48,7 +48,7 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
     ]
 
      useEffect(()=>{
-
+        console.log("here")
         if(user.user_role === "CHAIR/HEAD"){
             fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/user/all",
                 {
@@ -81,7 +81,8 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
             navigate('/home')
             alert("Must be an admin to access this page")
         }
-     },[user])
+     },[user.user_role])
+
 
      //create a text file of logs
      useEffect(()=>{
@@ -111,6 +112,7 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
 
 
      useEffect(()=>{
+        console.log("here")
         if (viewValue==="user"){
             fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log/user/"+chosenUser,
             {
