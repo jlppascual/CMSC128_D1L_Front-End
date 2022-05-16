@@ -20,12 +20,15 @@ const View_Students =()=>{
     const [orderValue, setOrderValue] = useState("");
     const [searchValue, setSearchValue] = useState("");
     const [viewValue, setViewValue] = useState("");
-    const [input, setInput] = useState("")
+    
     const [showConfirmation, setShowConfirmation] = useState("")
     const [toDelete, setToDelete] = useState("")
+    const [message, setMessage] = useState("Loading students...")
     const prev_order_state = useRef();
     const prev_view_state = useRef();
- 
+    
+    let input ;
+    
     const searchFilter = [
         {label: 'NAME', value:'name'},
         {label:'STUDENT NUMBER',value:'student_number'}
@@ -35,7 +38,7 @@ const View_Students =()=>{
         {label:'BACA', value:'BACA'}, 
         {label:'BAPHLO', value:'BAPHLO'},
         {label:'BASOC', value:'BASOC'},
-        {label:'BSAGCHEM', value:'BSAGCHEM'},
+        {label:'BSAGRICHEM', value:'BSAGRICHEM'},
         {label:'BSAMAT', value:'BSAMAT'},
         {label:'BSAPHY', value:'BSAPHY'},
         {label:'BSBIO', value:'BSBIO'},
@@ -56,7 +59,8 @@ const View_Students =()=>{
 
     //if state changes, this function is executed
     useEffect(()=>{
-
+        setRecord(undefined)
+        setMessage("Loading students...")
         fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student?orderby="+[orderValue],
         {
             method: "GET",
@@ -71,6 +75,7 @@ const View_Students =()=>{
                 setRecord(json.result.output)
             }else{
                 setRecord(undefined)
+                setMessage(json.result.message)
             }
         })
     },[state]);
@@ -80,6 +85,8 @@ const View_Students =()=>{
         if(prev_order_state.current != [orderValue]){
             prev_order_state.current = [orderValue];
             if(viewValue === "ALL" || viewValue === ""){
+                setRecord(undefined)
+                setMessage("Loading students...")
                 fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student?orderby="+[orderValue],
                 {
                     method: "GET",
@@ -94,9 +101,12 @@ const View_Students =()=>{
                         setRecord(json.result.output)
                     }else{
                         setRecord(undefined)
+                        setMessage(json.result.message)
                     }
                 })
             }else{
+                setRecord(undefined)
+                setMessage("Loading students...")
                 fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/degree/"+ [viewValue]+"?orderby="+[orderValue],
                 {
                     method: "GET",
@@ -111,6 +121,7 @@ const View_Students =()=>{
                         setRecord(json.result.output)
                     }else{
                         setRecord(undefined)
+                        setMessage(json.result.message)
                     }
                 })
             }
@@ -122,6 +133,8 @@ const View_Students =()=>{
         if(prev_view_state.current != [viewValue]){
             prev_view_state.current = [viewValue];
             if (viewValue==="ALL" || viewValue===""){
+                setRecord(undefined)
+                setMessage("Loading students...")
                 fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student?orderby="+[orderValue],
                 {
                     method: "GET",
@@ -136,9 +149,12 @@ const View_Students =()=>{
                         setRecord(json.result.output)
                     }else{
                         setRecord(undefined)
+                        setMessage(json.result.message)
                     }
                 })
             } else{
+                setRecord(undefined)
+                setMessage("Loading students...")
                 fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/degree/"+ [viewValue]+"?orderby="+[orderValue],
             {
                 method: "GET",
@@ -153,6 +169,7 @@ const View_Students =()=>{
                     setRecord(json.result.output)
                 }else{
                     setRecord(undefined)
+                    setMessage(json.result.message)
                 }
             })}
         }
@@ -168,6 +185,9 @@ const View_Students =()=>{
         }
 
         if(input === ""){
+            setViewValue("ALL")
+            setRecord(undefined)
+            setMessage("Loading students...")
             fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student?orderby="+[orderValue],
         {
             method: "GET",
@@ -181,11 +201,14 @@ const View_Students =()=>{
             if(json.result.success){
                 setRecord(json.result.output)
             }else{
-                alert(json.result.message)
+                setRecord(undefined)
+                setMessage(json.result.message)
             }
         })} else {
         if(viewValue !== ""){setViewValue("ALL")}
-        fetch(url + [input]+"&&orderby="+[orderValue],{
+        setRecord(undefined)
+        setMessage("Loading results...")
+        fetch(url + input,{
             credentials:'include'
         })
         .then((response) => {return response.json()})
@@ -202,7 +225,8 @@ const View_Students =()=>{
                 }
             }
             else{
-                alert(json.result.message) // Message: No results found
+                setRecord(undefined)
+                setMessage(json.result.message)
             }
         })}
     }
@@ -212,14 +236,11 @@ const View_Students =()=>{
     }
 
     const viewChange=(e)=>{
-        console.log(record)
         setViewValue(e.target.value);
     }
 
     const handleUserInput = (e) => {
-        const value = e.target.value;
-        setInput(value);
-        setViewValue("ALL")
+        input = e.target.value;
     }
 
     const confirmDelete= async(decision) =>{
@@ -259,31 +280,6 @@ const View_Students =()=>{
             </label>
         );
     }
-    async function countWarning(student_id){
-        
-        let count = await fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/'+student_id,{
-            method:'GET',
-            credentials:'include'
-        }).then(response=> {return response.json()})
-        .then(json=>{
-            return json.result.output.warnings.length;
-        })
-        return(count)
-        
-    }
-
-    async function countWarning(student_id){
-        
-        let count = await fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/'+student_id,{
-            method:'GET',
-            credentials:'include'
-        }).then(response=> {return response.json()})
-        .then(json=>{
-            return json.result.output.warnings.length;
-        })
-        return(count)
-        
-    }
 
     return(
         <div>
@@ -318,9 +314,6 @@ const View_Students =()=>{
                         
                         <tbody className = 'view-student-tbody'>
                             {record.map((rec, i) => {
-                                let bg_color = 'white';
-                                let count = countWarning(rec.student_id)
-                                if(count > 0) bg_color = 'rgba(141, 20, 54, 0.1)'
                                 return (
                                     <tr key={i} className='view-student-element' style={{}}>
                                         
@@ -335,9 +328,9 @@ const View_Students =()=>{
                         {showConfirmation===true? <DeletePopup props={{confirmDelete: confirmDelete.bind()}} />:""}
                     </table></div>:
                 <div className='empty-students'>
-                    <p>No student records to display</p>
-                    <button onClick={()=> navigate('/student/new')}> Add Student Records</button>
-                    </div>
+                    <p>{message}</p>
+                    {message==="Loading students..."?"":message==="Loading results..."?"":<button onClick={()=> navigate('/student/new')}> Add Student Records</button>}
+                </div>
                 }
             </div>
         </div>

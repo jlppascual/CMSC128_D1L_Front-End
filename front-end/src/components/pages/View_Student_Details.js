@@ -34,7 +34,6 @@ const View_Student_Details =()=>{
     useEffect(()=>{
         const link = window.location.href
         const id = link.slice(link.lastIndexOf('/')+1,link.length)
-        // console.log(id)
         fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/'+id,{
             method:'GET',
             credentials:'include'
