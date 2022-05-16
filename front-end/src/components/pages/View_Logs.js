@@ -83,7 +83,6 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
         }
      },[user.user_role])
 
-
      //create a text file of logs
      useEffect(()=>{
         makeTextFile()
@@ -120,9 +119,9 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
             })
             .then(response => {return response.json()})
             .then(json=>{
-                // if (json.result.session.silentRefresh) {
-                //     setAuth(json.result.session.user, json.result.session.silentRefresh)
-                // }
+                if (json.result.session.silentRefresh) {
+                    setAuth(json.result.session.user, json.result.session.silentRefresh)
+                }
                 if(json.result.success){
                     formatLogs(json.result.output)
                 }else{
@@ -137,9 +136,9 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
             })
             .then(response => {return response.json()})
             .then(json=>{
-                // if (json.result.session.silentRefresh) {
-                //     setAuth(json.result.session.user, json.result.session.silentRefresh)
-                // }
+                if (json.result.session.silentRefresh) {
+                    setAuth(json.result.session.user, json.result.session.silentRefresh)
+                }
                 if(json.result.success){
                     formatLogs(json.result.output)
                 }else{
@@ -155,9 +154,9 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
             })
             .then(response => {return response.json()})
             .then(json=>{
-                // if (json.result.session.silentRefresh) {
-                //     setAuth(json.result.session.user, json.result.session.silentRefresh)
-                // }
+                if (json.result.session.silentRefresh) {
+                    setAuth(json.result.session.user, json.result.session.silentRefresh)
+                }
                 if(json.result.success){
                     formatLogs(json.result.output)
                 }else{
