@@ -18,9 +18,43 @@ const MyProfile =()=>{
     const[showSettings, setShowSettings] = useState(false);
     const[popType, setType] = useState("")
     const[user_logs, setLogs] = useState([])
+    const [emptyLogs, setEmptyMessage] = useState("Loading logs...");
+    const [students, setStudents] = useState([]);
+    const [users, setUsers] = useState([]);
+
 
     const { user, setAuth} = useStore();
  
+    useEffect(()=>{
+       
+        fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/user/all",
+        {
+            method: "GET",
+            credentials:'include'
+        })
+        .then(response => {return response.json()})
+        .then(json=>{
+            if(json.result.success){
+                setUsers(json.result.output)
+                
+            }          
+        })
+        fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/all",
+        {
+            method: "GET",
+            credentials:'include'
+        })
+        .then(response => {return response.json()})
+        .then(json=>{
+            if(json.result.success){
+                setStudents(json.result.output)
+                setPage(!pageState)
+            }          
+        })
+
+        
+    },[user])
+
     useEffect(()=>{
        
         fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log/user/"+ user.user_id,
@@ -30,14 +64,41 @@ const MyProfile =()=>{
         })
         .then(response => {return response.json()})
         .then(json=>{
-            setLogs(json.result.output)
-            if(json.result.session){
-                setAuth(user,json.result.session)
-            }            
+            if(json.result.success){
+                formatLogs(json.result.output)    
+            }
+            else{
+                formatLogs(undefined)
+                setEmptyMessage("No logs to display for this user")    
+            }         
         })
         
         
-    },[user])
+    },[pageState])
+
+    const formatLogs = (logs) => {
+        if(logs && students && students.length > 0 && users && users.length > 0){
+            for (let i = 0; i < logs.length; i++) {
+                for (let j = 0; j < students.length; j++) {
+                    if(logs[i].subject_entity==="Student" && logs[i].subject_id === students[j].student_id){ 
+                        logs[i]['subject_name'] = students[j].first_name +" "+ students[j].last_name
+                        break
+                    }
+                }
+                for (let j = 0; j < users.length; j++) {
+                    if(logs[i].subject_entity==="User" && logs[i].subject_id === users[j].user_id){ 
+                        logs[i]['subject_name'] = users[j].first_name+" "+users[j].last_name
+                        break
+                    }
+                }
+            }
+            setLogs(logs)
+        }
+        else{
+            setLogs(undefined)
+            setEmptyMessage("Loading logs...")
+        }
+    }
     
     const settings_list=[
         {label:"Change username", value:'username'},
@@ -54,7 +115,6 @@ const MyProfile =()=>{
         .then(body => {
             if(!body.success) alert(body.message);
             else{
-                console.log(body);
                 navigate('/');
                 setAuth(null, false)
             }
@@ -101,8 +161,6 @@ const MyProfile =()=>{
                 let confirm_pass = document.getElementById("confirm-password").value
 
                 if(new_pass === confirm_pass){
-                    
-                    console.log(document.getElementById('current-password').value,new_pass, confirm_pass)
                     fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/user/'+user.user_id+'/password' ,{
                         method: 'PATCH', 
                         credentials:'include',
@@ -215,17 +273,16 @@ const MyProfile =()=>{
             <p className='user-logs-title'>USER LOGS</p>
             <div className ='view-log-preview' style = {{width: '60%',
                     marginLeft:'20%',
-                    height: '35%',
-                    backgroundColor: '#ebebeb'}}>
+                    height: '35%',}}>
                     {user_logs !== undefined ? 
                     <div className='table-wrap'>
                         <table className='view-log-table'>
                         <thead className='view-log-thead'>
                             <tr className='header-row'>
-                                <th className='log-header' style={{backgroundColor: '#ebebeb'}}>DATE TIME</th>
-                                <th className='log-header' style={{backgroundColor: '#ebebeb'}}>ACTIVITY</th>
-                                <th className='log-header' style={{backgroundColor: '#ebebeb'}}>SUBJECT</th>
-                                <th className='log-header' style={{backgroundColor: '#ebebeb'}}>DETAILS</th>
+                                <th className='log-header'>DATE TIME</th>
+                                <th className='log-header' >ACTIVITY</th>
+                                <th className='log-header' >SUBJECT</th>
+                                <th className='log-header' >DETAILS</th>
                             </tr>
                         </thead>
                         <tbody className = 'view-log-tbody'>
@@ -234,19 +291,21 @@ const MyProfile =()=>{
                             var time_stamp = log.time_stamp.split(" ")
                             return (
                             <tr className='view-log-element' key={i}>
-                            <td className='log-cell'>{time_stamp[0]}<br /> {time_stamp[1]}</td>
+                            <td className='log-cell' >{time_stamp[0]}<br /> {time_stamp[1]}</td>
                             <td className='log-cell'>{log.activity_type}</td>
-                            <td className='log-cell'> {log.subject_entity!==null? log.subject_entity:"-"}</td>
+                            { log.subject_entity === "User"? <td className='subject-cell' onClick ={()=>{navigate('/user/'+log.subject_id)}}>  <span>{log.subject_name}</span></td>
+                                : log.subject_entity === "Student"? <td className='subject-cell' onClick ={()=>{navigate('/student/'+log.subject_id)}}>  <span>{log.subject_name}</span></td>
+                                :
+                                <td className='subject-cell'>-</td>}
                             <td className='log-cell'> {log.details!==null? log.details:"-"}</td>
                             
                             </tr>)
                             })}
                         </tbody>
                     </table>
-                        {/* <p>{user_logs.length}</p> */}
                     </div>
                     : 
-                    <div className='no-logs'>No logs to display </div>}
+                    <div className='no-logs'>{emptyLogs}</div>}
                     </div> 
             </div>
             {isToggled===true? <Popup type={popType}/>:""}

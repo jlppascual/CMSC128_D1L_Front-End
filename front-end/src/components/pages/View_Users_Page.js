@@ -134,7 +134,6 @@
             })
             .then(response => {return response.json()})
             .then(json=>{
-                console.log(json)
                 if(json.result.success){
                     setUsers(json.result.output)
                 }else{
@@ -142,7 +141,6 @@
                 }
             })
         } else {
-            console.log(url + input)
             fetch(url + [input],{
                 credentials:'include'
             })

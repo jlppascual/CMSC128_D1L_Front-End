@@ -10,15 +10,15 @@ class ComponentToPrint extends React.Component{
     }
    
     render(){
-        console.log(this.state.user)
         return(
             <div className='view-print-preview'>
                 <span className="system-watermark">ASTERIS CAS - UPLB</span> <span className="date-watermark">{new Date().toLocaleString()}</span><br />
                 <p className="user-watermark">{this.state.user.first_name} {this.state.user.last_name}</p>
-                
+                <span className="watermark-text">ASTERIS</span>
+                <div className="watermark"></div>
             {this.props.record != undefined ? 
                 <table className='view-print-table'>
-                    <span className="watermark-text">ASTERIS</span>
+                    
                     
                     <thead className='view-print-thead'>
                         <tr>
@@ -28,11 +28,10 @@ class ComponentToPrint extends React.Component{
                         </tr>
                     </thead>
                     <tbody className = 'view-print-tbody'>
-                        <div className="watermark">
-                        </div>
+                        
                         {this.props.record.map((rec, i) => {
                             return (
-                                <tr className='view-print-element'>
+                                <tr className='view-print-element' key = {i}>
                                     <td className='name-cell'>{i+1}. {rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""}
                                     {rec.suffix ? ', ' + rec.suffix : ''}</td>
                                     <td className='gwa-cell'>{rec.gwa}</td>
