@@ -21,11 +21,11 @@
     const [state, changeState]= useState('0');
     const [orderValue, setOrderValue] = useState("");
     const [viewValue, setViewValue] = useState("");
-    const [input, setInput] = useState("")
     const prev_order_state = useRef();
     const prev_view_state = useRef();
     const { user,setAuth } = useStore();
     const [fileName, setFileName] = useState();
+    const [message, setMessage] = useState("Loading students...")
 
     const orderFilter = [
         {label: 'NAME', value:'name'},
@@ -37,7 +37,7 @@
         {label:'BACA', value:'BACA'}, 
         {label:'BAPHLO', value:'BAPHLO'},
         {label:'BASOC', value:'BASOC'},
-        {label:'BSAGCHEM', value:'BSAGCHEM'},
+        {label:'BSAGRICHEM', value:'BSAGRICHEM'},
         {label:'BSAMAT', value:'BSAMAT'},
         {label:'BSAPHY', value:'BSAPHY'},
         {label:'BSBIO', value:'BSBIO'},
@@ -48,6 +48,7 @@
         {label:'BSSTAT', value:'BSSTAT'},
     ]
 
+    let input ;
     prev_order_state.current = [orderValue];
     prev_view_state.current = [viewValue];
 
@@ -69,12 +70,16 @@
     //if state changes, this function is executed
      useEffect(()=>{
         getDate();
+        setRecord(undefined)
+        setMessage("Loading students...")
         fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/summary?orderby="+[orderValue],
         {
             method: "GET",
             credentials:'include'
         })
-        .then(response => {return response.json()})
+        .then(response => {
+            return response.json()
+        })
         .then(json=>{
             if (json.result.session.silentRefresh) {
                 setAuth(json.result.session.user, json.result.session.silentRefresh)
@@ -83,6 +88,7 @@
                 setRecord(json.result.output)
             }else{
                 setRecord(undefined)
+                setMessage(json.result.message)
             }
         }) 
     },[state]);
@@ -93,6 +99,8 @@
         if(prev_order_state.current != [orderValue]){
             prev_order_state.current = [orderValue];
             if(viewValue === "ALL" || viewValue===""){
+                setRecord(undefined)
+                setMessage("Loading students...")
                 fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/summary?orderby="+[orderValue],
                 {
                     method: "GET",
@@ -100,6 +108,9 @@
                 })
                 .then(response => {return response.json()})
                 .then(json=>{
+                    if (json.result.session.silentRefresh) {
+                        setAuth(json.result.session.user, json.result.session.silentRefresh)
+                    }
                     if(json.result.success){
                         setRecord(json.result.output)
                     }else{
@@ -107,6 +118,8 @@
                     }
                 })
             }else{
+                setRecord(undefined)
+                setMessage("Loading students...")
                 fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/summary/degree/"+ [viewValue]+"?orderby="+[orderValue],
                 {
                     method: "GET",
@@ -133,7 +146,9 @@
         getDate();
         if(prev_view_state.current != [viewValue]){
             prev_view_state.current = [viewValue];
-            if (viewValue==="ALL"){
+            if (viewValue==="ALL" || viewValue===""){
+                setRecord(undefined)
+                setMessage("Loading students...")
                 fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/summary?orderby="+[orderValue],
                 {
                     method: "GET",
@@ -148,15 +163,18 @@
                         setRecord(json.result.output)
                     }else{
                         setRecord(undefined)
+                        setMessage(json.result.message)
                     }
                 })
             } else{
+                setRecord(undefined)
+                setMessage("Loading students...")
                 fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/summary/degree/"+ [viewValue],
             {
                 method: "GET",
                 credentials:'include'
             })
-            .then(response => {return response.json()})
+            .then(response =>{return response.json()})
             .then(json=>{
                 if (json.result.session.silentRefresh) {
                     setAuth(json.result.session.user, json.result.session.silentRefresh)
@@ -165,6 +183,7 @@
                     setRecord(json.result.output)
                 }else{
                     setRecord(undefined)
+                    setMessage(json.result.message)
                 }
             })}
         }
@@ -175,6 +194,8 @@
         getDate();
 
         if(input === ""){
+                setRecord(undefined)
+                setMessage("Loading results...")
                 fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/summary?orderby="+[orderValue],
             {
                 method: "GET",
@@ -189,10 +210,14 @@
                     setRecord(json.result.output)
                 }else{
                     setRecord(undefined)
+                    setMessage(json.result.message)
                 }
             })
         } else {
-        fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/summary/search?name=' +[input]+'&&orderby='+[orderValue],{
+            setRecord(undefined)
+            setMessage("Loading results...")
+            setViewValue("ALL")
+        fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/summary/search?name=' +input+'&&orderby='+orderValue,{
             credentials:'include'
         })
         .then((response) => {return response.json()})
@@ -205,6 +230,7 @@
             }
             else{
                 setRecord(undefined)
+                setMessage(json.result.message)
             }
         })}
     }
@@ -229,9 +255,8 @@
     }
 
     const handleUserInput = (e) => {
-        const value = e.target.value;
-        setInput(value);
-        setViewValue("ALL")
+        input = e.target.value;
+        
     }
 
     const DropDown =({value,options,onChange, type})=>{
@@ -296,7 +321,7 @@
                                 })}
                             </tbody>
                         </table></div>: (<div className='empty-students'>
-                    <p>No student candidates for graduation</p>
+                    <p>{message}</p>
                     </div>)}
                 </div>
                 <div style={{display:"none"}}><ComponentToPrint user = {user} record={record} documentTitle={fileName} ref={componentRef} /></div> 

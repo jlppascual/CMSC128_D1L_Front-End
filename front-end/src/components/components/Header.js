@@ -26,7 +26,6 @@ const Header =()=>{
         .then(body => {
             if(!body.success) alert(body.message);
             else{
-                console.log(body);
                 navigate('/');
                 setAuth(null, false)
             }

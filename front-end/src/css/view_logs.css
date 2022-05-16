@@ -46,6 +46,7 @@
 
 .table-wrap::-webkit-scrollbar-thumb {
     background-color: white;
+    min-height: 40px;
 }
 
 .table-wrap::-webkit-scrollbar-thumb:hover {

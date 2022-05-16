@@ -191,18 +191,12 @@
             if (json.result.session.silentRefresh) {
                 setAuth(json.result.session.user, json.result.session.silentRefresh)
             }
-             if(json.result.success){
-                 const student = json.result.output.record
-                 const full_name = student.first_name+" "+student.last_name+", "+student.degree_program+":\n"
-                 let message =  full_name+json.result.message
-                 alert(message)
-             }
-             else{
-                const student = data.student_data
-                const full_name = student.first_name+" "+student.last_name+", "+student.degree_program+":\n"
-                let message =  full_name+json.result.message
-                alert(message)
-             }
+            
+            const student = data.student_data
+            const full_name = student.first_name+" "+student.last_name+", "+student.degree_program+":\n"
+            let message =  full_name+json.result.message
+            alert(message)
+             
              setFiles([]);
              setResults([]);
          })
