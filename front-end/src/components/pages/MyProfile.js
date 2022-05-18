@@ -24,7 +24,10 @@ const MyProfile =()=>{
 
 
     const { user, setAuth} = useStore();
- 
+    
+    const validEmail = new RegExp('^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$');
+    const validNumber = new RegExp('^(09|9|639)[0-9]{9}$');
+
     useEffect(()=>{
        
         fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/user/all",
@@ -102,7 +105,9 @@ const MyProfile =()=>{
     
     const settings_list=[
         {label:"Change username", value:'username'},
-        {label:"Change password", value:'password'}
+        {label:"Change password", value:'password'},
+        {label:"Change email", value:'email'},
+        {label:"Change mobile number", value:'number'}
     ]
 
     const userLogout=()=>{ 
@@ -147,7 +152,7 @@ const MyProfile =()=>{
                         }
 
                         if(json.result.success){
-                            setToggle(!isToggled)
+
                             alert(json.result.message)
                             userLogout()
                             
@@ -156,8 +161,7 @@ const MyProfile =()=>{
                         }
                     })
             }
-        }else{
-            if(popType==="password"){
+        } else if(popType==="password"){
                 let old_pass = document.getElementById('current-password').value
                 let new_pass = document.getElementById("new-password").value
                 let confirm_pass = document.getElementById("confirm-password").value
@@ -187,8 +191,27 @@ const MyProfile =()=>{
                                 alert(json.result.message)
                             }})
                 }
+            }else if(popType==="email"){
+                let new_email = document.getElementById('new-email').value;
+                
+                if (validEmail.test(new_email)){
+                    /*
+                        Enter fetch request logic
+                    */
+                } else{
+                    // prompt will be inserted here
+                }
+            } else if(popType==="number"){
+                let new_number = document.getElementById('new-number').value;
+
+                if (validNumber.test(new_number)){
+                    /*
+                        Enter fetch request logic
+                    */
+                } else{
+                    // prompt will be inserted here
+                }
             }
-        }
     }
 
     const cancelClicked=async()=>{
@@ -197,47 +220,78 @@ const MyProfile =()=>{
     }
 
     const Popup=(props)=>{
+        let body;
+        // checks what field will be edited by the user before rendering it in the body of the popup
+        if(props.type === 'username'){
+            body = 
+            <div> 
+                <div  className='username-box'>
+                    <p>Change Username</p>
+                    <input type="text" className = "setting-fields"id="new-username" placeholder="Enter new username"></input><br/>
+                    <div className='popup-buttons'>
+                        <button className="cancel" onClick={cancelClicked}>Cancel</button> <button className="confirm" onClick={confirmClicked}>Confirm</button> 
+                    </div> 
+                </div>               
+            </div>
+        } else if(props.type === 'password'){
+            body = 
+            <div>
+                <div className='password-box'>
+                <p>Change Password</p>
+                    <input type="password" className = "setting-fields" id="current-password" placeholder="Enter current password"></input><br/>
+                    <input type="password" className = "setting-fields" id="new-password" placeholder="Enter new password"></input><br/>
+                    <input type="password" className = "setting-fields" id="confirm-password" placeholder="Confirm new password"></input><br/>
+                </div>
+                <div className='popup-buttons'>
+                    <button className="cancel" onClick={cancelClicked}>Cancel</button><button className="confirm" onClick={confirmClicked}>Confirm</button> 
+                </div>
+            </div>
+        } else if(props.type === 'email'){
+            body =
+            <div> 
+                <div  className='username-box'>
+                    <p>Change Email</p>
+                    <input type="text" className = "setting-fields"id="new-email" placeholder="Enter new email"></input><br/>
+                    <div className='popup-buttons'>
+                        <button className="cancel" onClick={cancelClicked}>Cancel</button> <button className="confirm" onClick={confirmClicked}>Confirm</button> 
+                    </div> 
+                </div>               
+            </div>
+        } else if(props.type === 'number'){
+            body =
+            <div> 
+                <div  className='username-box'>
+                    <p>Change Mobile Number</p>
+                    <span className='number-prompt'>+63</span><input type="number" className = "setting-fields" id="new-number"></input><br/>
+                    <div className='popup-buttons'>
+                        <button className="cancel" onClick={cancelClicked}>Cancel</button> <button className="confirm" onClick={confirmClicked}>Confirm</button> 
+                    </div> 
+                </div>               
+            </div>
+        }
         return (
             <div className="settings-popup-box">
-                 {props.type === 'username'? (
-                <div> 
-                    <div  className='username-box'>
-                            <p>Change Username</p>
-                            <input type="text" className = "setting-fields"id="new-username" placeholder="Enter new username"></input><br/>
-                            <div className='popup-buttons'>
-                            <button className="cancel" onClick={cancelClicked}>Cancel</button> <button className="confirm" onClick={confirmClicked}>Confirm</button> 
-                        </div> 
-                        </div>
-                                       
-                    </div>
-                ) : (
-                <div>
-                    <div className='password-box'>
-                    <p>Change Password</p>
-                        <input type="password" className = "setting-fields" id="current-password" placeholder="Enter current password"></input><br/>
-                        <input type="password" className = "setting-fields" id="new-password" placeholder="Enter new password"></input><br/>
-                        <input type="password" className = "setting-fields" id="confirm-password" placeholder="Confirm new password"></input><br/>
-                    </div>
-                    <div className='popup-buttons'>
-                        <button className="cancel" onClick={cancelClicked}>Cancel</button><button className="confirm" onClick={confirmClicked}>Confirm</button> 
-                    </div>
-                </div>
-                )}
+                {body}
             </div>
-
         )
     }
 
     const handleChange=async(foo)=>{
         await setToggle(!isToggled);
 
-        if(foo.value==='username'){
-             setType('username')
+        if(foo.value === 'username'){
+             setType('username');
         }else if(foo.value ==='password'){
-             setType('password')
-        }else(
-            setType("")
-        )
+             setType('password');
+        }else if (foo.value === 'email'){
+            setType('email');
+        } else if (foo.value === 'number'){
+            setType('number');
+        } else {
+            setType('');
+        }
+            
+        
         
     }
 
