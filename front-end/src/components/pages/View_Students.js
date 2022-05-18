@@ -184,7 +184,7 @@ const View_Students =()=>{
             url = 'http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/search?student_number='
         }
 
-        if(input === ""){
+        if(input === "" || input === undefined){
             setViewValue("ALL")
             setRecord(undefined)
             setMessage("Loading students...")

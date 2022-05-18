@@ -35,9 +35,10 @@ const Home = () => {
                 <div className={'column'}>
                     <div className={'card'}>
                         <h3>Web Description</h3>
-                        <p className={'web-desc'}>Lorem ipsum dolor sit amet. Cum dolorem deserunt ad officiis velit et omnis laudantium sit enim illo id excepturi architecto aut ullam maxime aut accusantium sunt. Sit earum eligendi et nemo quia 33 soluta enim. Et esse iusto id saepe inventore ex galisum quas. Et facere corporis in nisi consequatur hic sunt expedita non commodi repellat quo fugit consectetur.
-                        <br/><br/>
-                        Aut similique distinctio ea illum corrupti et explicabo voluptate ut delectus deserunt aut blanditiis quia quo quod velit. Qui voluptas dolores a illum incidunt ad tenetur galisum aut totam nihil rem consectetur consequatur et recusandae labore.</p>
+                        <p className={'web-desc'}>The product is intended to be utilized by the CAS Scholarships, Honors, and Awards Committee <b>(SHAC)</b> as a digitized GWA verification tool to aid committee members in evaluating graduating students’ grade records. Hence, this document details the entire ASTERIS functionality set along with an extensive list of features that are accessible to the end user.
+                        <br /> <br />
+                        The product, <b>ASTERIS</b>, is defined as a web application developed using a modified version of the MERN—denoted as: MongoDB, Express, React, and Node.js—technology stack. Reflective of the development team’s preferences, the MongoDB component had been substituted by MariaDB. 
+                        </p>
                     </div>
                 </div>
             </div>

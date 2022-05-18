@@ -119,7 +119,7 @@
         }
 
         //if search input is empty, check if a user role is selected, else do the default search
-        if(input === ""){
+        if(input === "" || input === undefined){
             let url_role;
 
             if( viewValue === "OCS REP" || viewValue === "ACS" || viewValue === "UNIT REP" || viewValue === "MEMBER"){

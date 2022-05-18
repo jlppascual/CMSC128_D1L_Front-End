@@ -37,7 +37,7 @@
         {label:'BACA', value:'BACA'}, 
         {label:'BAPHLO', value:'BAPHLO'},
         {label:'BASOC', value:'BASOC'},
-        {label:'BSAGRICHEM', value:'BSAGRICHEM'},
+        {label:'BSAGCHEM', value:'BSAGCHEM'},
         {label:'BSAMAT', value:'BSAMAT'},
         {label:'BSAPHY', value:'BSAPHY'},
         {label:'BSBIO', value:'BSBIO'},
@@ -193,7 +193,7 @@
         e.preventDefault();
         getDate();
 
-        if(input === ""){
+        if(input === "" || input===undefined){
                 setRecord(undefined)
                 setMessage("Loading results...")
                 fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/summary?orderby="+[orderValue],
