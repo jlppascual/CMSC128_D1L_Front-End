@@ -27,7 +27,9 @@ const Header =()=>{
             if(!body.success) alert(body.message);
             else{
                 navigate('/');
-                setAuth(null, false)
+                setTimeout(() => {
+                    setAuth(null, false);
+                }, 500);
             }
         })
     }
