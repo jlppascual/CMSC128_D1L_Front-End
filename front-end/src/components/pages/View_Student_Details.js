@@ -11,6 +11,9 @@ import DetailsPopup from '../components/Popups/DetailsPopup';
 import {BiEdit, BiTrash, BiArrowBack}  from 'react-icons/bi';
 import {RiAlertLine}  from 'react-icons/ri';
 import '../../css/studentdetails.css'
+import { ToastContainer } from 'react-toastify';
+import { notifyError, notifySuccess } from '../components/Popups/toastNotifUtil';
+import '../../css/toast_container.css';
 
 const View_Student_Details =()=>{
     const[pageState, setPage] = useState(false)
@@ -69,7 +72,7 @@ const View_Student_Details =()=>{
                     setAuth(json.result.session.user, json.result.session.silentRefresh)
                 }
                 if(json.result.success){
-                    window.alert(json.result.message)
+                    notifySuccess(json.result.message)
                     navigate('/students')
                 }
             })
@@ -99,10 +102,10 @@ const View_Student_Details =()=>{
     
     const handleUpdate=()=>{
         if (!isCompleteFields()){
-            alert("Please complete missing fields")
+            notifyError("Please complete missing fields")
         }
         else if(!checkChanges()){
-            alert("Please apply changes first")
+            notifyError("Please apply changes first")
         }
         else {
             setNewCourses(getCourses())
@@ -148,7 +151,7 @@ const View_Student_Details =()=>{
                     const student = state.student_details
                     const full_name = student.first_name+" "+student.last_name+", "+student.degree_program+":\n"
                     let message =  full_name+json.result.message
-                    alert(message)
+                    notifySuccess(message)
                     setPage(!pageState)
                 }
             })
@@ -370,6 +373,7 @@ const View_Student_Details =()=>{
         
         <Header/>
         <Menu />
+        <ToastContainer className='toast-container'/>
         <Footer/>
         </div>
     )

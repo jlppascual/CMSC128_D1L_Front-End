@@ -14,6 +14,7 @@
  import USER from '../../images/dp_default.jpg'
  import { ToastContainer } from 'react-toastify';
  import { notifyError, notifySuccess } from '../components/Popups/toastNotifUtil';
+ import '../../css/toast_container.css';
 
  export default function View_Users_Page (){
 
@@ -259,7 +260,7 @@
                 {showDeleteConfirmation===true? <DeleteConfirmPopup props={{confirmDelete: confirmDelete.bind()}} />:""}</div>
             <Header />
             <Menu/>
-            <ToastContainer/>
+            <ToastContainer className='toast-container'/>
             <Footer/>
         </div> 
     )

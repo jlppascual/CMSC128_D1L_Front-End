@@ -9,6 +9,9 @@ import USER from '../../images/dp_default.jpg'
 import {HiMail}  from 'react-icons/hi';
 import {RiPhoneFill}  from 'react-icons/ri';
 import {BiArrowBack} from 'react-icons/bi'
+import '../../css/toast_container.css';
+import { notifyError } from '../components/Popups/toastNotifUtil';
+import { ToastContainer } from 'react-toastify';
 
 
 const UserProfile =()=>{
@@ -51,7 +54,7 @@ const UserProfile =()=>{
             })
         } else{
             navigate("/home")
-            alert("Must be an admin to access this page")
+            notifyError("Must be an admin to access this page")
         }
     },[user])
 
@@ -161,6 +164,7 @@ const UserProfile =()=>{
             </div>
             <Header/>
             <Menu/>
+            <ToastContainer className='toast-container'/>
             <Footer/>
         </div>
     )
