@@ -1,10 +1,11 @@
-import { useNavigate } from 'react-router-dom'
-import useStore from '../hooks/authHook'
-import UPLB from '../../images/uplb.png'
-import Footer from '../components/Footer'
+import { useNavigate } from 'react-router-dom';
+import useStore from '../hooks/authHook';
+import UPLB from '../../images/uplb.png';
+import Footer from '../components/Footer';
 import { ToastContainer } from 'react-toastify';
 import { notifyError } from '../components/Popups/toastNotifUtil';
-import '../../css/login.css'
+import '../../css/login.css';
+import '../../css/toast_container.css';
 
 
 // changed to function to use hooks
@@ -64,7 +65,7 @@ const Login = () => {
                 </div>
                 
             </div>
-            <ToastContainer />
+            <ToastContainer className={'toast-container'}/>
             <Footer />
         </div> 
     )
