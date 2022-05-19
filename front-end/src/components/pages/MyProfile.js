@@ -8,6 +8,9 @@ import '../../css/profile.css'
 import USER from '../../images/dp_default.jpg'
 import {HiMail}  from 'react-icons/hi';
 import {RiPhoneFill,RiSettings5Line}  from 'react-icons/ri';
+import { notifyError, notifySuccess } from '../components/Popups/toastNotifUtil';
+import { ToastContainer } from 'react-toastify';
+import '../../css/toast_container.css';
 
 const MyProfile =()=>{
 
@@ -118,7 +121,7 @@ const MyProfile =()=>{
         })
         .then(response => response.json())
         .then(body => {
-            if(!body.success) alert(body.message);
+            if(!body.success) notifyError(body.message);
             else{
                 navigate('/');
                 setTimeout(() => {
@@ -134,7 +137,7 @@ const MyProfile =()=>{
             let new_uname = document.getElementById('new-username').value
 
             if(new_uname ===""){
-                alert("Warning: field empty! Please input new username!")
+                notifyError("Warning: field empty! Please input new username!")
             }else{
                 fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/user/'+user.user_id+'/username' ,{
                     method: 'PATCH',
@@ -150,14 +153,13 @@ const MyProfile =()=>{
                         if (json.result.session.silentRefresh) {
                             setAuth(json.result.session.user, json.result.session.silentRefresh)
                         }
-
                         if(json.result.success){
-
-                            alert(json.result.message)
+                            setToggle(!isToggled)
+                            notifySuccess(json.result.message)
                             userLogout()
                             
                         }else{
-                            alert(json.result.message)
+                            notifyError(json.result.message)
                         }
                     })
             }
@@ -182,13 +184,12 @@ const MyProfile =()=>{
                             if (json.result.session.silentRefresh) {
                                 setAuth(json.result.session.user, json.result.session.silentRefresh)
                             }
-
                             if(json.result.success){
                                 setToggle(!isToggled)
-                                alert(json.result.message)
+                                notifySuccess(json.result.message)
                                 userLogout()
                             }else{
-                                alert(json.result.message)
+                                notifyError(json.result.message)
                             }})
                 }
             }else if(popType==="email"){
@@ -199,7 +200,7 @@ const MyProfile =()=>{
                         Enter fetch request logic
                     */
                 } else{
-                    // prompt will be inserted here
+                    notifyError('Invalid email format')
                 }
             } else if(popType==="number"){
                 let new_number = document.getElementById('new-number').value;
@@ -209,7 +210,7 @@ const MyProfile =()=>{
                         Enter fetch request logic
                     */
                 } else{
-                    // prompt will be inserted here
+                    notifyError('Invalid mobile number format')
                 }
             }
     }
@@ -373,6 +374,7 @@ const MyProfile =()=>{
             <Header/>
             <Menu/>
             <Footer/>
+            <ToastContainer className='toast-container'/>
         </div>
     )
 }
