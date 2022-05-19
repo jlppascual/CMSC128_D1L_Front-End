@@ -12,6 +12,9 @@
  import DeleteConfirmPopup from '../components/Popups/DeleteConfirmPopup';
  import '../../css/view_users.css'
  import USER from '../../images/dp_default.jpg'
+ import { ToastContainer } from 'react-toastify';
+ import { notifyError, notifySuccess } from '../components/Popups/toastNotifUtil';
+ import '../../css/toast_container.css';
 
  export default function View_Users_Page (){
 
@@ -53,7 +56,7 @@
             })
         }else{
             navigate("/home")
-            alert("Must be an admin to access this page")
+            notifyError("Must be an admin to access this page")
         }
         
      },[pageState]);
@@ -137,7 +140,7 @@
                 if(json.result.success){
                     setUsers(json.result.output)
                 }else{
-                    alert(json.result.message)
+                    notifyError(json.result.message)
                 }
             })
         } else {
@@ -151,7 +154,7 @@
                     setUsers(json.result.output);
                 }
                 else{
-                    alert(json.result.message) // Message: No results found
+                    notifyError(json.result.message) // Message: No results found
                 }
             })
         }
@@ -182,7 +185,7 @@
             .then(json=>{
    
                if(json.result.success){
-                    window.alert(json.result.message)
+                    notifySuccess(json.result.message)
                     setPage(!pageState)            
                }
             })
@@ -257,6 +260,7 @@
                 {showDeleteConfirmation===true? <DeleteConfirmPopup props={{confirmDelete: confirmDelete.bind()}} />:""}</div>
             <Header />
             <Menu/>
+            <ToastContainer className='toast-container'/>
             <Footer/>
         </div> 
     )

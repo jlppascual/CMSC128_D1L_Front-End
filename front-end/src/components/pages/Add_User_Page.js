@@ -9,6 +9,9 @@
  import Footer from '../components/Footer';
  import Menu from '../components/Menu'
  import '../../css/add_users.css'
+import { ToastContainer } from 'react-toastify';
+import '../../css/toast_container.css';
+import { notifyError, notifySuccess } from '../components/Popups/toastNotifUtil';
 
 const Add_User_Page=()=>{
 
@@ -22,7 +25,7 @@ const Add_User_Page=()=>{
     useEffect(() => {
         if(user.user_role !=="CHAIR/HEAD"){
             navigate("/home")
-            alert("Must be an admin to access this page")
+            notifyError("Must be an admin to access this page")
         }
         
     },)
@@ -48,7 +51,7 @@ const Add_User_Page=()=>{
 
     const sendData=(user_details)=>{
         if(user_details.password !== user_details.confirm_password) {
-            alert("Passwords don't match!")
+            notifyError("Passwords don't match!")
         } else{
             fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/user', {
                 method: 'POST',
@@ -63,10 +66,10 @@ const Add_User_Page=()=>{
                     setAuth(json.result.session.user, json.result.session.silentRefresh)
                 }
                 if(json.result.success){
-                   alert(json.result.message)
+                   notifySuccess(json.result.message)
                    clearInputs();
                }else{
-                   alert(json.result.message)
+                   notifyError(json.result.message)
                }}
             )
             
@@ -115,6 +118,7 @@ const Add_User_Page=()=>{
             </div>
             <Menu/>
             <Header />
+            <ToastContainer className='toast-container' />
             <Footer/>
     </div> 
     )

@@ -1,8 +1,11 @@
-import { useNavigate } from 'react-router-dom'
-import useStore from '../hooks/authHook'
-import UPLB from '../../images/uplb.png'
-import Footer from '../components/Footer'
-import '../../css/login.css'
+import { useNavigate } from 'react-router-dom';
+import useStore from '../hooks/authHook';
+import UPLB from '../../images/uplb.png';
+import Footer from '../components/Footer';
+import { ToastContainer } from 'react-toastify';
+import { notifyError } from '../components/Popups/toastNotifUtil';
+import '../../css/login.css';
+import '../../css/toast_container.css';
 
 
 // changed to function to use hooks
@@ -30,7 +33,7 @@ const Login = () => {
         )
         .then(response => response.json())
         .then(body => {
-            if(!body.success) alert(body.message);
+            if(!body.success) notifyError(body.message);
             else{
                 setAuth(body.user, body.success);
                 navigate('/home');
@@ -60,7 +63,9 @@ const Login = () => {
                         <input type="submit" value="LOG IN" className='submit-btn' onClick={login}/>
                     </form><br/>
                 </div>
+                
             </div>
+            <ToastContainer className={'toast-container'}/>
             <Footer />
         </div> 
     )

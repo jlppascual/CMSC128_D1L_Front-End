@@ -10,6 +10,9 @@
  import useStore from '../hooks/authHook';
  import '../../css/view_logs.css'
 import { BsSearch, BsDownload } from 'react-icons/bs';
+import { notifyError } from '../components/Popups/toastNotifUtil';
+import '../../css/toast_container.css';
+import { ToastContainer } from 'react-toastify';
 
  const View_Logs=()=>{
 
@@ -82,7 +85,7 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
                 })
         }else{
             navigate('/home')
-            alert("Must be an admin to access this page")
+            notifyError("Must be an admin to access this page")
         }
      },[user.user_role])
 
@@ -371,6 +374,7 @@ import { BsSearch, BsDownload } from 'react-icons/bs';
             </div>
             <Header/>
             <Menu />
+            <ToastContainer className='toast-container'/>
             <Footer/>
     </div>
     )

@@ -11,6 +11,9 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Menu from '../components/Menu';
 import DeletePopup from '../components/Popups/DeletePopup';
+import { ToastContainer } from 'react-toastify';
+import { notifySuccess } from '../components/Popups/toastNotifUtil';
+import '../../css/toast_container.css';
 
 const View_Students =()=>{
 
@@ -256,7 +259,7 @@ const View_Students =()=>{
                     setAuth(json.result.session.user, json.result.session.silentRefresh)
                 }
                 if(json.result.success){
-                    window.alert(json.result.message)
+                    notifySuccess(json.result.message)
                     changeState(!state)
                 }
             })
@@ -336,6 +339,7 @@ const View_Students =()=>{
         </div>
         <Header />
         <Menu />
+        <ToastContainer className='toast-container'/>
         <Footer />
     </div>
     );
