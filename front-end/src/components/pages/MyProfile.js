@@ -195,22 +195,32 @@ const MyProfile =()=>{
             }else if(popType==="email"){
                 let new_email = document.getElementById('new-email').value;
                 
-                if (validEmail.test(new_email)){
-                    /*
-                        Enter fetch request logic
-                    */
-                } else{
-                    notifyError('Invalid email format')
+                if(new_email !== ''){
+                    if (validEmail.test(new_email)){
+                        /*
+                            Enter fetch request logic
+                        */
+                    } else{
+                        notifyError('Invalid email format')
+                    }
+                } else {
+                    notifyError('Email field is missing');
                 }
+                
             } else if(popType==="number"){
                 let new_number = document.getElementById('new-number').value;
-
-                if (validNumber.test(new_number)){
-                    /*
-                        Enter fetch request logic
-                    */
-                } else{
-                    notifyError('Invalid mobile number format')
+                
+                if(new_number !== ''){
+                    if (validNumber.test(new_number)){
+                        /*
+                            Enter fetch request logic
+                        */
+                    } else{
+                        notifyError('Invalid mobile number format');
+                    }
+                }
+                else{
+                    notifyError('Mobile number field is missing');
                 }
             }
     }
