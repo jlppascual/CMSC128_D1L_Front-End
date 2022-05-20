@@ -35,9 +35,9 @@ const Home = () => {
                 <div className={'column'}>
                     <div className={'card'}>
                         <h3>Web Description</h3>
-                        <p className={'web-desc'}>The product is intended to be utilized by the CAS Scholarships, Honors, and Awards Committee <b>(SHAC)</b> as a digitized GWA verification tool to aid committee members in evaluating graduating students’ grade records. Hence, this document details the entire ASTERIS functionality set along with an extensive list of features that are accessible to the end user.
+                        <p className={'web-desc'}>The <b>Automated STudent Entry and Record Inspection Software</b> or <b>ASTERIS</b> for short, is an inhouse technology solution developed to aid in tackling the ever-increasing workload of the <b>UPLB CAS Scholarships, Honors, and Awards Committee</b> [herein defined as the <i>user</i>]—concisely referred to as <b>SHAC</b>.
                         <br /> <br />
-                        The product, <b>ASTERIS</b>, is defined as a web application developed using a modified version of the MERN—denoted as: MongoDB, Express, React, and Node.js—technology stack. Reflective of the development team’s preferences, the MongoDB component had been substituted by MariaDB. 
+                        ASTERIS serves as a digital student general weighted average (GWA) verification interface that provides extensive record inspection features accessible to SHAC members. The software enables collaborative student record processing over a network whilst ensuring that sensitive information security is given utmost priority.
                         </p>
                     </div>
                 </div>
