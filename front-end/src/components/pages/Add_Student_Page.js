@@ -68,7 +68,7 @@
          for(var j = 11; j < array.length; j++){
  
              if(array[j][1] != ''){
- 
+                 
                  let sem = array[j][7].slice(0,array[j][7].indexOf('/'));
                  let year = array[j][7].slice(array[j][7].indexOf('/')+1, array[j][7].length)
                  let no_of_units = Number(array[j][6]);
@@ -144,7 +144,6 @@
      }
  
      const parseData = async(content)=>{
-        
          //separates file content by new line
          if(!content) {
              alert('Invalid file/format')

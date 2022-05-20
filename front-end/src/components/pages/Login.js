@@ -6,6 +6,7 @@ import { ToastContainer } from 'react-toastify';
 import { notifyError } from '../components/Popups/toastNotifUtil';
 import '../../css/login.css';
 import '../../css/toast_container.css';
+import { useEffect } from 'react';
 
 
 // changed to function to use hooks
@@ -13,9 +14,29 @@ const Login = () => {
 
     const {REACT_APP_HOST_IP} = process.env
 
-    const { setAuth } = useStore();     // from zustand store
+    const { user, isAuthenticated, setAuth } = useStore();     // from zustand store
     const navigate = useNavigate();     // hook for navigation
 
+    //checks if user is already logged in
+    useEffect(()=>{
+        if (!user && !isAuthenticated) {
+
+            fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/auth/refresh',
+              { method: 'GET', credentials: 'include' }
+            )
+            .then(res => res.json() )
+            .then(body => {
+              if (body.success) {
+                setAuth(body.user, body.success)
+                navigate('/home')
+            }
+              else {
+                alert(body.message)
+                navigate('/');
+              }
+            })
+          }
+    },[])
 
     // handles login action and 
     const login = (e) => {

@@ -23,7 +23,6 @@ const RequireAuth = ({ children }) => {
           navigate('/');
         }
       })
-
     }
   }, [isAuthenticated]);
 

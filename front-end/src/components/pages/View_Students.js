@@ -13,6 +13,7 @@ import Menu from '../components/Menu';
 import DeletePopup from '../components/Popups/DeletePopup';
 import { ToastContainer } from 'react-toastify';
 import { notifySuccess } from '../components/Popups/toastNotifUtil';
+import { RiAlertLine } from 'react-icons/ri'
 import '../../css/toast_container.css';
 
 const View_Students =()=>{
@@ -311,6 +312,7 @@ const View_Students =()=>{
                         <thead className='view-student-thead'>
                             <tr className='header-row'>
                                 <th className='student-header' style ={{textAlign:'left', paddingLeft: '20px'}}>NAME</th>
+                                {/* <th className='student-header-warning'></th> */}
                                 <th className='student-header'>STUDENT NUMBER</th>
                                 <th className='student-header'>DEGREE PROGRAM</th>
                                 <th className='student-header'></th>
@@ -322,7 +324,10 @@ const View_Students =()=>{
                                 return (
                                     <tr key={i} className='view-student-element' style={{}}>
                                         
-                                        <td className='student-cell' onClick={()=> navigate('/student/'+rec.student_id)} style ={{textAlign:'left', paddingLeft: '20px'}}>{rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""} {rec.suffix ? ', ' + rec.suffix + " " + rec.warning_count: ''}</td>
+                                        {/* <td className='student-cell' onClick={()=> navigate('/student/'+rec.student_id)} style ={{textAlign:'left', paddingLeft: '20px'}}><div style={{float:'left'}}>{rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""} {rec.suffix ? ', ' + rec.suffix + " ": ''}</div> <div className='warning-count' style={{float:'left', paddingLeft:"10px"}}> {rec.warning_count}</div> </td> */}
+                                        <td className='student-cell' onClick={()=> navigate('/student/'+rec.student_id)} style ={{textAlign:'left', paddingLeft: '20px'}}><div style={{float:'left'}}>{rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""} {rec.suffix ? ', ' + rec.suffix + " ": ''}</div> {rec.warning_count > 0? <div className="student-warning-badge"><RiAlertLine />
+                                        <span className='badge-text'>no. of warnings: {rec.warning_count}</span></div> : ""}</td>
+                                        {/* <td className='student-cell-warning'> {rec.warning_count}</td> */}
                                         <td className='student-cell' onClick={()=> navigate('/student/'+rec.student_id)}>{rec.student_number}</td>
                                         <td className='student-cell' onClick={()=> navigate('/student/'+rec.student_id)}>{rec.degree_program}</td>
                                         <td className='student-cell' style ={{textAlign:'right', paddingRight: '30px'}} onClick={()=>{onDelete(rec)}}><AiFillDelete className='view-student-delete-icon'/></td>
