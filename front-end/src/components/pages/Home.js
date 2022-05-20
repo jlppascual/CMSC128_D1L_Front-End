@@ -37,7 +37,7 @@ const Home = () => {
                         <h3>Web Description</h3>
                         <p className={'web-desc'}>The <b>Automated STudent Entry and Record Inspection Software</b> or <b>ASTERIS</b> for short, is an inhouse technology solution developed to aid in tackling the ever-increasing workload of the <b>UPLB CAS Scholarships, Honors, and Awards Committee</b> [herein defined as the <i>user</i>]—concisely referred to as <b>SHAC</b>.
                         <br /> <br />
-                        ASTERIS serves as a digital student general weighted average (GWA) verification interface that provides extensive record inspection features accessible to SHAC members. The software enables collaborative student record processing over a network whilst ensuring that sensitive information security is given utmost priority.
+                        ASTERIS serves as a digital student <b>general weighted average (GWA) verification interface</b> that provides extensive record inspection features accessible to SHAC members. The software enables collaborative student record processing over a network whilst ensuring that sensitive information security is given utmost priority.
                         </p>
                     </div>
                 </div>
