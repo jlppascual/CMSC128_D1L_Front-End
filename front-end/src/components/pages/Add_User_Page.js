@@ -50,7 +50,30 @@ const Add_User_Page=()=>{
     }
 
     const sendData=(user_details)=>{
-        if(user_details.password !== user_details.confirm_password) {
+        const password_format = /^(?=.*[-_.!"'#%&,:;<>=@{}~\$\(\)\*\+\/\\\?\[\]\^\|])(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/
+        const username_format = /^[A-Za-z]\w*$/
+        const mail_format = /^[a-zA-Z0-9]+([.-]?[a-zA-Z0-9]+)*@[a-zA-Z]+([.-]?[a-zA-Z0-9]+)*(.[a-zA-Z]{2,3})+$/
+
+
+        if(user_details.first_name === ""){
+            notifyError("missing first name")
+        }else if(user_details.last_name === "") {
+            notifyError("missing last name")
+        } else if(user_details.password === "") {
+            notifyError("missing password")
+        } else if(user_details.user_role === "") {
+            notifyError("please select a user role")
+        } else if(user_details.user_name === "") {
+            notifyError("missing username")
+        } else if(user_details.email === "") {
+            notifyError("missing email")
+        } else if(!user_details.username.match(username_format)){
+            notifyError("username must start with a letter")
+        }else if(!user_details.email.match(mail_format)){
+            notifyError("invalid mail")
+        }else if(!user_details.password.match(password_format)){
+            notifyError("password must be at least 8 characters and contains at least 1 upper-case letter, 1 lower-case letter, and a special character");
+        }else if(user_details.password !== user_details.confirm_password) {
             notifyError("Passwords don't match!")
         } else{
             fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/user', {

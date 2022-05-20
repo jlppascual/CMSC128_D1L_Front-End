@@ -107,6 +107,9 @@
      const handleUserInput = (e) => {
          const value = e.target.value;
          setInput(value);
+            if (viewValue!=="ALL" || viewValue!==""){
+            setViewValue("ALL")
+        }
      }
  
      const handleSubmit = (e) => {

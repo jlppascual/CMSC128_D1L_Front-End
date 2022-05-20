@@ -193,7 +193,9 @@
             }
             
             const student = data.student_data
-            const full_name = student.first_name+" "+ " " + student.middle_name+ " " +student.last_name+ " " + suffix + ", "+ student.degree_program+":\n"
+            let full_name="";
+            {student.suffix!==""? (full_name = student.first_name+" "+ student.middle_name+ " " +student.last_name+ " " + student.suffix + ", "+ student.degree_program+":\n"): (full_name = student.first_name+" " + student.middle_name+ " " +student.last_name+", "+ student.degree_program+":\n")}
+
             let message =  full_name+json.result.message
             alert(message)
              

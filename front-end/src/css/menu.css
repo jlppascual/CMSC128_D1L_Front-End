@@ -1,11 +1,41 @@
-.menu-navbar{
+.home-bar{
     height: 80px;
-
     display: flex;
     justify-content: flex-start;
     align-items: center;
     position:fixed;
-    margin-top: 60px;
+    margin-top: 3%;
+}
+
+.home-name{
+    font-size: 23px;
+    font-weight: bold;
+    color: #3f3f3f;
+    position:fixed;
+    top:12.7%;
+    left: 78px;
+}
+
+.home-icon{
+    font-size: 30px;
+    color:#3f3f3f;
+    height: 80px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    position:fixed;
+    margin-top: 1.5%;
+    margin-left: 2%;
+    cursor: pointer;
+}
+
+.menu-navbar{
+    height: 80px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    position:fixed;
+    margin-top: 6.8%;
 }
 
 .menu-bars{
@@ -23,7 +53,7 @@
     font-weight: bold;
     color: #3f3f3f;
     position:fixed;
-    top:83px;
+    top:19.1%;
     left: 80px;
 }
 
