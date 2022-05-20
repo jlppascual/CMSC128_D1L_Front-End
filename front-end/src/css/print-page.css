@@ -1,64 +1,79 @@
 @media print{
     @page { 
-        margin: 15px 0px;   
-        padding: 0;     
+        margin: 85px 0px ;     
       }
       
-    body {
+    /* body {
     margin: 0;
     padding: 0;
     }
-   /* body {margin-top: 50mm; margin-bottom: 50mm; 
+   body {margin-top: 50mm; margin-bottom: 50mm; 
         margin-left: 0mm; margin-right: 0mm} */
        
     .view-print-preview{
         margin-top: 0.5in;
         margin-bottom: 1in;
-        margin-left: 0.5in;
+        margin-left: 0.7in;
         margin-right: 0.5in;
     }
 
     .view-print-table{
-        
+        margin-top: -70px;
         width:100%;
         margin-left: auto;
         margin-right: auto;
         border-spacing: 0 5px;
-        border-collapse: collapse;
-        page-break-inside: auto;
-        
+        border-collapse: collapse;  
     }
 
     .watermark-text{
+        transform: rotate(-40deg);
+        margin-left: auto;
+        margin-right: auto;
+        color: #8D1436;
+        font-size: 150px;
+        opacity: 0.2;
+        position:fixed;
+        font-weight: 500;
+        top: 35%;
+        left: 15%;
+    }
+    .watermark-textt{
         transform: rotate(-30deg);
         margin-left: auto;
         margin-right: auto;
         color: #8D1436;
         font-size: 130px;
-        opacity: 0.4;
+        opacity: 0.2;
         position:fixed;
-        top: 30%;
+        font-weight: 600;
+        top: 60%;
         left: 19%;
     }
+    .summary-title{
+        text-align: center;
+        position:relative;
+        top:-50px;
+        margin-bottom: 0px;
+    }
+    .filter{
+        text-align: center;
+        position:relative;
+        top:-60px;
+    }
     .system-watermark{
-        
-        margin-top:-10px;
-        left:15px;
+        transform: rotate(-90deg);
+        position:fixed;
+        top: 50%;
+        left:-270px;
+        z-index: -1;
+        page-break-after: always;
+        opacity:0.6;
     }
-
-    .user-watermark{
-       margin-top:2px;
-        left:15px;
-    }
-    .date-watermark{
-        margin-left:15px;
-    }
-    
     .view-print-element{
         page-break-inside: avoid;
-        page-break-after: auto;
         margin-top: 20px;
-        font-size: 16px;
+        font-size: 15px;
     }
     
     .view-print-thead{
@@ -69,12 +84,11 @@
     
     .view-print-cell-header, .view-print-element td{
         border: 1px solid black; 
-        padding:5px;
+        padding:7px;
     }
     
     
     .view-print-tbody{
-        font-size: 10px;
         font-family: Arial, Helvetica, sans-serif;
     }
     
@@ -97,16 +111,7 @@
         padding: 5px;
     }
 
-    .view-filter{
-        margin-top: 0px;
-        margin-bottom: 15px;
-        margin-right: 100px;
-    }
-
-    .order-filter{
-        margin-top: 0px;
-        margin-bottom: 15px;
-    }
+    
 }
 /* .view-print-preview{
     margin: 5%;

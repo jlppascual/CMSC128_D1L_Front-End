@@ -56,7 +56,7 @@
     const componentRef = useRef();
     const handlePrint = useReactToPrint({
         content: () => componentRef.current,
-        documentTitle: fileName
+        documentTitle: fileName,
     });
     // fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log/print",{
         //     method: "POST",
