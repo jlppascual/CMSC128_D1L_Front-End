@@ -12,8 +12,6 @@ const DeletePopup=({props})=>{
 
     const handleButton = async(choice) => {
         let reason = document.getElementById('deletion-details').value.trim();  // this removes trailing and leading spaces
-        console.log(reason)
-        
         // uncomment if backend logic is already implemented
         // if(!choice) await props.confirmDelete(choice, reason)
 
