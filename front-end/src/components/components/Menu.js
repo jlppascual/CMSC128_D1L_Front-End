@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { FaBars } from 'react-icons/fa';
-import  { AiOutlineClose } from 'react-icons/ai'
+import  { AiOutlineClose, AiFillHome } from 'react-icons/ai'
 import { IconContext } from 'react-icons/lib';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { SidebarDataUser, SidebarDataStudent } from './menu_components/SidebarData';
 import useStore from '../hooks/authHook'
 import '../../css/menu.css'
@@ -11,11 +11,28 @@ class Menu extends React.Component{
     render(){
         
         return(
-            <Menubar />
+            <div>
+                <Home />
+                <Menubar />
+            </div>
+            
         );
     }
 }
 
+function Home(){
+    const navigate = useNavigate();
+    const navHome=()=>{
+        navigate("/home");
+    }
+    return(
+        <div className="home-bar">
+            <i className='home-icon' onClick={navHome}><AiFillHome/></i>
+            <div className='home-name'>Home</div>
+        </div>
+        
+    )
+}
 function Menubar(){
     const [ sidebar, setSidebar ] = useState(false)
     const { user } = useStore();

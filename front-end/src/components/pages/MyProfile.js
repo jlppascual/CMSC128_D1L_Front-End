@@ -135,9 +135,12 @@ const MyProfile =()=>{
         if(popType ==='username'){
 
             let new_uname = document.getElementById('new-username').value
+            const username_format = /^[A-Za-z]\w*$/
 
             if(new_uname ===""){
                 notifyError("Warning: field empty! Please input new username!")
+            }else if(!new_uname.match(username_format)){
+                notifyError("username must start with a letter")
             }else{
                 fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/user/'+user.user_id+'/username' ,{
                     method: 'PATCH',
@@ -167,8 +170,13 @@ const MyProfile =()=>{
                 let old_pass = document.getElementById('current-password').value
                 let new_pass = document.getElementById("new-password").value
                 let confirm_pass = document.getElementById("confirm-password").value
+                const password_format = /^(?=.*[-_.!"'#%&,:;<>=@{}~\$\(\)\*\+\/\\\?\[\]\^\|])(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/
 
-                if(new_pass === confirm_pass){
+                if(!new_pass.match(password_format)){
+                    notifyError("password must be at least 8 characters and contains at least 1 upper-case letter, 1 lower-case letter, and a special character");
+                }else if(new_pass !== confirm_pass){
+                    notifyError("passwords do not match!")
+                }else{
                     fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/user/'+user.user_id+'/password' ,{
                         method: 'PATCH', 
                         credentials:'include',

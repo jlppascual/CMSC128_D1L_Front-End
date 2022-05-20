@@ -16,15 +16,24 @@ const Login = () => {
     const { setAuth } = useStore();     // from zustand store
     const navigate = useNavigate();     // hook for navigation
 
+
     // handles login action and 
     const login = (e) => {
         e.preventDefault();
         const credentials = {
             username: document.getElementById('login-username').value,
-            password: document.getElementById('login-password').value
+            password: document.getElementById('login-password').value,
         }
-
-        fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/auth' ,{
+       
+        const password_format = /^(?=.*[-_.!"'#%&,:;<>=@{}~\$\(\)\*\+\/\\\?\[\]\^\|])(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/
+        // const password_format = /^(?=.[0-9])(?=.[-.!"'#%&,:;<>=@{}~\$\(\)\*\+\/\\\?\[\]\^\|])(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9-._!"'#%&,:;<>=@{}~$()*+/\?\[\]\^\|]{8,}$/ 
+        const username_format = /^[A-Za-z]\w*$/
+        if(!credentials.username.match(username_format)){
+            notifyError("username must start with a letter")
+        }else if(!credentials.password.match(password_format)){
+            notifyError("password must be at least 8 characters and contains at least 1 upper-case letter, 1 lower-case letter, and a special character");
+        }else{
+            fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/auth' ,{
                 method:'POST',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
@@ -39,6 +48,7 @@ const Login = () => {
                 navigate('/home');
             }
         })
+        }
     }
 
     return(

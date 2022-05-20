@@ -216,7 +216,6 @@
         } else {
             setRecord(undefined)
             setMessage("Loading results...")
-            setViewValue("ALL")
         fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/summary/search?name=' +input+'&&orderby='+orderValue,{
             credentials:'include'
         })
@@ -256,7 +255,9 @@
 
     const handleUserInput = (e) => {
         input = e.target.value;
-        
+        if (viewValue!=="ALL" || viewValue!==""){
+            setViewValue("ALL")
+        }        
     }
 
     const DropDown =({value,options,onChange, type})=>{

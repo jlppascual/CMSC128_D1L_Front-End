@@ -188,7 +188,6 @@ const View_Students =()=>{
         }
 
         if(input === "" || input === undefined){
-            setViewValue("ALL")
             setRecord(undefined)
             setMessage("Loading students...")
             fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student?orderby="+[orderValue],
@@ -244,6 +243,9 @@ const View_Students =()=>{
 
     const handleUserInput = (e) => {
         input = e.target.value;
+        if (viewValue!=="ALL" || viewValue!==""){
+            setViewValue("ALL")
+        }
     }
 
     const confirmDelete= async(decision) =>{
@@ -320,7 +322,7 @@ const View_Students =()=>{
                                 return (
                                     <tr key={i} className='view-student-element' style={{}}>
                                         
-                                        <td className='student-cell' onClick={()=> navigate('/student/'+rec.student_id)} style ={{textAlign:'left', paddingLeft: '20px'}}>{rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""} {rec.suffix ? ', ' + rec.suffix : ''}</td>
+                                        <td className='student-cell' onClick={()=> navigate('/student/'+rec.student_id)} style ={{textAlign:'left', paddingLeft: '20px'}}>{rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""} {rec.suffix ? ', ' + rec.suffix + " " + rec.warning_count: ''}</td>
                                         <td className='student-cell' onClick={()=> navigate('/student/'+rec.student_id)}>{rec.student_number}</td>
                                         <td className='student-cell' onClick={()=> navigate('/student/'+rec.student_id)}>{rec.degree_program}</td>
                                         <td className='student-cell' style ={{textAlign:'right', paddingRight: '30px'}} onClick={()=>{onDelete(rec)}}><AiFillDelete className='view-student-delete-icon'/></td>
