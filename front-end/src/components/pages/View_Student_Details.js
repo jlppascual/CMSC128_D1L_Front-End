@@ -307,7 +307,7 @@ const View_Student_Details =()=>{
             < div className='student-record'>
             <div className='student-info-left'>
                 <div><b>Degree Program:</b> <span className='info-l'>{state.student_details.degree_program}</span></div>  <br/>
-                <div><b>Student No.:</b> <span className='info-l'>{state.student_details.student_number}</span></div> <br/>
+                <div><b>Student No.:</b> <span className='info-l'>{state.student_details.student_number !==""? state.student_details.student_number:'-'}</span></div> <br/>
                 <div><b>Latin Honor:</b> {state.student_details.latin_honor !== ""?<span className='info-l'> {state.student_details.latin_honor}</span>: <span className='info-l'>-</span>}</div><br/>
             </div>
             <div className='student-info-right'>
