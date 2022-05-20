@@ -124,3 +124,18 @@ ul{
 .entity-title{
     color: #3f3f3f;
 }
+
+@media screen and (max-width: 1920px) {
+    .menu-navbar{
+        margin-top: 75px;
+    }
+
+    .menu-side{
+        top: 75px;
+    }
+    
+    .menu-name {
+        padding-top: 10px;
+        font-size: 28px;
+    }
+}

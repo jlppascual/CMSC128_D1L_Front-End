@@ -34,3 +34,22 @@ footer{
     margin-top: 2px;
     margin-right: 7px
   }
+
+  @media screen and (max-width: 1920px) {
+    footer{
+    transform: scale(115%)
+  }
+  
+  .info-left{
+    transform: scale(115%)
+  }
+  
+  .copyright{
+    transform: scale(110%);
+    margin-right: 10px
+  }
+  
+   .dot {
+    transform: scale(115%)
+  }
+}

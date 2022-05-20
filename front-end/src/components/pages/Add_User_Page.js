@@ -12,6 +12,9 @@
 import { ToastContainer } from 'react-toastify';
 import '../../css/toast_container.css';
 import { notifyError, notifySuccess } from '../components/Popups/toastNotifUtil';
+import { Icon } from 'react-icons-kit';
+import {eyeOff} from 'react-icons-kit/feather/eyeOff';
+import {eye} from 'react-icons-kit/feather/eye';
 
 const Add_User_Page=()=>{
 
@@ -114,6 +117,33 @@ const Add_User_Page=()=>{
          setRole(document.getElementById("user_role").value);
      }
 
+     const [type, setType] = useState('password')
+     const [icon, setIcon] = useState(eyeOff)
+     const [type1, setType1] = useState('password')
+     const [icon1, setIcon1] = useState(eyeOff)
+
+
+     const handleToggle = () => {
+         if(type === 'text'){
+             setIcon(eyeOff);
+             setType('password');
+         } else {
+             setIcon(eye);
+             setType('text');
+         }
+     }
+
+     const handleToggle1 = () => {
+        if(type1 === 'text'){
+            setIcon1(eyeOff);
+            setType1('password'); 
+        } else {
+            setIcon1(eye);
+            setType1('text');
+        }
+    }
+
+
     return(
         <div>
             <div className='add-user-body'>
@@ -129,8 +159,10 @@ const Add_User_Page=()=>{
                     <option value="member">Member</option>
                 </select><br />
                 <input type="text" className = "field" id="username" placeholder="◯ Username" required /><br />
-                <input type="password" className = "field" id="password"placeholder = "◯ Password" required/><br />
-                <input type="password" className = "field" id="confirm_password" placeholder = "◯ Confirm Password" required/><br />
+                <i onClick={handleToggle}id = "visibilityBtn" className='eyeUsers'><Icon icon = {icon} ></Icon></i>
+                <input type={type} className = "field" id="password"placeholder = "◯ Password" required/><br />
+                <i onClick={handleToggle1}id = "visibilityBtn" className='eyeUsers'><Icon icon = {icon1} ></Icon></i>
+                <input type={type1} className = "field" id="confirm_password" placeholder = "◯ Confirm Password" required/><br />
                 <input type="text" className = "field" id="email"placeholder = "◯ Email" required/><br />
                 <input type="text" className = "field" id="phone_number"placeholder = "◯ Phone Number"/><br />
                 <div className='create-user-buttons'>

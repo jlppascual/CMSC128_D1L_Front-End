@@ -46,3 +46,33 @@
 }
 
 /* still need to improve for responsiveness and positioning */
+
+@media screen and (max-width: 1920px) {
+
+
+  .column {
+    float: left;
+    width: 25%;
+    padding: 0 125px;
+    margin: 75px -150px 0px 180px;
+  }
+
+  
+  .web-desc{
+    text-align: justify;
+    padding: 10px 16px 10px;
+    font-size: 20px;
+  }
+
+  .announcement{
+    font-size: 20px;
+  }
+
+  .info {
+    font-size: 20px
+  }
+  
+  .announcement1 {
+    font-size: 24px;
+  }
+}

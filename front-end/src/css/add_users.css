@@ -81,3 +81,69 @@ h2{
     cursor:pointer;
     margin-right: 5%;
 }
+
+.eyeUsers{
+    position: absolute;
+    margin-top: 1%;
+    margin-left: 330px; 
+    cursor: pointer;
+}
+
+
+@media screen and (max-width: 1920px) {
+
+    .signup-field{
+        text-align: center;
+        font-family: 'Segoe UI';
+        background-color: #ffffff;
+        height: 562.5px;
+        width: 30%;
+        border-radius: 18.75px;
+        position: absolute;
+        left: 50%;
+        top: 42%;
+        transform: translate(-50%, -50%);
+        box-shadow: 1px 1px 1px 1px #888888;
+    }
+
+    h2{
+        margin-bottom: 10px;
+        font-size: 30px;
+    }
+
+    .eyeUsers{
+        margin-top: 2%;
+        margin-left: 420px; 
+        cursor: pointer;
+    }
+
+    .field{
+        padding: 7px;
+        margin : 5px;
+        width : 75%;
+        font-family: Optima;
+        outline:none;
+        border: 1px solid gray;
+        margin-bottom:6.25px;
+        border-radius: 6.25px;
+        font-size:17px;
+    }
+
+    .create-user-buttons{
+        text-align: center;
+        margin-top: 18.75px;
+    }
+
+    .confirm-button{
+        font-size: 18.75px;
+        border-radius: 8.75px;
+        padding: 8.75px;
+    }
+
+
+    .reset-button{
+        font-size: 18.75px;
+        border-radius: 8.75px;
+        padding: 8.75px;
+    }
+  }

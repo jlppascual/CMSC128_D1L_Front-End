@@ -194,3 +194,37 @@
     font-weight: 600;
     font-size: 300%;
 }
+
+.eyeProfile{
+    position: absolute;
+    margin-top: -12%;
+    margin-left: 250px;
+    height: 40px;
+    cursor:pointer;
+}
+
+.eyeProfile1{
+    position: absolute;
+    margin-top: -12%;
+    margin-left: 112.5px;
+    height: 40px;
+    cursor:pointer;
+}
+
+@media screen and (max-width: 1920px) {
+    .eyeProfile{
+        position: absolute;
+        margin-top: -10%;
+        margin-left: 310px;
+        height: 30px;
+        cursor:pointer;
+    }
+    
+    .eyeProfile1{
+        position: absolute;
+        margin-top: -10%;
+        margin-left: 140px;
+        height: 40px;
+        cursor:pointer;
+    }
+}

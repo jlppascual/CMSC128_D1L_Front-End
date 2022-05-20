@@ -332,3 +332,62 @@
     font-weight: 600;
     font-size: 300%;
 }
+
+@media screen and (max-width: 1920px) {
+
+    .view-student-body{
+        padding-bottom: 5%;
+    }
+
+    .title {
+        font-size: 48px;
+    }
+
+    .title span {
+        font-size: 30px;
+    }
+    .view-student-dropdown{
+        outline:none;
+        border: none;
+        border-radius: 10px;
+        padding: 3px;
+        font-family: Helvetica;
+        cursor: pointer;
+        font-size: 17px;
+    }
+    
+    .view-student-search{
+        height: 50px;
+    }
+    
+    
+    .view-student-input{
+        font-size: 16px;
+        height: 31.25px;
+    }
+    
+    .view-student-preview{
+        margin-top: 18.75px;
+        padding-top: 18.75px;
+        height: 45%;
+        border-radius: 10px;
+    }
+    
+    .view-student-thead{
+        font-size: 21px;
+    }
+        
+    .view-student-element{
+        font-size: 20px;
+    }
+    
+    .empty-students button{
+        background-color: white;
+        border:1px solid gray;
+        outline:none;
+        padding: 10px 15px ;
+        border-radius: 6.25px;
+        cursor: pointer;
+    }
+
+  }
