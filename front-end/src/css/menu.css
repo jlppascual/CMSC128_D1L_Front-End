@@ -24,7 +24,7 @@
     justify-content: flex-start;
     align-items: center;
     position:fixed;
-    margin-top: 1.5%;
+    margin-top: 1%;
     margin-left: 2%;
     cursor: pointer;
 }
@@ -35,7 +35,7 @@
     justify-content: flex-start;
     align-items: center;
     position:fixed;
-    margin-top: 6.8%;
+    margin-top: 7.2%;
 }
 
 .menu-bars{

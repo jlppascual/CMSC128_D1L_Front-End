@@ -37,6 +37,7 @@ const DetailsPopup=({props})=>{
         <div className="details-popup-box">
            
                 <p className='details-text'>Provide a brief description on changes made</p>
+                <p className='format-text'>Please use this format for consistency (<b>SUBJECT</b> : [<b>OLD UNIT/GRADE</b>] TO [<b>NEW UNIT/GRADE</b>])</p>
                 <textarea className = "details-area" value={details} onChange={(e)=>handleDetailsChange(e)} placeholder = "Enter edit notes" wrap="hard" ></textarea>
                 <p className = 'character-count' style={{color: char_color}}>{maxchar - char_count}</p>
                 <i className='alert-msg' style={{color: 'red'}}>{alert_message}</i>

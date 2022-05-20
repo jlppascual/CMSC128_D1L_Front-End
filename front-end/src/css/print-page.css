@@ -19,7 +19,7 @@
     }
 
     .view-print-table{
-        table-layout: fixed;
+        
         width:100%;
         margin-left: auto;
         margin-right: auto;
@@ -91,6 +91,21 @@
     .degree-cell{
         text-align: center;
         padding: 5px;
+    }
+    .latin-cell{
+        text-align: center;
+        padding: 5px;
+    }
+
+    .view-filter{
+        margin-top: 0px;
+        margin-bottom: 15px;
+        margin-right: 100px;
+    }
+
+    .order-filter{
+        margin-top: 0px;
+        margin-bottom: 15px;
     }
 }
 /* .view-print-preview{
