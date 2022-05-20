@@ -325,7 +325,7 @@
                     <p>{message}</p>
                     </div>)}
                 </div>
-                <div style={{display:"none"}}><ComponentToPrint user = {user} record={record} documentTitle={fileName} ref={componentRef} /></div> 
+                <div style={{display:"none"}}><ComponentToPrint user = {user} record={record} documentTitle={fileName} ref={componentRef} order = {orderValue} view = {viewValue} message = {message}/></div> 
             </div>
             <Header/>
             <Menu/>
