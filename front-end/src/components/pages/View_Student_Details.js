@@ -16,15 +16,23 @@ import { notifyError, notifySuccess } from '../components/Popups/toastNotifUtil'
 import '../../css/toast_container.css';
 
 const View_Student_Details =()=>{
+
+    const {REACT_APP_HOST_IP} = process.env
     const[pageState, setPage] = useState(false)
     const[editable, setEditable] = useState(false);
-    const {REACT_APP_HOST_IP} = process.env
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState("")
     const [showCancelConfirmation, setShowCancelConfirmation] = useState("")
     const [showEditConfirmation, setShowEditConfirmation] = useState("")
     const [showWarnings, setShowWarnings] = useState(false)
     const [new_courses, setNewCourses] = useState([])
-    
+    const [new_degree, setDegree] = useState("")
+    const [new_studno, setStudno] = useState("")
+    const [new_fullname, setNewName] = useState({
+        last_name:"",
+        first_name:"",
+        middle_name:"",
+        suffix:""
+    })
     const [state, setState]= useState({
         student_details:[],
         record_details:[],
@@ -53,6 +61,17 @@ const View_Student_Details =()=>{
                 warnings:json.result.output.warnings })         
         })
     },[pageState])
+
+    useEffect(()=>{
+        setDegree(state.student_details.degree_program);
+        setStudno(state.student_details.student_number);
+        setNewName({
+            last_name: state.student_details.last_name,
+            first_name: state.student_details.first_name,
+            middle_name: state.student_details.middle_name,
+            suffix: state.student_details.suffix
+        })
+    },[state])
     
     const handleDelete=(event)=>{
         event.preventDefault();
@@ -101,6 +120,7 @@ const View_Student_Details =()=>{
     }
     
     const handleUpdate=()=>{
+        
         if (!isCompleteFields()){
             notifyError("Please complete missing fields")
         }
@@ -114,6 +134,12 @@ const View_Student_Details =()=>{
         
     }
     const confirmEdit = async(decision,details)=>{
+        const studno_format = /^20[0-9]{2,}-[0-9]{5,}$/
+
+        if(!new_studno.match(studno_format)){
+            notifyError("invalid student number format")
+            setStudno(state.student_details.student_number)
+        }else{
         setShowEditConfirmation(false)
         document.getElementById("submit-changes-btn").disabled = false;
         document.getElementById("cancel-editing-btn").disabled = false;
@@ -126,35 +152,47 @@ const View_Student_Details =()=>{
                 new_courses,
                 new_terms,
                 new_record,
+                new_details: {
+                    last_name: new_fullname.last_name,
+                    first_name: new_fullname.first_name,
+                    middle_name: new_fullname.middle_name,
+                    suffix: new_fullname.suffix,
+                    student_number: new_studno,
+                    degree_program: new_degree
+                }
             }
 
-           fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/"+ state.student_details.student_id, {
+            fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/"+ state.student_details.student_id, {
 
-                method:'PATCH',
-                credentials:'include',
-                headers:{
-                    'Content-Type':'application/json'
-                },
-                body: JSON.stringify({
-                    updatedStudent,
-                    details,
-                    user_id: user.user_id,
-                    
-                }) 
-            })
-            .then((response) => {return response.json()})
-            .then(json => {
-                if (json.result.session.silentRefresh) {
-                    setAuth(json.result.session.user, json.result.session.silentRefresh)
-                }
-                if(json.result.success){
-                    const student = state.student_details
-                    const full_name = student.first_name+" "+student.last_name+", "+student.degree_program+":\n"
-                    let message =  full_name+json.result.message
-                    notifySuccess(message)
-                    setPage(!pageState)
-                }
-            })
+                    method:'PATCH',
+                    credentials:'include',
+                    headers:{
+                        'Content-Type':'application/json'
+                    },
+                    body: JSON.stringify({
+                        updatedStudent,
+                        details,
+                        user_id: user.user_id,
+                        
+                    }) 
+                })
+                .then((response) => {return response.json()})
+                .then(json => {
+                    if (json.result.session.silentRefresh) {
+                        setAuth(json.result.session.user, json.result.session.silentRefresh)
+                    }
+                    if(json.result.success){
+                        const student = state.student_details
+                        const full_name = student.first_name+" "+student.last_name+", "+student.degree_program+":\n"
+                        let message =  full_name+json.result.message
+                        notifySuccess(message)
+                        setPage(!pageState)
+                    }else{
+                        setDegree(state.student_details.degree_program)
+                        setStudno(state.student_details.student_number)
+                    notifyError(json.result.message)}
+                })
+            }
         }
     }
 
@@ -178,6 +216,12 @@ const View_Student_Details =()=>{
 
     const isCompleteFields = () =>{
         let temp;
+        if(document.getElementsByName('last_name') == "") return false;
+        if(document.getElementsByName('first_name') == "") return false;
+        if(document.getElementsByName('student_number') == "") return false;
+        if(document.getElementsByName('degree_program') == "") return false;
+
+
         const terms = state.term_details
         for (let i = 0; i < terms.length; i++) {
             for (let j = 0; j < terms[i].course_data.length; j++) {
@@ -193,18 +237,18 @@ const View_Student_Details =()=>{
             }
         }
         return true
-
-        // for (let i = 0; i < courses.length; i++) {
-        //     if (courses[i].course_code === "" || courses[i].grade === "" || courses[i].units === "" ){
-        //         flag = false;
-        //         return flag;
-        //     }
-        // }
-        // return flag;
     }
 
     const checkChanges = () =>{
        let temp;
+
+       if(document.getElementsByName("first_name")!==state.student_details.first_name) return true;
+       if(document.getElementsByName("last_name")!==state.student_details.last_name) return true;
+       if(document.getElementsByName("middle_name")!==state.student_details.middle_name) return true;
+       if(document.getElementsByName("suffix")!==state.student_details.suffix) return true;
+       if(document.getElementsByName("student_number")!==state.student_details.student_number) return true;
+       if(document.getElementsByName("degree_program")!==state.student_details.degree_program) return true;
+
         const terms = state.term_details
         for (let i = 0; i < terms.length; i++) {
             for (let j = 0; j < terms[i].course_data.length; j++) {
@@ -293,11 +337,63 @@ const View_Student_Details =()=>{
                 }
                 {!state.student_details.isDeleted?
                 <i className = "back-icon" onClick={()=> navigate('/students')}><BiArrowBack size= {30} /></i>:""}
-                {!state.student_details.isDeleted?
-                <p className="student-name">{state.student_details.last_name}, {state.student_details.first_name} {state.student_details.middle_name} {state.student_details.suffix} </p>
+                {!state.student_details.isDeleted? 
+                    editable == true? (
+                        <div className='student-edit-name-container'>
+                        <input className="student-edit-name" name='last_name'
+                            type = "text"
+                            required = "required"
+                            placeholder= "Enter last name"
+                            value = {new_fullname.last_name}
+                            onChange = {(e)=>{setNewName({
+                                last_name: e.target.value,
+                                first_name: new_fullname.first_name,
+                                middle_name: new_fullname.middle_name,
+                                suffix: new_fullname.suffix
+                            })}}
+                        ></input>
+                        <input className="student-edit-name" name='first_name'
+                            type = "text"
+                            required = "required"
+                            placeholder= "Enter first name"
+                            value = {new_fullname.first_name}
+                            onChange = {(e)=>{setNewName({
+                                last_name: new_fullname.last_name,
+                                first_name: e.target.value,
+                                middle_name: new_fullname.middle_name,
+                                suffix: new_fullname.suffix
+                            })}} 
+                        ></input>
+                        <input className="student-edit-name" name='middle_name'
+                            type = "text"
+                            required = "required"
+                            placeholder= "Enter middle name"
+                            value = {new_fullname.middle_name} 
+                            onChange = {(e)=>{setNewName({
+                                last_name: new_fullname.last_name,
+                                first_name: new_fullname.first_name,
+                                middle_name: e.target.value,
+                                suffix: new_fullname.suffix
+                            })}}
+                        ></input>
+                        <input className="student-edit-name" name='suffix'
+                            type = "text"
+                            required = "required"
+                            placeholder= "Enter suffix name"
+                            value = {new_fullname.suffix}
+                            onChange = {(e)=>{setNewName({
+                                last_name: new_fullname.last_name,
+                                first_name: new_fullname.first_name,
+                                middle_name: new_fullname.middle_name,
+                                suffix: e.target.value
+                            })}}
+                        ></input></div>
+                    )
+                    :
+                    (<p className="student-name">{state.student_details.last_name}, {state.student_details.first_name} {state.student_details.middle_name} {state.student_details.suffix} </p>)
                 : <p className="student-name" style={{marginLeft:'16.5%'}}>{state.student_details.last_name}, {state.student_details.first_name} {state.student_details.middle_name} {state.student_details.suffix} </p>
                 }
-                {editable === true ? <span>
+                {editable === true ? <span className='edit-btns'>
                     <button type = "button" onClick={handleCancel} className="cancel-edit-btn" id="cancel-editing-btn">Cancel Editing</button>
                     <button type = "button" onClick={handleUpdate} className="submit-edit-btn" id="submit-changes-btn">Submit Changes</button>
                     </span>:""}
@@ -305,11 +401,36 @@ const View_Student_Details =()=>{
             </div>
             
             < div className='student-record'>
-            <div className='student-info-left'>
-                <div><b>Degree Program:</b> <span className='info-l'>{state.student_details.degree_program}</span></div>  <br/>
-                <div><b>Student No.:</b> <span className='info-l'>{state.student_details.student_number}</span></div> <br/>
-                <div><b>Latin Honor:</b> {state.student_details.latin_honor !== ""?<span className='info-l'> {state.student_details.latin_honor}</span>: <span className='info-l'>-</span>}</div><br/>
-            </div>
+                {editable == true? (
+                <div className='student-info-edit-left'>
+                    <tr><b>Degree Program:</b><input className="edit-top-cell"
+                        name = 'degree_program'
+                        type = "text"
+                        required = "required"
+                        placeholder= "Enter degree program"
+                        value = {new_degree}
+                        onChange={(e)=>{setDegree(e.target.value)}}
+                    ></input><br/></tr>
+                    <tr><b>Student No.:</b><input className="info-edit-cell"
+                        name = "student_number"
+                        type = "text"
+                        required = "required"
+                        placeholder= "Enter student number"
+                        value = {new_studno} 
+                        onChange={(e)=>{setStudno(e.target.value)}}
+                    ></input><br/></tr>
+                    <tr><b>Latin Honor:</b> <input className = "info-edit-cell"
+                        type = "text"
+                        required = "required"
+                    defaultValue = {state.student_details.latin_honor} 
+                    ></input><br/></tr>
+                </div>)
+                :(
+                <div className='student-info-left'>
+                    <div><b>Degree Program:</b><span className='info-l'>{state.student_details.degree_program}</span></div><br/>
+                    <div><b>Student No.:</b><span className='info-l'>{state.student_details.student_number !==""? state.student_details.student_number:'-'}</span></div><br/>
+                    <div><b>Latin Honor:</b> {state.student_details.latin_honor !== ""?<span className='info-l'> {state.student_details.latin_honor}</span>: <span className='info-l'>-</span>}</div><br/>
+                </div>)}
             <div className='student-info-right'>
                 <div><b>Total weights:</b> <span name={"record-cumulative"} className='info-r'>{state.record_details.cumulative_sum}</span></div>  <br/>
                 <div><b>Total Units:</b> <span name={"record-units"} className='info-r'>{state.record_details.total_units}</span></div>  <br/>
@@ -367,7 +488,6 @@ const View_Student_Details =()=>{
             {showCancelConfirmation ? <CancelPopup />:""}
             {showWarnings ? <WarningPopup />:""}
             <div className = "bottom-space">
-                
             </div>
         </div>
         

@@ -10,6 +10,7 @@ import { Icon } from 'react-icons-kit';
 import {eyeOff} from 'react-icons-kit/feather/eyeOff';
 import {eye} from 'react-icons-kit/feather/eye';
 import { useState } from 'react';
+import { useEffect } from 'react';
 
 
 // changed to function to use hooks
@@ -17,9 +18,28 @@ const Login = () => {
 
     const {REACT_APP_HOST_IP} = process.env
 
-    const { setAuth } = useStore();     // from zustand store
+    const { user, isAuthenticated, setAuth } = useStore();     // from zustand store
     const navigate = useNavigate();     // hook for navigation
 
+    //checks if user is already logged in
+    useEffect(()=>{
+        if (!user && !isAuthenticated) {
+
+            fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/auth/refresh',
+              { method: 'GET', credentials: 'include' }
+            )
+            .then(res => res.json() )
+            .then(body => {
+              if (body.success) {
+                setAuth(body.user, body.success)
+                navigate('/home')
+            }
+              else {
+                navigate('/');
+              }
+            })
+          }
+    },[])
 
     // handles login action and 
     const login = (e) => {

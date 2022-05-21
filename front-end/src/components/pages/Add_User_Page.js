@@ -56,8 +56,7 @@ const Add_User_Page=()=>{
         const password_format = /^(?=.*[-_.!"'#%&,:;<>=@{}~\$\(\)\*\+\/\\\?\[\]\^\|])(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/
         const username_format = /^[A-Za-z]\w*$/
         const mail_format = /^[a-zA-Z0-9]+([.-]?[a-zA-Z0-9]+)*@[a-zA-Z]+([.-]?[a-zA-Z0-9]+)*(.[a-zA-Z]{2,3})+$/
-
-
+        const phone_format = /^\+639[0-9]{9,}$/
         if(user_details.first_name === ""){
             notifyError("missing first name")
         }else if(user_details.last_name === "") {
@@ -70,6 +69,8 @@ const Add_User_Page=()=>{
             notifyError("missing username")
         } else if(user_details.email === "") {
             notifyError("missing email")
+        } else if(user_details.phone_number !== "" && user_details.phone_number !== undefined) {
+            if(!user_details.phone_number.match(phone_format)){notifyError("please follow +639XXXXXXXXX format")};
         } else if(!user_details.username.match(username_format)){
             notifyError("username must start with a letter")
         }else if(!user_details.email.match(mail_format)){
@@ -164,7 +165,7 @@ const Add_User_Page=()=>{
                 <i onClick={handleToggle1}id = "visibilityBtn" className='eyeUsers'><Icon icon = {icon1} ></Icon></i>
                 <input type={type1} className = "field" id="confirm_password" placeholder = "◯ Confirm Password" required/><br />
                 <input type="text" className = "field" id="email"placeholder = "◯ Email" required/><br />
-                <input type="text" className = "field" id="phone_number"placeholder = "◯ Phone Number"/><br />
+                <input type="text" className = "field" id="phone_number"placeholder = "◯ Phone Number [+639XXXXXXXXX]"/><br />
                 <div className='create-user-buttons'>
                     <input type="reset" value="Reset" className='reset-button'/>
                     <input type="submit" value="Confirm" className='confirm-button' onClick={readInput}/>

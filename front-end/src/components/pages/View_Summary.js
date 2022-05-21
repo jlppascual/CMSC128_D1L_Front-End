@@ -56,7 +56,7 @@
     const componentRef = useRef();
     const handlePrint = useReactToPrint({
         content: () => componentRef.current,
-        documentTitle: fileName
+        documentTitle: fileName,
     });
     // fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log/print",{
         //     method: "POST",
@@ -325,7 +325,7 @@
                     <p>{message}</p>
                     </div>)}
                 </div>
-                <div style={{display:"none"}}><ComponentToPrint user = {user} record={record} documentTitle={fileName} ref={componentRef} /></div> 
+                <div style={{display:"none"}}><ComponentToPrint user = {user} record={record} documentTitle={fileName} ref={componentRef} order = {orderValue} view = {viewValue} message = {message}/></div> 
             </div>
             <Header/>
             <Menu/>

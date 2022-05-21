@@ -12,8 +12,8 @@
     font-weight: bold;
     color: #3f3f3f;
     position:fixed;
-    top:12.7%;
-    left: 78px;
+    top: 80px;
+    left: 75px;
 }
 
 .home-icon{
@@ -24,7 +24,7 @@
     justify-content: flex-start;
     align-items: center;
     position:fixed;
-    margin-top: 1.5%;
+    margin-top: 1%;
     margin-left: 2%;
     cursor: pointer;
 }
@@ -35,7 +35,7 @@
     justify-content: flex-start;
     align-items: center;
     position:fixed;
-    margin-top: 6.8%;
+    margin-top: 7.2%;
 }
 
 .menu-bars{
@@ -53,8 +53,8 @@
     font-weight: bold;
     color: #3f3f3f;
     position:fixed;
-    top:19.1%;
-    left: 80px;
+    top:130px;
+    left: 75px;
 }
 
 .menu-side{

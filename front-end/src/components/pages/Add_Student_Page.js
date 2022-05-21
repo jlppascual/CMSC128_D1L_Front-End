@@ -5,9 +5,11 @@
  import { useNavigate } from 'react-router-dom'
  import React, { useRef, useState } from 'react';
  import useStore from '../hooks/authHook'
+ import { notifyError } from '../components/Popups/toastNotifUtil';
  import Header from '../components/Header';
  import Footer from '../components/Footer';
  import Menu from '../components/Menu'
+ import Prompts from '../components/Popups/addStudentPopup'
  import '../../css/addstudent.css'
  
  const Add_Student_Page=()=>{
@@ -15,7 +17,9 @@
     const {REACT_APP_HOST_IP} = process.env
     const [files, setFiles] = useState([]);
     const [results, setResults] = useState([]);
+    const [prompts, setPrompts] = useState([]);
     const [ fullName, setFullName] = useState("");
+    const [showPrompts, setShowPrompts] = useState(false);
     const semester= useRef();
     const acad_year = useRef();
     const num_of_units = useRef();
@@ -51,6 +55,10 @@
          let res = await Promise.all(files);
          await setResults(res)
      }
+
+     const closePrompts = (value) => {
+        setShowPrompts(value);
+     }
  
      const getRecords = async(array) =>{
          let headers = [];
@@ -68,7 +76,7 @@
          for(var j = 11; j < array.length; j++){
  
              if(array[j][1] != ''){
- 
+                 
                  let sem = array[j][7].slice(0,array[j][7].indexOf('/'));
                  let year = array[j][7].slice(array[j][7].indexOf('/')+1, array[j][7].length)
                  let no_of_units = Number(array[j][6]);
@@ -144,15 +152,14 @@
      }
  
      const parseData = async(content)=>{
-        
          //separates file content by new line
          if(!content) {
-             alert('Invalid file/format')
+            notifyError('Invalid file/format')
             return}
          let rows = content.slice(content.indexOf('\n')+1).split('\n');
          if(!rows || rows[0].split(",")[1] !== "STUDENT INFORMATION"){
-             alert('Invalid file/format')
-             return;
+            notifyError('Invalid file/format')
+            return;
          }
          //returns filecontent in an array of strings splited by ','
          let array = rows.map(row =>{
@@ -164,14 +171,14 @@
  
      ///function to read the read csv file as text
      const submitButton=(e)=>{
-         e.preventDefault();
-         if(results.length > 0){
-             results.map(async(result) => {
-                 let data = await parseData(result);
-                 if(data) await sendData(data);
-             });
-             
-         }
+        e.preventDefault();
+        if(results.length > 0){
+            results.map(async(result) => {
+                let data = await parseData(result);
+                if(data) await sendData(data);
+            });
+        }
+        setShowPrompts(true);
      }
  
      const sendData = async(data)=>{
@@ -197,18 +204,17 @@
             {student.suffix!==""? (full_name = student.first_name+" "+ student.middle_name+ " " +student.last_name+ " " + student.suffix + ", "+ student.degree_program+":\n"): (full_name = student.first_name+" " + student.middle_name+ " " +student.last_name+", "+ student.degree_program+":\n")}
 
             let message =  full_name+json.result.message
-            alert(message)
+            prompts.push(message)
              
-             setFiles([]);
-             setResults([]);
+            setFiles([]);
+            setResults([]);
          })
          
      }
  
      return(
-     <div>
-         
-         
+        console.log(files),
+     <div>         
          <div className='body'>
              <form>
                  <p className="title">Add Student Records</p>
@@ -227,10 +233,12 @@
                      }): ""}
                  </div>
                  <br/><br/>
-                 <button onClick={submitButton} className="submit-button">Submit</button> 
+                 {files.length > 0? <button onClick={submitButton} className="submit-button">Submit</button>:
+                 <button disabled={true} className="submit-disabled-button">Submit</button> }
                  <br/><br/>          
              </form>
          </div>
+         {showPrompts? <Prompts props={{closePrompts:closePrompts.bind(this),prompts:prompts}}/>: ""}
          <Header/>
          <Menu />
          <Footer/>
