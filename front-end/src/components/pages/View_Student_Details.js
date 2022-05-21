@@ -367,7 +367,6 @@ const View_Student_Details =()=>{
             {showCancelConfirmation ? <CancelPopup />:""}
             {showWarnings ? <WarningPopup />:""}
             <div className = "bottom-space">
-                
             </div>
         </div>
         

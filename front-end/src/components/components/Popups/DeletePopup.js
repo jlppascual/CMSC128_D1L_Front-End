@@ -29,6 +29,8 @@ const DeletePopup=({props})=>{
         <div className="popup-box">
            
                 <p className='delete-text'>Are you sure you want to delete?</p>
+                <p className='format-text'>Please use this format for consistency (<b>REASON</b> : [<b>REASON FOR DELETION</b>])</p> 
+
                 <textarea className = 'deletion-details-textarea' id = 'deletion-details' onChange={(e) => handleDetailsChange(e)} maxLength={500} placeholder = "Provide reason for deletion" wrap="hard" ></textarea>
                 <p className = 'details-character-count'>{maxchar - char_count}</p>
                 
