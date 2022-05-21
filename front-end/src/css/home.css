@@ -21,6 +21,7 @@
   text-align: center;
   background-color: #f1f1f1;
   border-radius: 4px;
+
 }
 
 /* Responsive columns - one column layout (vertical) on small screens
@@ -32,12 +33,28 @@
   }
 } */
 
+
+
 .inside-card {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
   padding: 3px 16px 16px;
   text-align: left;
   background-color: #dfdcdc;
   border-radius: 4px;
+}
+
+
+.download-button{
+  width : 35%;
+  font-size: 20px;
+  background-color: #dfdcdc;
+  border-radius: 20px;
+  color:#000000;
+  font-weight: bold;
+  padding:3px 30px 10px;
+  cursor:pointer;
+  text-decoration: none;
+
 }
 
 .web-desc{
@@ -65,14 +82,27 @@
   }
 
   .announcement{
-    font-size: 20px;
+    font-size: 30px;
   }
 
   .info {
-    font-size: 20px
+    font-size: 25px
   }
   
   .announcement1 {
-    font-size: 24px;
+    font-size: 30px;
   }
+
+  .inside-card h4 {
+    font-size: 22px;
+  }
+
+  .download-button{
+    font-size: 25px;
+  }
+
+  .inside-card {
+    font-size: 20px;
+  }
+
 }
