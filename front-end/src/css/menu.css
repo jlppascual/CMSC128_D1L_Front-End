@@ -125,7 +125,7 @@ ul{
     color: #3f3f3f;
 }
 
-@media screen and (max-width: 1920px) {
+@media screen and (min-width:  1921px)  {
     .menu-navbar{
         margin-top: 175px;
     }
@@ -135,7 +135,7 @@ ul{
     }
     
     .menu-name {
-        padding-top: 10px;
+        margin-top: 62px;
         font-size: 28px;
     }
 
@@ -145,6 +145,7 @@ ul{
 
     .home-name{
         font-size: 28px;
+        margin-top: 38px;
     }
     
     .home-icon{

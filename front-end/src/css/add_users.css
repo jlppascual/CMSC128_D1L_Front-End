@@ -90,7 +90,7 @@ h2{
 }
 
 
-@media screen and (max-width: 1920px) {
+@media screen and (min-width:  1921px) {
 
     .signup-field{
         text-align: center;
