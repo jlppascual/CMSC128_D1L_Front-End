@@ -64,7 +64,7 @@
 
 /* still need to improve for responsiveness and positioning */
 
-@media screen and (max-width: 1920px) {
+@media screen and (min-width: 1920px) {
 
 
   .column {
