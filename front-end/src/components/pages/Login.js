@@ -31,7 +31,6 @@ const Login = () => {
                 navigate('/home')
             }
               else {
-                alert(body.message)
                 navigate('/');
               }
             })
