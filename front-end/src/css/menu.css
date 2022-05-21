@@ -124,3 +124,37 @@ ul{
 .entity-title{
     color: #3f3f3f;
 }
+
+@media screen and (max-width: 1920px) {
+    .menu-navbar{
+        margin-top: 175px;
+    }
+
+    .menu-side{
+        top: 75px;
+    }
+    
+    .menu-name {
+        padding-top: 10px;
+        font-size: 28px;
+    }
+
+    .home-bar{
+        height: 120px;
+    }
+
+    .home-name{
+        font-size: 28px;
+    }
+    
+    .home-icon{
+        font-size: 40px;
+        color:#3f3f3f;
+        height: 80px;
+        display: flex;
+        justify-content: flex-start;
+        margin-top: 1.5%;
+        margin-left: 1.5%;
+        cursor: pointer;
+    }
+}

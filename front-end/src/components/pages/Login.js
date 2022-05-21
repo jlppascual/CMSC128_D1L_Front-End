@@ -6,6 +6,10 @@ import { ToastContainer } from 'react-toastify';
 import { notifyError } from '../components/Popups/toastNotifUtil';
 import '../../css/login.css';
 import '../../css/toast_container.css';
+import { Icon } from 'react-icons-kit';
+import {eyeOff} from 'react-icons-kit/feather/eyeOff';
+import {eye} from 'react-icons-kit/feather/eye';
+import { useState } from 'react';
 import { useEffect } from 'react';
 
 
@@ -71,6 +75,19 @@ const Login = () => {
         }
     }
 
+    const [type, setType] = useState('password')
+    const [icon, setIcon] = useState(eyeOff)
+
+    const handleToggle = () => {
+        if(type === 'text'){
+            setIcon(eyeOff);
+            setType('password');
+        } else {
+            setIcon(eye);
+            setType('text');
+        }
+    }
+
     return(
         <div>
             <div className='login-body'>
@@ -87,7 +104,8 @@ const Login = () => {
                     <form className='login-form'>
                         <h2>User Login</h2>
                         <input type='text' className= "form-field" id='login-username' placeholder='⭕ Username'/><br/>
-                        <input type='password' className= "form-field" id='login-password' placeholder='⭕ Password'/><br/>
+                        <input type={type}className= "form-field" id='login-password' placeholder='⭕ Password'/>
+                        <i onClick={handleToggle} id = "visibilityBtn" className='eyeLogin'><Icon icon = {icon} ></Icon></i>
 
                         {/* Submit */}
                         <input type="submit" value="LOG IN" className='submit-btn' onClick={login}/>

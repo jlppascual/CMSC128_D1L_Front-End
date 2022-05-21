@@ -107,3 +107,53 @@ label{
     height:280px;
     border-radius: 10px;
 }
+
+
+@media screen and (max-width: 1920px) {
+
+    .file-accept{
+        padding:270px 7% 120px 7%;
+        border-radius: 10px;
+        top: 282.5px;
+        left: 20%;
+        margin-right:10px;
+    }
+
+    .title{
+        margin-top: 106.25px;
+        margin-left: 16.5%;
+        font-size: 37.5px;
+        margin-bottom: 12.5px;
+    }
+    
+    .title span{
+        font-size: 25px;
+    }
+
+    label{
+        font-size: 27.5px;
+    }
+
+    .plus-sign{
+        top: 410px;
+        font-size: 70px;
+    }
+  
+    .submit-button{
+        width: 27%;
+        height: 43.75 px;
+        top:575px;
+        left:53%;
+        font-size: 18.75px;
+        margin-top: 10px;
+        padding:10px;
+    }
+    
+    .chosen-files{
+        top:-18.5px;
+        left:53%;
+        padding:18.5px;
+        padding-top:3.75px;
+        height:350px;
+    }
+  }

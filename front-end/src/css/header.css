@@ -95,3 +95,63 @@
     background-color: #f1f1f1;
     border-radius: 10px;
 }
+
+@media screen and (max-width: 1920px) {
+    .header-main {
+        height: 75px;
+    }
+    
+    .asteris-logo{
+        width: 187.5px;
+    }
+    
+    .green-shape{
+        width:25px;
+        height:75px;
+    }
+    
+    .yellow-shape{
+        width:25px;
+        height:75px;
+    }
+    
+    .header-right{
+        position:fixed;
+        right:25px;
+        top:18.75px;
+    }
+    
+    .header-user{
+        margin-right:18.75px;
+        font-size: 22.5px;
+    }
+    
+    .header-dp{
+        border-radius: 62.5%;
+        width: 37.5px;
+    }
+    
+    .header-caret{
+        padding-left: 6.25px;
+        margin-right: 37.5px;
+    }
+    
+    
+    .header-dropdown{
+        width: 150px;
+        top: 50px;
+        right:18.75px;
+        border-radius:18.75px;
+
+    }
+    
+    .header-dropitem{
+        font-size: 17.5px;
+        height: 43.25px;
+    }
+    
+    .header-dropitem:hover{
+        background-color: #f1f1f1;
+        border-radius: 12.5px;
+    }
+}

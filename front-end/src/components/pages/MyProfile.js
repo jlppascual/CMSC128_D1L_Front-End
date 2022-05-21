@@ -11,6 +11,9 @@ import {RiPhoneFill,RiSettings5Line}  from 'react-icons/ri';
 import { notifyError, notifySuccess } from '../components/Popups/toastNotifUtil';
 import { ToastContainer } from 'react-toastify';
 import '../../css/toast_container.css';
+import { Icon } from 'react-icons-kit';
+import {eyeOff} from 'react-icons-kit/feather/eyeOff';
+import {eye} from 'react-icons-kit/feather/eye';
 
 const MyProfile =()=>{
 
@@ -24,6 +27,12 @@ const MyProfile =()=>{
     const [emptyLogs, setEmptyMessage] = useState("Loading logs...");
     const [students, setStudents] = useState([]);
     const [users, setUsers] = useState([]);
+    const [type, setType0] = useState('password')
+    const [icon, setIcon] = useState(eyeOff)
+    const [type1, setType1] = useState('password')
+    const [icon1, setIcon1] = useState(eyeOff)
+    const [type2, setType2] = useState('password')
+    const [icon2, setIcon2] = useState(eyeOff)
     const [toEdit, setToEdit] = useState('');
     const [toPassCred, setToPassCred] = useState('');
 
@@ -310,9 +319,12 @@ const MyProfile =()=>{
             <div>
                 <div className='password-box'>
                 <p>Change Password</p>
-                    <input type="password" className = "setting-fields" id="current-password" placeholder="Enter current password"></input><br/>
-                    <input type="password" className = "setting-fields" id="new-password" placeholder="Enter new password"></input><br/>
-                    <input type="password" className = "setting-fields" id="confirm-password" placeholder="Confirm new password"></input><br/>
+                    <input type={type} className = "setting-fields" id="current-password" placeholder="Enter current password"></input><br/>
+                    <i onClick={handleToggle} id = "visibilityBtn" className='eyeProfile'><Icon icon = {icon} ></Icon></i>
+                    <input type={type1} className = "setting-fields" id="new-password" placeholder="Enter new password"></input><br/>
+                    <i onClick={handleToggle1} id = "visibilityBtn" className='eyeProfile'><Icon icon = {icon1} ></Icon></i>
+                    <input type={type2} className = "setting-fields" id="confirm-password" placeholder="Confirm new password"></input><br/>
+                    <i onClick={handleToggle2} id = "visibilityBtn" className='eyeProfile1'><Icon icon = {icon2} ></Icon></i>
                 </div>
                 <div className='popup-buttons'>
                     <button className="cancel" onClick={cancelClicked}>Cancel</button><button className="confirm" onClick={confirmClicked}>Confirm</button> 
@@ -380,6 +392,36 @@ const MyProfile =()=>{
 
     const handleSettings = () =>{
         setShowSettings(!showSettings)
+    }
+
+    const handleToggle = () => {
+        if(type === 'text'){
+            setIcon(eyeOff);
+            setType0('password');
+        } else {
+            setIcon(eye);
+            setType0('text');
+        }
+    }
+
+    const handleToggle1 = () => {
+       if(type1 === 'text'){
+           setIcon1(eyeOff);
+           setType1('password'); 
+       } else {
+           setIcon1(eye);
+           setType1('text');
+       }
+   }
+
+   const handleToggle2 = () => {
+    if(type2 === 'text'){
+        setIcon2(eyeOff);
+        setType2('password'); 
+    } else {
+        setIcon2(eye);
+        setType2('text');
+    }
     }
 
     return(
