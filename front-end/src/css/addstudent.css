@@ -109,7 +109,7 @@ label{
 }
 
 
-@media screen and (min-width:  1921px) {
+@media screen and (min-width:  1920px) {
 
     .file-accept{
         padding:270px 7% 120px 7%;
@@ -140,6 +140,16 @@ label{
     }
   
     .submit-button{
+        width: 27%;
+        height: 43.75 px;
+        top:575px;
+        left:53%;
+        font-size: 18.75px;
+        margin-top: 10px;
+        padding:10px;
+    }
+
+    .submit-disabled-button{
         width: 27%;
         height: 43.75 px;
         top:575px;

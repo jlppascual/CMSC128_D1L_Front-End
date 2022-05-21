@@ -9,7 +9,6 @@ const addStudentPopup=({props})=>{
     const prompts = props.prompts;
     
     return(
-        // console.log(props.prompts.length),
         <div className="popup-box">
             <p className='details-text'>Results:</p>
             <div className="prompts-container">
@@ -20,8 +19,8 @@ const addStudentPopup=({props})=>{
                     })
                 ):"" }
             </div> 
-                <div className='buttons'>
-                    <button onClick={() => {handleButton(false)}} className = 'cancel-btn'>Close</button>                    
+                <div className='close-buttons'>
+                    <button onClick={() => {handleButton(false)}} className = 'close-btn'>Close</button>                    
                 </div>
         </div>
     )
