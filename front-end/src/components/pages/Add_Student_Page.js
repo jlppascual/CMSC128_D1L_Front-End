@@ -213,9 +213,8 @@
      }
  
      return(
-     <div>
-         
-         
+        console.log(files),
+     <div>         
          <div className='body'>
              <form>
                  <p className="title">Add Student Records</p>
@@ -234,7 +233,8 @@
                      }): ""}
                  </div>
                  <br/><br/>
-                 <button onClick={submitButton} className="submit-button">Submit</button> 
+                 {files.length > 0? <button onClick={submitButton} className="submit-button">Submit</button>:
+                 <button disabled={true} className="submit-disabled-button">Submit</button> }
                  <br/><br/>          
              </form>
          </div>

@@ -74,6 +74,22 @@ label{
     cursor:pointer;
 }
 
+.submit-disabled-button{
+    border:none;
+    outline:none;
+    width: 27%;
+    height: 35px;
+    position:absolute;
+    top:460px;
+    left:53%;
+    font-size: 15px;
+    background-color: gray;
+    border-radius: 10px;
+    color:#fcfff6;
+    font-weight: bold;
+    padding:4px;
+}
+
 .submit-button:hover{
     opacity:0.8
 }
