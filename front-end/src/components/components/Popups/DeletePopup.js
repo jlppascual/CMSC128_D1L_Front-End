@@ -13,15 +13,14 @@ const DeletePopup=({props})=>{
     const handleButton = async(choice) => {
         let reason = document.getElementById('deletion-details').value.trim();  // this removes trailing and leading spaces
         // uncomment if backend logic is already implemented
-        // if(!choice) await props.confirmDelete(choice, reason)
-
-        if(!choice) await props.confirmDelete(choice)
+        if(!choice) await props.confirmDelete(choice, reason)
+        // if(!choice) await props.confirmDelete(choice)
         else {
             if (reason === '') notifyError('Please enter a valid reason');
             else{
                 if (reason.length < 10) notifyError('Reason must not be less than 10 characters');
-                // else await props.confirmDelete(choice, reason);
-                else await props.confirmDelete(choice);
+                else await props.confirmDelete(choice, reason);
+                // else await props.confirmDelete(choice);
             }
         }
     }

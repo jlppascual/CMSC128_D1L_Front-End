@@ -249,13 +249,20 @@ const View_Students =()=>{
         }
     }
 
-    const confirmDelete= async(decision) =>{
+    const confirmDelete= async(decision, reason) =>{
         setShowConfirmation(false)
         if(decision){
             const student = toDelete.student_id
             await fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/'+student+'/'+user.user_id,{
                 method: "DELETE",
-                credentials:'include'
+                credentials:'include',
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                body: JSON.stringify({
+                    details: reason,
+                    user_id: user.user_id,
+                }) 
             }).then(response =>{ return response.json()})
             .then(json=>{
                 if (json.result.session.silentRefresh) {
