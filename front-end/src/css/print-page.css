@@ -27,16 +27,16 @@
     }
 
     .watermark-text{
-        transform: rotate(-40deg);
+        transform: rotate(-30deg);
         margin-left: auto;
         margin-right: auto;
         color: #8D1436;
-        font-size: 150px;
+        font-size: 130px;
         opacity: 0.2;
         position:fixed;
-        font-weight: 500;
-        top: 35%;
-        left: 15%;
+        font-weight: bold;
+        top: 15%;
+        left: 19%;
     }
     .watermark-textt{
         transform: rotate(-30deg);
@@ -46,7 +46,7 @@
         font-size: 130px;
         opacity: 0.2;
         position:fixed;
-        font-weight: 600;
+        font-weight: bold;
         top: 60%;
         left: 19%;
     }

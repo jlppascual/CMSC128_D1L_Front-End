@@ -17,8 +17,8 @@ class ComponentToPrint extends React.Component{
                 {this.state.user.first_name} {this.state.user.last_name} ({this.state.user.user_role})</span> 
                 <p className="filter">{this.props.view != "ALL" && this.props.view !=""? <span>{this.props.view}</span> :"All CAS Students"} 
                 &nbsp;&nbsp;-&nbsp;&nbsp;{this.props.order == "gwa"? <span>GWA (ascending)</span>:"Alphabetical"}</p> 
-                <span className="watermark-text">ASTERIS</span>
-                {/* <span className="watermark-textt">ASTERIS</span> */}
+                <span className="watermark-textt">ASTERIS</span>
+                 <span className="watermark-text">ASTERIS</span>
                 <div className="watermark"></div>
                 <br />
             {this.props.record != undefined ? 
