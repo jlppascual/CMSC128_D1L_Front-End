@@ -61,7 +61,10 @@
   text-align: justify;
   padding: 10px 16px 10px;
 }
-
+.template-desc{
+  text-align: justify;
+  padding: 10px 16px 10px;
+} 
 /* still need to improve for responsiveness and positioning */
 
 @media screen and (min-width: 1920px) {
@@ -74,7 +77,12 @@
     margin: 75px -150px 0px 180px;
   }
 
-  
+ .template-desc{
+    text-align: justify;
+    padding: 10px 16px 10px;
+    font-size: 20px;
+  } 
+
   .web-desc{
     text-align: justify;
     padding: 10px 16px 10px;

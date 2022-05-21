@@ -23,9 +23,8 @@ const Home = () => {
                         <h3 className='announcement'>Student Record Template</h3>
                         <div className={'inside-card'}>
                             <h4>Downloadable link</h4>
-                            <p>Here are some contents from announcement 
-                            1. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis arcu in erat interdum venenatis. Quisque placerat, ex in pellentesque pellentesque, eros libero molestie neque, sit amet lobortis lorem nulla sit amet felis..</p>
-                        </div><br />
+                            <p className='template-desc'> ASTERIS will only take student record inputs that utilize the template created by the Development Team. Additional information and automation of GWA in the said template allow for a more cohesive recording for each student. You may download the spreadsheet file below and save as a .csv file once done.</p>
+                            </div><br />
                         <div>
                             <a href={csvtemplate} className='download-button' download> Download </a>
                         </div>
