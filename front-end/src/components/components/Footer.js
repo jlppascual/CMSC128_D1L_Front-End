@@ -5,7 +5,7 @@ class Footer extends React.Component{
     render(){
         return(
             <footer>
-                <div className='info-left'><div className="dot" /> alpha version</div>
+                <div className='info-left'><div className="dot" /> aster ver. 2.0 bode</div>
                 <div className='info-left'><div className="dot" /> uplbemail@up.edu.ph</div>
                 <div className='info-left'><div className="dot" /> (02)8-997-27-74</div>
                 <div className='info-left'><div className="dot" /> CAS Building, UPLB</div>
