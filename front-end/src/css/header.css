@@ -96,7 +96,7 @@
     border-radius: 10px;
 }
 
-@media screen and (min-width:  1921px) {
+@media screen and (min-width:  1920px) {
     .header-main {
         height: 75px;
     }
