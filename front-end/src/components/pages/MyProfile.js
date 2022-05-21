@@ -24,6 +24,8 @@ const MyProfile =()=>{
     const [emptyLogs, setEmptyMessage] = useState("Loading logs...");
     const [students, setStudents] = useState([]);
     const [users, setUsers] = useState([]);
+    const [toEdit, setToEdit] = useState('');
+    const [toPassCred, setToPassCred] = useState('');
 
 
     const { user, setAuth} = useStore();
@@ -205,9 +207,9 @@ const MyProfile =()=>{
                 
                 if(new_email !== ''){
                     if (validEmail.test(new_email)){
-                        /*
-                            Enter fetch request logic
-                        */
+                        setType('pass-validation');
+                        setToEdit('email');
+                        setToPassCred(new_email);
                     } else{
                         notifyError('Invalid email format')
                     }
@@ -220,9 +222,9 @@ const MyProfile =()=>{
                 
                 if(new_number !== ''){
                     if (validNumber.test(new_number)){
-                        /*
-                            Enter fetch request logic
-                        */
+                        setType('pass-validation');
+                        setToEdit('number');
+                        setToPassCred(new_number);
                     } else{
                         notifyError('Invalid mobile number format');
                     }
@@ -230,6 +232,57 @@ const MyProfile =()=>{
                 else{
                     notifyError('Mobile number field is missing');
                 }
+            } else if(popType === 'pass-validation'){
+                let pass_validation = document.getElementById('pass-validation').value;
+                console.log(toPassCred)
+                console.log(pass_validation)
+                
+                if(toEdit === 'email'){
+                    fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/user/'+user.user_id+'/email', {
+                        method: 'PATCH', 
+                        credentials:'include',
+                        headers:{
+                            'Content-Type':'application/json'
+                        },
+                        body: JSON.stringify({
+                            password: pass_validation,
+                            new_email: toPassCred
+                      })
+                    }).then(response=>{return response.json()})
+                    .then(json=>{
+                        if (json.result.session.silentRefresh) {
+                            setAuth(json.result.session.user, json.result.session.silentRefresh)
+                        }
+                        if(json.result.success){
+                            setToggle(!isToggled)
+                            notifySuccess(json.result.message)
+                        }else{
+                            notifyError(json.result.message)
+                        }})
+                } else if (toEdit === 'number'){
+                    fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/user/'+user.user_id+'/number', {
+                        method: 'PATCH', 
+                        credentials:'include',
+                        headers:{
+                            'Content-Type':'application/json'
+                        },
+                        body: JSON.stringify({
+                            password: pass_validation,
+                            new_number: toPassCred
+                      })
+                    }).then(response=>{return response.json()})
+                    .then(json=>{
+                        if (json.result.session.silentRefresh) {
+                            setAuth(json.result.session.user, json.result.session.silentRefresh)
+                        }
+                        if(json.result.success){
+                            setToggle(!isToggled)
+                            notifySuccess(json.result.message)
+                        }else{
+                            notifyError(json.result.message)
+                        }})
+                }
+                
             }
     }
 
@@ -282,6 +335,17 @@ const MyProfile =()=>{
                 <div  className='username-box'>
                     <p>Change Mobile Number</p>
                     <span className='number-prompt'>+63</span><input type="number" className = "setting-fields" id="new-number"></input><br/>
+                    <div className='popup-buttons'>
+                        <button className="cancel" onClick={cancelClicked}>Cancel</button> <button className="confirm" onClick={confirmClicked}>Confirm</button> 
+                    </div> 
+                </div>               
+            </div>
+        } else if(props.type === 'pass-validation'){
+            body =
+            <div> 
+                <div  className='username-box'>
+                    <p>Please enter password</p>
+                    <input type="password" className = "setting-fields" id="pass-validation" placeholder="Enter password"></input><br/>
                     <div className='popup-buttons'>
                         <button className="cancel" onClick={cancelClicked}>Cancel</button> <button className="confirm" onClick={confirmClicked}>Confirm</button> 
                     </div> 
