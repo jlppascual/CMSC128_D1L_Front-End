@@ -12,7 +12,7 @@ import Footer from '../components/Footer';
 import Menu from '../components/Menu';
 import DeletePopup from '../components/Popups/DeletePopup';
 import { ToastContainer } from 'react-toastify';
-import { notifySuccess } from '../components/Popups/toastNotifUtil';
+import { notifyError, notifySuccess } from '../components/Popups/toastNotifUtil';
 import { RiAlertLine } from 'react-icons/ri'
 import '../../css/toast_container.css';
 
@@ -20,23 +20,26 @@ const View_Students =()=>{
 
     const {REACT_APP_HOST_IP} = process.env
     const [record, setRecord] = useState();
-    const [state, changeState]= useState('0');
-    const [orderValue, setOrderValue] = useState("");
+    const [state, changeState]= useState(false);
     const [searchValue, setSearchValue] = useState("");
     const [viewValue, setViewValue] = useState("");
-    
+    // reference: https://www.freecodecamp.org/news/how-to-work-with-multiple-checkboxes-in-react/?fbclid=IwAR0UqtIok1fIaGpvkHEmbDslOMN_DrunOE58lrdxAiTKRUmpMtTkgUaEF6g
+    const [checkedState, setCheckedState] = useState([]);
+    const [studentsToDel, setStudentsDel] = useState([]);
     const [showConfirmation, setShowConfirmation] = useState("")
+    const [showConfirmationMany, setShowConfirmationMany] = useState("")
     const [toDelete, setToDelete] = useState("")
     const [message, setMessage] = useState("Loading students...")
-    const prev_order_state = useRef();
+    const [selectedValue, setSelectVal] = useState(false);
     const prev_view_state = useRef();
     
     let input ;
-    
+
     const searchFilter = [
         {label: 'NAME', value:'name'},
         {label:'STUDENT NUMBER',value:'student_number'}
     ]
+
     const viewFilter = [
         {label:'ALL', value:'ALL'}, 
         {label:'BACA', value:'BACA'}, 
@@ -53,7 +56,6 @@ const View_Students =()=>{
         {label:'BSSTAT', value:'BSSTAT'},
     ]
 
-    prev_order_state.current = [orderValue];
     prev_view_state.current = [viewValue];
 
     const { user, setAuth } = useStore();
@@ -65,7 +67,7 @@ const View_Students =()=>{
     useEffect(()=>{
         setRecord(undefined)
         setMessage("Loading students...")
-        fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student?orderby="+[orderValue],
+        fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student?orderby="+"",
         {
             method: "GET",
             credentials:'include'
@@ -84,53 +86,34 @@ const View_Students =()=>{
         })
     },[state]);
 
-    //if orderValue changes, this function is executed
+    // if students exist/updated, creates an array of checkboxes with the record length
     useEffect(()=>{
-        if(prev_order_state.current != [orderValue]){
-            prev_order_state.current = [orderValue];
-            if(viewValue === "ALL" || viewValue === ""){
-                setRecord(undefined)
-                setMessage("Loading students...")
-                fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student?orderby="+[orderValue],
-                {
-                    method: "GET",
-                    credentials: 'include'
-                })
-                .then(response => {return response.json()})
-                .then(json=>{
-                    if (json.result.session.silentRefresh) {
-                        setAuth(json.result.session.user, json.result.session.silentRefresh)
-                    }
-                    if(json.result.success){
-                        setRecord(json.result.output)
-                    }else{
-                        setRecord(undefined)
-                        setMessage(json.result.message)
-                    }
-                })
-            }else{
-                setRecord(undefined)
-                setMessage("Loading students...")
-                fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/degree/"+ [viewValue]+"?orderby="+[orderValue],
-                {
-                    method: "GET",
-                    credentials:'include'
-                })
-                .then(response => {return response.json()})
-                .then(json=>{
-                    if (json.result.session.silentRefresh) {
-                        setAuth(json.result.session.user, json.result.session.silentRefresh)
-                    }
-                    if(json.result.success){
-                        setRecord(json.result.output)
-                    }else{
-                        setRecord(undefined)
-                        setMessage(json.result.message)
-                    }
-                })
+        if(record === undefined){""}
+        else setCheckedState(new Array(record.length).fill(false))
+    }, [record])
+
+    //handles checking of checkbox
+    const handleCheckChange=async(position)=>{
+        let updatedCheckedState = [];
+        checkedState.map((item, index)=>{
+            index === position ? item === true? updatedCheckedState.push(false): updatedCheckedState.push(true): updatedCheckedState.push(item)
+        })
+
+        await setCheckedState(updatedCheckedState);
+
+        let students = []
+
+        updatedCheckedState.map((item,index)=>{
+            {
+                if(item == true){
+
+                    students.push(record[index].student_id)
+                }
             }
-        }
-    },[orderValue]);
+        })
+
+        setStudentsDel(students);
+    }
 
     //if viewValue changes, this function is executed
     useEffect(()=>{
@@ -139,7 +122,7 @@ const View_Students =()=>{
             if (viewValue==="ALL" || viewValue===""){
                 setRecord(undefined)
                 setMessage("Loading students...")
-                fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student?orderby="+[orderValue],
+                fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student?orderby="+"",
                 {
                     method: "GET",
                     credentials:'include'
@@ -159,7 +142,7 @@ const View_Students =()=>{
             } else{
                 setRecord(undefined)
                 setMessage("Loading students...")
-                fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/degree/"+ [viewValue]+"?orderby="+[orderValue],
+                fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/degree/"+ [viewValue]+"?orderby="+"",
             {
                 method: "GET",
                 credentials:'include'
@@ -191,7 +174,7 @@ const View_Students =()=>{
         if(input === "" || input === undefined){
             setRecord(undefined)
             setMessage("Loading students...")
-            fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student?orderby="+[orderValue],
+            fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student?orderby="+"",
         {
             method: "GET",
             credentials:'include'
@@ -233,6 +216,39 @@ const View_Students =()=>{
             }
         })}
     }
+
+    const selectChange=async()=>{
+        await setSelectVal(!selectedValue)
+    }
+
+    useEffect(()=>{
+        let updatedCheckedState = [];
+
+        if(selectedValue===true){
+            checkedState.map((item, index)=>{
+                updatedCheckedState.push(true)
+            })
+        }else{
+            checkedState.map((item, index)=>{
+                updatedCheckedState.push(false)
+            })
+        }
+
+        setCheckedState(updatedCheckedState);
+
+        let students = []
+
+        updatedCheckedState.map((item,index)=>{
+            {
+                if(item == true){
+                    students.push(record[index].student_id)
+                }
+            }
+        })
+
+        setStudentsDel(students);
+   
+    },[selectedValue])
 
     const searchChange=(e)=>{
         setSearchValue(e.target.value);
@@ -276,9 +292,49 @@ const View_Students =()=>{
         }
     }
 
+    const confirmDeleteMany= async(decision, reason) =>{
+        setShowConfirmationMany(false)
+        if(decision){
+            await fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/delete/'+user.user_id,{
+                method: "DELETE",
+                credentials:'include',
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                body: JSON.stringify({
+                    details: reason,
+                    students_to_delete: studentsToDel,
+                }) 
+            }).then(response =>{ return response.json()})
+            .then(json=>{
+                if (json.result.session.silentRefresh) {
+                    setAuth(json.result.session.user, json.result.session.silentRefresh)
+                }
+                if(json.result.success){
+                    notifySuccess(json.result.message)
+                    changeState(!state)
+                    changeState(!state)
+                }else{
+                    notifyError(json.result.message)
+                }
+            })
+        }
+        if(selectedValue===true){
+            await setRecord([]);
+            await changeState(!state)
+            await changeState(!state)
+            setSelectVal(false);
+        }
+    }
+
     const onDelete=(student)=>{
         setShowConfirmation(true)
         setToDelete(student);
+    }
+
+    const onDeleteMany = ()=>{
+        setShowConfirmationMany(true);
+        setToDelete(studentsToDel);
     }
 
     const DropDown =({value,options,onChange, type})=>{
@@ -294,6 +350,7 @@ const View_Students =()=>{
         );
     }
 
+ 
     return(
         <div>
         <div className='view-student-body'>
@@ -317,7 +374,13 @@ const View_Students =()=>{
                     <div className='student-table-wrap'>
                     <table className='view-student-table'>
                         <thead className='view-student-thead'>
+                            <tr className='student-header' >     
+                                <th><div  className='general-checkbox'><input type = 'checkbox' checked = {selectedValue} value = {selectedValue} onChange={selectChange}/></div></th>
+                                <th><div className='delete-many-icon' style={{marginLeft:'-15px'}}><AiFillDelete onClick={()=>{onDeleteMany()}}/></div></th>  
+                                <th></th><th></th><th></th>
+                            </tr>
                             <tr className='header-row'>
+                                <th className='student-header'></th>
                                 <th className='student-header' style ={{textAlign:'left', paddingLeft: '20px'}}>NAME</th>
                                 <th className='student-header'>STUDENT NUMBER</th>
                                 <th className='student-header'>DEGREE PROGRAM</th>
@@ -329,7 +392,7 @@ const View_Students =()=>{
                             {record.map((rec, i) => {
                                 return (
                                     <tr key={i} className='view-student-element' style={{}}>
-                                        
+                                        <td className='student-cell'><input className='student-checkbox'style ={{marginLeft:'10px'}} type = 'checkbox' checked = {checkedState[i]} value = {checkedState[i]} onChange={()=>handleCheckChange(i)}></input></td>
                                         <td className='student-cell' onClick={()=> navigate('/student/'+rec.student_id)} style ={{textAlign:'left', paddingLeft: '20px'}}><div style={{float:'left'}}>{rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""} {rec.suffix ? ', ' + rec.suffix + " ": ''}</div> {rec.warning_count > 0? <div className="student-warning-badge"><RiAlertLine />
                                         <span className='badge-text'>no. of warnings: {rec.warning_count}</span></div> : ""}</td>
                                         <td className='student-cell' onClick={()=> navigate('/student/'+rec.student_id)}>{rec.student_number}</td>
@@ -340,6 +403,7 @@ const View_Students =()=>{
                             })}
                         </tbody>
                         {showConfirmation===true? <DeletePopup props={{confirmDelete: confirmDelete.bind()}} />:""}
+                        {showConfirmationMany===true? <DeletePopup props={{confirmDelete: confirmDeleteMany.bind()}}/>:""}
                     </table></div>:
                 <div className='empty-students'>
                     <p>{message}</p>
