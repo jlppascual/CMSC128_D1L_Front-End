@@ -156,29 +156,6 @@ const MyProfile =()=>{
                 setType('pass-validation');
                 setToEdit('username');
                 setToPassCred(new_uname);
-                // fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/user/'+user.user_id+'/username' ,{
-                //     method: 'PATCH',
-                //     credentials:'include', 
-                //     headers:{
-                //         'Content-Type':'application/json'
-                //     },
-                //     body: JSON.stringify({
-                //           new_username : new_uname
-                //     })
-                //  }).then(response=>{return response.json()})
-                //     .then(json=>{
-                //         if (json.result.session.silentRefresh) {
-                //             setAuth(json.result.session.user, json.result.session.silentRefresh)
-                //         }
-                //         if(json.result.success){
-                //             setToggle(!isToggled)
-                //             notifySuccess(json.result.message)
-                //             userLogout()
-                            
-                //         }else{
-                //             notifyError(json.result.message)
-                //         }
-                //     })
             }
         } else if(popType==="password"){
                 let old_pass = document.getElementById('current-password').value
