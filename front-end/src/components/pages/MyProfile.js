@@ -155,7 +155,7 @@ const MyProfile =()=>{
             }else{
                 setType('pass-validation');
                 setToEdit('username');
-                setToPassCred(new_uname);     
+                setToPassCred(new_uname);
             }
         } else if(popType==="password"){
                 let old_pass = document.getElementById('current-password').value
