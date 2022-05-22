@@ -179,6 +179,9 @@
             });
         }
         setShowPrompts(true);
+                     
+        setFiles([]);
+        setResults([]);
      }
  
      const sendData = async(data)=>{
@@ -205,15 +208,12 @@
 
             let message =  full_name+json.result.message
             prompts.push(message)
-             
-            setFiles([]);
-            setResults([]);
+
          })
          
      }
  
      return(
-        console.log(files),
      <div>         
          <div className='body'>
              <form>

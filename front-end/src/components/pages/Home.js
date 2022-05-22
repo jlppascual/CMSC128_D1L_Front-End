@@ -9,7 +9,7 @@ import Header from '../components/Header';
 import Menu from '../components/Menu';
 import Footer from '../components/Footer'
 import '../../css/home.css';
-import csvtemplate from '../template/GWA_template.csv';
+import csvtemplate from '../../template/ASTERIS_TEMPLATE.xlsx';
 
 // changed to a handler function to use hooks
 const Home = () => {

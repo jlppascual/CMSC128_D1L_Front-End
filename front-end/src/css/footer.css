@@ -35,7 +35,7 @@ footer{
     margin-right: 7px
   }
 
-  @media screen and (max-width: 1920px) {
+  @media screen and (min-width: 1920px) {
     footer{
     transform: scale(115%)
   }

@@ -118,6 +118,7 @@ option{
     padding-top: 0px;
     position: sticky;
     top: 0;
+    font-size: 15px;
 }
 
 .student-header-warning{
@@ -141,10 +142,11 @@ option{
 }
 
 .student-cell{
-    word-break: break-all;
+    word-break: normal;
     text-align: center;
     padding: 5px;
     border-bottom: 10px solid rgb(206, 206, 206);
+    font-size: 15px;
 } 
 
 .student-warning-badge{
@@ -152,7 +154,7 @@ option{
     float: left;
     margin-top: 1px;
     margin-left: 5px;
-    margin-right: -40px;
+    margin-right: -130px;
 }
 
 .student-warning-badge .badge-text{
@@ -204,3 +206,25 @@ option{
 .empty-students button:hover{
     background-color: rgb(245, 245, 245);
 }
+
+.checkbox-container{
+    display: inline;
+    background-color: rgb(206, 206, 206);
+    
+}
+.general-checkbox{
+    float:left; 
+    background-color: rgb(206, 206, 206);
+    margin-left: 20px;
+}
+
+.delete-many-icon{
+    float:left;
+    background-color: rgb(206, 206, 206);
+
+}
+
+.student-checkbox{
+    cursor:pointer;
+}
+
