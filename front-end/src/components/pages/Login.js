@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import useStore from '../hooks/authHook';
 import UPLB from '../../images/uplb.png';
+import Logo from '../../images/asteris-logo.webp'
 import Footer from '../components/Footer';
 import { ToastContainer } from 'react-toastify';
 import { notifyError } from '../components/Popups/toastNotifUtil';
@@ -92,7 +93,8 @@ const Login = () => {
         <div>
             <div className='login-body'>
                 <div className='header'>
-                <p className="app-name">ASTERIS</p>
+                {/* <p className="app-name">ASTERIS</p> */}
+                <p><img src={Logo} alt="" className='asteris-logo-login'/></p>
                     <img src = {UPLB} id="uplb-logo" alt="UPLB logo"/>
                     <div className='text-header'>
                         <p className="univ-name">UNIVERSITY OF THE PHILIPPINES LOS BAÑOS</p>
@@ -103,12 +105,14 @@ const Login = () => {
                 <div>
                     <form className='login-form'>
                         <h2>User Login</h2>
-                        <input type='text' className= "form-field" id='login-username' placeholder='⭕ Username'/><br/>
-                        <input type={type}className= "form-field" id='login-password' placeholder='⭕ Password'/>
+                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
+                        <input type='text' className= "form-field" id='login-username' placeholder='&#xf007;  Username'/><br/>
+                        <input type={type}className= "form-field" id='login-password' placeholder='&#xf023;  Password'/>
                         <i onClick={handleToggle} id = "visibilityBtn" className='eyeLogin'><Icon icon = {icon} ></Icon></i>
 
                         {/* Submit */}
                         <input type="submit" value="LOG IN" className='submit-btn' onClick={login}/>
+                        <br/><p className='forgot-password'>Forgot Password?</p>
                     </form><br/>
                 </div>
                 

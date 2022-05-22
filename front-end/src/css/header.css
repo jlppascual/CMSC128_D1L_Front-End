@@ -102,6 +102,7 @@
     }
     
     .asteris-logo{
+        margin-top: 4px;
         width: 187.5px;
     }
     
@@ -123,30 +124,29 @@
     
     .header-user{
         margin-right:18.75px;
-        font-size: 22.5px;
+        font-size: 23px;
     }
     
     .header-dp{
         border-radius: 62.5%;
-        width: 37.5px;
+        width: 38px;
     }
     
     .header-caret{
         padding-left: 6.25px;
         margin-right: 37.5px;
-    }
-    
+    }  
     
     .header-dropdown{
         width: 150px;
         top: 50px;
-        right:18.75px;
-        border-radius:18.75px;
-
+        /*right:18.75px;
+        border-radius:18.75px; */
+        transform: scale(105%);
     }
     
     .header-dropitem{
-        font-size: 17.5px;
+        font-size: 18px;
         height: 43.25px;
     }
     
