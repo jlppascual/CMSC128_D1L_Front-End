@@ -213,13 +213,12 @@ option{
     
 }
 .general-checkbox{
-    float:left; 
     background-color: rgb(206, 206, 206);
-    margin-left: 20px;
+    
 }
 
 .delete-many-icon{
-    float:left;
+
     background-color: rgb(206, 206, 206);
 
 }
