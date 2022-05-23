@@ -41,14 +41,21 @@ body{
     font-size: 14px;
 }
 
-.app-name{
+/* .app-name{
     color:#fcfff6;
     font-family: "Segoe UI";
     font-weight: 500;
     font-size: 20px;
     position:fixed;
     right:5%;
+} */
+
+.asteris-logo-login{
+    width: 140px;
+    position: fixed;
+    right: 5%
 }
+
 
 .login-form{
     text-align: center;
@@ -76,7 +83,7 @@ body{
     background-color: #F3F3F3;
     outline: none;
     border:none;
-    font-family: 'Helvetica';
+    font-family: 'Helvetica', FontAwesome;
     margin-top: 8%;
 }
 
@@ -101,6 +108,13 @@ body{
     cursor: pointer;
 }
 
+.forgot-password{
+    font-size: 12px;
+    text-decoration: underline;
+    color:  gray;
+    margin-top: 25px;
+}
+
 
 @media screen and (min-width:  1920px) {
     .header{
@@ -121,9 +135,16 @@ body{
         font-size: 17.5px;
     }
     
-    .app-name{
+    /* .app-name{
         font-size: 25px;
+    } */
+
+    .asteris-logo-login{
+        /* width: 180px; */
+        transform: scale(125%);
+        padding-top: 7px;
     }
+
 
     #uplb-logo{
         height: 75%;
@@ -146,7 +167,11 @@ body{
     }
 
     .login-form h2{
-        transform: scale(125%)
+        transform: scale(110%)
+    }
+
+    .login-form input{
+        font-size: 16px;
     }
 
     .form-field{
@@ -157,7 +182,7 @@ body{
         background-color: #F3F3F3;
         outline: none;
         border: none;
-        font-family: 'Helvetica';
+        font-family: 'Helvetica', FontAwesome;
         margin-top: 8%;
     }
 
@@ -168,13 +193,22 @@ body{
 
     .eyeLogin{
         position: absolute;
-        margin-top: 12.5%;
+        margin-top: 11.5%;
         margin-left: -30px;
         height: 40px;
     }
 
-    Footer {
-        transform: scale(105%);
+    .forgot-password{
+        /* font-size: 12px;
+        text-decoration: underline;
+        color:  gray; */
+        transform: scale(130%);
+        padding-top: 7px;
     }
+
+    /* Footer {
+        transform: scale(125%);
+    } */
+    
 } 
 

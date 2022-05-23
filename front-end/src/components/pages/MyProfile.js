@@ -309,7 +309,7 @@ const MyProfile =()=>{
             body = 
             <div> 
                 <div  className='username-box'>
-                    <p>Change Username</p>
+                    <p className='change-popup-text'>Change Username</p>
                     <input type="text" className = "setting-fields"id="new-username" placeholder="Enter new username"></input><br/>
                     <div className='popup-buttons'>
                         <button className="cancel" onClick={cancelClicked}>Cancel</button> <button className="confirm" onClick={confirmClicked}>Confirm</button> 
@@ -320,7 +320,7 @@ const MyProfile =()=>{
             body = 
             <div>
                 <div className='password-box'>
-                <p>Change Password</p>
+                <p className='change-popup-text'>Change Password</p>
                     <input type={type} className = "setting-fields" id="current-password" placeholder="Enter current password"></input><br/>
                     <i onClick={handleToggle} id = "visibilityBtn" className='eyeProfile'><Icon icon = {icon} ></Icon></i>
                     <input type={type1} className = "setting-fields" id="new-password" placeholder="Enter new password"></input><br/>
@@ -336,7 +336,7 @@ const MyProfile =()=>{
             body =
             <div> 
                 <div  className='username-box'>
-                    <p>Change Email</p>
+                    <p className='change-popup-text'>Change Email</p>
                     <input type="text" className = "setting-fields"id="new-email" placeholder="Enter new email"></input><br/>
                     <div className='popup-buttons'>
                         <button className="cancel" onClick={cancelClicked}>Cancel</button> <button className="confirm" onClick={confirmClicked}>Confirm</button> 
@@ -347,8 +347,8 @@ const MyProfile =()=>{
             body =
             <div> 
                 <div  className='username-box'>
-                    <p>Change Mobile Number</p>
-                    <span className='number-prompt'>+63</span><input type="number" className = "setting-fields" id="new-number"></input><br/>
+                    <p className='change-popup-text'>Change Mobile Number</p>
+                    <span className='number-prompt'>+63</span><input type="number" className = "setting-fields-number" id="new-number" placeholder='9XXXXXXXXX'></input><br/>
                     <div className='popup-buttons'>
                         <button className="cancel" onClick={cancelClicked}>Cancel</button> <button className="confirm" onClick={confirmClicked}>Confirm</button> 
                     </div> 

@@ -328,9 +328,9 @@ const View_Student_Details =()=>{
             <div className = "top-header">
                 {!state.student_details.isDeleted?
                 <div className='icons'>
-                    <i className = "icon" onClick={handleEdit}><BiEdit size= {25}/></i>
-                    <i className = "icon" onClick={handleDelete}><BiTrash size= {25}/></i>
-                    <i className = "icon" onClick={handleWarnings}><RiAlertLine size= {25}/></i>
+                    <i className = "icon" onClick={handleEdit}><BiEdit size= {25} title="Edit student record"/></i>
+                    <i className = "icon" onClick={handleDelete}><BiTrash size= {25} title="Delete student record"/></i>
+                    <i className = "icon" onClick={handleWarnings}><RiAlertLine size= {25} title="Warnings"/></i>
                     {state.warnings && state.warnings.length > 0? <span className="warning-badge">{state.warnings.length}</span>
                     : ""}
                 </div>:""

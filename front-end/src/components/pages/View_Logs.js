@@ -315,11 +315,11 @@ import { ToastContainer } from 'react-toastify';
 
                     <ul className='filter-list'>
                         <a download={"asteris_logs ("+new Date().toLocaleString()+").txt"} href={downloadLink} className="text-download"> DOWNLOAD <i className='download-icon'><BsDownload/></i></a>
-                        <li><DropDown value = {viewValue} options = {view_options} onChange = { viewChange } type="view"/></li>
+                        <li><DropDown className="dropdown-values" value = {viewValue} options = {view_options} onChange = { viewChange } type="view"/></li>
                         {viewValue === "activity"? (
-                            <li><DropDown value = {activity} options = {activities} onChange = { handleActivity } type="activity"/></li>
+                            <li><DropDown className="dropdown-values" value = {activity} options = {activities} onChange = { handleActivity } type="activity"/></li>
                         ): viewValue === "user"? (
-                            <li><DropDown value = {chosenUser} options = {users} onChange = { handleUser } type="user"/></li>
+                            <li><DropDown className="dropdown-values" value = {chosenUser} options = {users} onChange = { handleUser } type="user"/></li>
                         ): ""}
                     </ul>
                 </div>

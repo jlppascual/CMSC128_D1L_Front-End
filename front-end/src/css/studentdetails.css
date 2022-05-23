@@ -378,61 +378,182 @@
     font-size: 300%;
 }
 
-@media screen and (max-width: 1920px) {
+@media screen and (min-width: 1920px) {
 
-    .view-student-body{
-        padding-bottom: 5%;
+    .back-icon{
+        /* position: fixed;
+        left: 16%;
+        margin-top: 66px;
+        cursor: pointer;
+        color: gray; */
+        transform: scale(120%);
+        margin-top: 5%;
     }
 
-    .title {
-        font-size: 48px;
-    }
-
-    .title span {
+    .student-name{
+        /* text-align: left; */
+        margin-top: 5%;
+        margin-left: 19%;
+        /* color: #8D1436; */
+        /* font-family: Palatino Linotype; */
         font-size: 30px;
+        /* margin-bottom:0px; */
     }
-    .view-student-dropdown{
-        outline:none;
-        border: none;
-        border-radius: 10px;
-        padding: 3px;
-        font-family: Helvetica;
-        cursor: pointer;
-        font-size: 17px;
+
+    .student-edit-name-container{
+        /* text-align: left; */
+        /* margin-left: 19%;
+        margin-top: 60px;
+        font-size: 14px;
+        margin-bottom:0px;
+        padding: 14px; */
+        transform: scale(130%);
+        /* width: 70%; */
+        margin-top: 4.5%;
+        margin-left: 28%;
     }
-    
-    .view-student-search{
-        height: 50px;
+
+    .student-edit-name{
+        width: 15%;
+        height: 15%;
+        /* margin-right: 5px; */
+        /* font-family: Palatino Linotype; */
     }
-    
-    
-    .view-student-input{
+
+    .icons{
+        /* float:right;
+        margin-top: 70px;
+        margin-right: 17% */
+        transform: scale(130%);
+        margin-top: 5%;
+        margin-right: 17.5%;
+    }
+
+    .student-record{
+        /* width:64%;
+        margin-left: 16.5%;
+        background-color: rgb(223, 223, 223);
+        margin-top: 15px;
+        padding: 20px;
+        bottom: 50px; */
+        transform: scale(130%);
+        width: 50%;
+        margin-top: 3%;
+        margin-left: 24%;
+    }
+
+    .edit-btns{
+        /* display: inline-block;
+        width: 80%;
+        margin-left: 18%; */
+        transform: scale(130%);
+        width: 70%;
+        margin-left: 28.5%;
+        margin-bottom: 1%;
+    }
+
+    .submit-edit-btn{
+        /* border:none; */
+        /* outline:none;  */
         font-size: 16px;
-        height: 31.25px;
+        margin-left: 42%;
+        width: 11%;
+        /* cursor:pointer; */
+        /* height: 30px; */
+        padding:2px;
     }
+
     
-    .view-student-preview{
-        margin-top: 18.75px;
-        padding-top: 18.75px;
-        height: 45%;
+    .cancel-edit-btn{
+        /* border:none; */
+        /* outline:none;  */
+        font-size: 16px;
+        /* margin-left: 41%; */
+        width: 11%;
+        /* cursor:pointer; */
+        /* height: 30px; */
+        padding:2px;
+    }
+
+
+    .cancel-popup-box{
+        /* position: fixed; */
+        /* top: 40%; */
+        /* left: 37%;
+        width: 24%;
+        background-color:white;
+        box-shadow: 0px 0px 2px 2px #888888;
         border-radius: 10px;
-    }
-    
-    .view-student-thead{
-        font-size: 21px;
-    }
+        text-align: center;
+        padding: 15px;
+        padding-bottom:25px; */
+        transform: scale(130%);
+        width: 20%;
         
-    .view-student-element{
-        font-size: 20px;
     }
-    
-    .empty-students button{
+
+    .warning-popup-box{
+        /* position: fixed;
+        top: 165px;
+        left:78%;
+        width: 18%;
+        max-height: 50%;
+        background-color:white;
+        box-shadow: 0px 0px 1px 1px #888888;
+        border-radius: 5px;
+        text-align: left;
+        padding: 15px;
+        overflow-y: scroll; */
+        transform: scale(120%);
+    }
+
+    .details-popup-box {
+        /* position: fixed;
+        top: 25%;
+        left: 25%;
+        width: 50%;
+        height: 60%;
         background-color: white;
-        border:1px solid gray;
-        outline:none;
-        padding: 10px 15px ;
-        border-radius: 6.25px;
-        cursor: pointer;
+        box-shadow: 0px 0px 2px 2px #888888;
+        border-radius: 10px;
+        text-align: left; */
+        transform: scale(130%);
+        height: 45%;
+        width: 35%;
+        margin-left: 7%;
+        margin-top: 2%;
+    }
+
+    .details-area {
+        /* resize: none; */
+        /* outline: none; */
+        /* font-family: Helvetica; */
+        /* font-size: 14px;
+        line-height: 1.5;
+        background-color: rgb(230,230,230);
+        border: 0.5px solid gray;
+        overflow-y: auto;
+        padding: 10px;
+        border-radius: 5px;
+        margin-left: 4%;
+        width: 89%; */
+        height: 50%;
+    }
+
+    .alert-msg{
+        margin-left: 5%;
+    }
+
+    .details-buttons{
+        margin-top: 2%;
+    } 
+
+    .popup-box {
+        transform: scale(130%);
+        height: 45%;
+        width: 35%;
+        margin-left: 7%;
+        margin-top: 2%;
     }
 
   }
