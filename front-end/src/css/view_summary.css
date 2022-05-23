@@ -17,7 +17,7 @@
 .view-summary-list{
     position:fixed;
     right: 15%;
-    top: 110px;
+    top: 130px;
 }
 
 .view-summary-list li{
@@ -35,7 +35,7 @@
     outline: none;
     position:fixed;
     right: 33%;
-    top: 157px;
+    top: 178px;
 }
 
 .print-button:hover{

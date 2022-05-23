@@ -18,6 +18,7 @@
     padding: 2px;
     font-family: Helvetica;
     cursor: pointer;
+    margin-top: 30px;
 }
 
 .option{
@@ -193,7 +194,7 @@
 }
 
 
-@media screen and (max-width: 1920px) {
+@media screen and (min-width: 1920px) {
 
 
     .view-user-header{

@@ -9,7 +9,7 @@ class Footer extends React.Component{
     render(){
         return(
             <footer>
-                <div className='info-leftmost'> <HiCode className='dot'/> aster ver. 2.0 bode</div>
+                <div className='info-leftmost'> <HiCode className='dot'/> asteris ver. 2.0 bode</div>
                 <div className='info-left'> <MdEmail className='dot'/> casdo.uplb@up.edu.ph</div>
                 <div className='info-left'> <RiPhoneFill className='dot'/> (049) 501-5822</div>
                 <div className='info-left'> <MdPlace className='dot'/> CAS Building, UPLB</div>

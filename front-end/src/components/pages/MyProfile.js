@@ -153,29 +153,9 @@ const MyProfile =()=>{
             }else if(!new_uname.match(username_format)){
                 notifyError("username must start with a letter")
             }else{
-                fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/user/'+user.user_id+'/username' ,{
-                    method: 'PATCH',
-                    credentials:'include', 
-                    headers:{
-                        'Content-Type':'application/json'
-                    },
-                    body: JSON.stringify({
-                          new_username : new_uname
-                    })
-                 }).then(response=>{return response.json()})
-                    .then(json=>{
-                        if (json.result.session.silentRefresh) {
-                            setAuth(json.result.session.user, json.result.session.silentRefresh)
-                        }
-                        if(json.result.success){
-                            setToggle(!isToggled)
-                            notifySuccess(json.result.message)
-                            userLogout()
-                            
-                        }else{
-                            notifyError(json.result.message)
-                        }
-                    })
+                setType('pass-validation');
+                setToEdit('username');
+                setToPassCred(new_uname);
             }
         } else if(popType==="password"){
                 let old_pass = document.getElementById('current-password').value
@@ -243,8 +223,6 @@ const MyProfile =()=>{
                 }
             } else if(popType === 'pass-validation'){
                 let pass_validation = document.getElementById('pass-validation').value;
-                console.log(toPassCred)
-                console.log(pass_validation)
                 
                 if(toEdit === 'email'){
                     fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/user/'+user.user_id+'/email', {
@@ -290,6 +268,30 @@ const MyProfile =()=>{
                         }else{
                             notifyError(json.result.message)
                         }})
+                }else if (toEdit === 'username'){
+                    fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/user/'+user.user_id+'/username' ,{
+                        method: 'PATCH',
+                        credentials:'include', 
+                        headers:{
+                            'Content-Type':'application/json'
+                        },
+                        body: JSON.stringify({
+                            password: pass_validation,
+                            new_username : toPassCred
+                        })
+                     }).then(response=>{return response.json()})
+                        .then(json=>{
+                            if (json.result.session.silentRefresh) {
+                                setAuth(json.result.session.user, json.result.session.silentRefresh)
+                            }
+                            if(json.result.success){
+                                setToggle(!isToggled)
+                                notifySuccess(json.result.message)
+                                userLogout()  
+                            }else{
+                                notifyError(json.result.message)
+                            }
+                        })
                 }
                 
             }

@@ -14,7 +14,7 @@
     margin-left: 16.5%;
     color: #8D1436;
     font-family: Palatino Linotype,Palatino LT STD;
-    font-size: 30px;
+    font-size: 15px;
     margin-bottom: 10px;
 }
 
@@ -63,7 +63,7 @@ label{
     width: 27%;
     height: 35px;
     position:absolute;
-    top:460px;
+    top:490px;
     left:53%;
     font-size: 15px;
     background-color: #00563F;
@@ -80,7 +80,7 @@ label{
     width: 27%;
     height: 35px;
     position:absolute;
-    top:460px;
+    top:490px;
     left:53%;
     font-size: 15px;
     background-color: gray;
