@@ -374,13 +374,8 @@ const View_Students =()=>{
                     <div className='student-table-wrap'>
                     <table className='view-student-table'>
                         <thead className='view-student-thead'>
-                            <tr className='student-header' >     
-                                <th><div  className='general-checkbox'><input type = 'checkbox' checked = {selectedValue} value = {selectedValue} onChange={selectChange}/></div></th>
-                                <th><div className='delete-many-icon' style={{marginLeft:'-15px'}}><AiFillDelete onClick={()=>{onDeleteMany()}}/></div></th>  
-                                <th></th><th></th><th></th>
-                            </tr>
                             <tr className='header-row'>
-                                <th className='student-header'></th>
+                                <th className='student-header'><input className='general-checkbox'type = 'checkbox' checked = {selectedValue} value = {selectedValue} onChange={selectChange} /><AiFillDelete onClick={()=>{onDeleteMany()}} className='delete-many-icon'/></th>
                                 <th className='student-header' style ={{textAlign:'left', paddingLeft: '20px'}}>NAME</th>
                                 <th className='student-header'>STUDENT NUMBER</th>
                                 <th className='student-header'>DEGREE PROGRAM</th>
@@ -392,7 +387,7 @@ const View_Students =()=>{
                             {record.map((rec, i) => {
                                 return (
                                     <tr key={i} className='view-student-element' style={{}}>
-                                        <td className='student-cell'><input className='student-checkbox'style ={{marginLeft:'10px'}} type = 'checkbox' checked = {checkedState[i]} value = {checkedState[i]} onChange={()=>handleCheckChange(i)}></input></td>
+                                        <td className='student-cell'><input className='student-checkbox'style ={{paddingLeft:'10px'}} type = 'checkbox' checked = {checkedState[i]} value = {checkedState[i]} onChange={()=>handleCheckChange(i)}></input></td>
                                         <td className='student-cell' onClick={()=> navigate('/student/'+rec.student_id)} style ={{textAlign:'left', paddingLeft: '20px'}}><div style={{float:'left'}}>{rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""} {rec.suffix ? ', ' + rec.suffix + " ": ''}</div> {rec.warning_count > 0? <div className="student-warning-badge"><RiAlertLine />
                                         <span className='badge-text'>no. of warnings: {rec.warning_count}</span></div> : ""}</td>
                                         <td className='student-cell' onClick={()=> navigate('/student/'+rec.student_id)}>{rec.student_number}</td>
