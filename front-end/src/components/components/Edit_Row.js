@@ -6,7 +6,7 @@ const Edit_Row = ( { course, term_index,index}) => {
     const [units, setUnits] = useState(course.units);
     let [weight, setWeight] = useState(course.weight)
     const [cumulated, setCumulated] = useState(course.cumulated)
-
+    const not_counted = ["5","5.0","5.00","4","4.0","4.00","INC","DFG","U"]
     let prevCumulated = 0
     let bg_color;
     {index % 2 === 0? bg_color = 'rgba(0, 86, 63, 0.2)': bg_color = 'white'}
@@ -82,21 +82,31 @@ const Edit_Row = ( { course, term_index,index}) => {
     const computeTermTotals = () =>{
         let t_index = 0;
         let cumulative = 0;
-        let total_units =0;
+        let total_units = 0;
+        let units_included = 0;
         
         while(checkTerm(t_index)){
             let c_index = 0;
             let units = 0;
             let weights = 0;
+            let term_name = document.getElementsByName("term-name"+t_index)[0].innerHTML
+            
             let curr_u = document.getElementsByName("units-"+t_index+"-"+c_index)[0];
             let curr_w = document.getElementsByName("weight-"+t_index+"-"+c_index)[0];
             while(curr_u !== undefined && curr_w !== undefined){
                 if(isNaN(curr_u.value)) curr_u.value = 0;
                 if(isNaN(curr_w.value)) curr_w.value = 0;
-                units = units + Number(curr_u.value)
+                let curr_g = document.getElementsByName("grade-"+t_index+"-"+c_index)[0].value;
+                // Failing/ Removal/ Unsatisfied grades/ INC/ DFG -> not counted in units
+                if(!not_counted.includes(curr_g)){
+                    units = units + Number(curr_u.value)
+                }
+                // Included in gwa computation
+                if(term_name !== "II/19/20" && !isNaN(Number(curr_g)))
+                    units_included = units_included + Number(curr_u.value)
+                // Current row
                 if(t_index === term_index && c_index === index){
                     weights = weights + weight
-                    
                 }
                 else{
                     weights = weights + Number(curr_w.value)
@@ -109,13 +119,14 @@ const Edit_Row = ( { course, term_index,index}) => {
             document.getElementsByName("weights-term"+t_index)[0].innerHTML = weights
             document.getElementsByName("units-term"+t_index)[0].innerHTML = units
             document.getElementsByName("gpa-term"+t_index)[0].innerHTML = parseFloat((weights/units).toFixed(4))
-            cumulative = cumulative + weights
+            if(term_name != "II/19/20")
+                cumulative = cumulative + weights
             total_units = total_units + units
             t_index++
         }
         document.getElementsByName("record-cumulative")[0].innerHTML = cumulative
         document.getElementsByName("record-units")[0].innerHTML = total_units
-        document.getElementsByName("record-gwa")[0].innerHTML = parseFloat((cumulative/total_units).toFixed(4))
+        document.getElementsByName("record-gwa")[0].innerHTML = parseFloat((cumulative/units_included).toFixed(4))
     }
     
     return(
