@@ -207,7 +207,7 @@
             {student.suffix!==""? (full_name = student.first_name+" "+ student.middle_name+ " " +student.last_name+ " " + student.suffix + ", "+ student.degree_program+":\n"): (full_name = student.first_name+" " + student.middle_name+ " " +student.last_name+", "+ student.degree_program+":\n")}
 
             let message =  full_name+json.result.message
-            prompts.push(message)
+            prompts.push({message,success:json.result.success})
 
          })
          
