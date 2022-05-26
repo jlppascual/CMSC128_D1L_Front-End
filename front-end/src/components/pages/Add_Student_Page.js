@@ -53,7 +53,7 @@
      
          // At this point you'll have an array of results
          let res = await Promise.all(files);
-         await setResults(res)
+         setResults(res)
      }
 
      const closePrompts = (value) => {
@@ -67,6 +67,7 @@
          let term = {};
          let weightPerTerm = 0;
          let cumulative_sum = 0;
+         let course_row = 0
  
          for(var i = 1; i < array[10].length; i++){
              if (array[10][i] != ''){
@@ -84,7 +85,7 @@
                  //if course is found at the beginning of the record
                  if(courses.length <=0 && array[j][7] != ''){
                      courses.push({course_code: array[j][1], grade: array[j][2], units: array[j][3], 
-                     weight: Number(array[j][4]), cumulated: Number(array[j][5])})
+                     weight: Number(array[j][4]), cumulated: Number(array[j][5]), row_number: course_row++})
                      weightPerTerm = weightPerTerm + (Number(array[j][4]))
                         
                      semester.current = sem;
@@ -110,12 +111,12 @@
                      term = {};
 
                      courses.push({course_code: array[j][1], grade: array[j][2], units: array[j][3], 
-                     weight: Number(array[j][4]), cumulated: Number(array[j][5])})
+                     weight: Number(array[j][4]), cumulated: Number(array[j][5]), row_number: course_row++})
                      weightPerTerm = weightPerTerm + (Number(array[j][4]))
                  // all courses under the current term will be appended until a new term is found
                  }else{
                      courses.push({course_code: array[j][1], grade: array[j][2], units: array[j][3], 
-                         weight: Number(array[j][4]), cumulated: Number(array[j][5])})
+                         weight: Number(array[j][4]), cumulated: Number(array[j][5]), row_number: course_row++})
  
                      weightPerTerm = weightPerTerm + (Number(array[j][4]))
                  }
@@ -210,7 +211,6 @@
             prompts.push({message,success:json.result.success})
 
          })
-         
      }
  
      return(
