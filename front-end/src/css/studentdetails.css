@@ -380,180 +380,112 @@
 
 @media screen and (min-width: 1920px) {
 
-    .back-icon{
-        /* position: fixed;
-        left: 16%;
-        margin-top: 66px;
-        cursor: pointer;
-        color: gray; */
-        transform: scale(120%);
-        margin-top: 5%;
+    .top-header{
+        position:sticky;
+        top:0px;
+        padding-top:0.5px ;
+        background-color: white;
     }
 
-    .student-name{
-        /* text-align: left; */
-        margin-top: 5%;
-        margin-left: 19%;
-        /* color: #8D1436; */
-        /* font-family: Palatino Linotype; */
-        font-size: 30px;
-        /* margin-bottom:0px; */
+    .warning-popup-box{
+        position: fixed;
+        top: 225px;
     }
 
-    .student-edit-name-container{
-        /* text-align: left; */
-        /* margin-left: 19%;
-        margin-top: 60px;
-        font-size: 14px;
-        margin-bottom:0px;
-        padding: 14px; */
-        transform: scale(130%);
-        /* width: 70%; */
-        margin-top: 4.5%;
-        margin-left: 28%;
-    }
-
-    .student-edit-name{
-        width: 15%;
-        height: 15%;
-        /* margin-right: 5px; */
-        /* font-family: Palatino Linotype; */
+    .record-line{
+        border: 1px solid white;
+        margin-top: 150px;
+        margin-bottom: 0px;
     }
 
     .icons{
-        /* float:right;
-        margin-top: 70px;
-        margin-right: 17% */
-        transform: scale(130%);
-        margin-top: 5%;
-        margin-right: 17.5%;
+        float:right;
+        margin-top: 130px;
+        margin-right: 17%;
+        transform: scale(125%)
+    }
+    
+    
+    .warning-badge {
+        font-size: 12.5px;
+        top: -5px;
+        right: -15px;
+    }
+    
+    .back-icon{
+        margin-top: 115px;
+        height: 125%;
     }
 
     .student-record{
-        /* width:64%;
-        margin-left: 16.5%;
-        background-color: rgb(223, 223, 223);
-        margin-top: 15px;
-        padding: 20px;
-        bottom: 50px; */
-        transform: scale(130%);
-        width: 50%;
-        margin-top: 3%;
-        margin-left: 24%;
+        width: 65%;
+        font-size: 20px;
+        bottom: 50px; 
     }
 
     .edit-btns{
-        /* display: inline-block;
-        width: 80%;
-        margin-left: 18%; */
-        transform: scale(130%);
         width: 70%;
         margin-left: 28.5%;
         margin-bottom: 1%;
     }
 
     .submit-edit-btn{
-        /* border:none; */
-        /* outline:none;  */
         font-size: 16px;
         margin-left: 42%;
         width: 11%;
-        /* cursor:pointer; */
-        /* height: 30px; */
         padding:2px;
     }
 
+    .student-name{
+        font-size: 40px;
+        margin-top:100px;
+    }
+
+    .record-head{
+        font-size: 21.25px
+    }
+
+    .term-summary{
+        font-size: 18.75px;
+    }
+
+    .info-l{
+        font-size: 18.75px
+    }
+
+    .edit-top-cell{
+        font-size: 18.75px;
+    }
+
+    .info-edit-cell{
+        font-size: 18.75px;
+    }
     
+    .info-r{
+        font-size: 18.75px;
+    }
+
+    .student-edit-name{
+        font-size: 18.75px;
+    }
+
+    .submit-edit-btn{
+        font-size: 17px;
+        height: 37.5px;
+    }
     .cancel-edit-btn{
-        /* border:none; */
-        /* outline:none;  */
-        font-size: 16px;
-        /* margin-left: 41%; */
-        width: 11%;
-        /* cursor:pointer; */
-        /* height: 30px; */
-        padding:2px;
+        font-size: 17px;
+        height: 37.5px;
     }
 
-
-    .cancel-popup-box{
-        /* position: fixed; */
-        /* top: 40%; */
-        /* left: 37%;
-        width: 24%;
-        background-color:white;
-        box-shadow: 0px 0px 2px 2px #888888;
-        border-radius: 10px;
-        text-align: center;
-        padding: 15px;
-        padding-bottom:25px; */
-        transform: scale(130%);
-        width: 20%;
-        
-    }
-
-    .warning-popup-box{
-        /* position: fixed;
-        top: 165px;
-        left:78%;
-        width: 18%;
-        max-height: 50%;
-        background-color:white;
-        box-shadow: 0px 0px 1px 1px #888888;
-        border-radius: 5px;
-        text-align: left;
-        padding: 15px;
-        overflow-y: scroll; */
-        transform: scale(120%);
-    }
-
-    .details-popup-box {
-        /* position: fixed;
-        top: 25%;
-        left: 25%;
-        width: 50%;
-        height: 60%;
-        background-color: white;
-        box-shadow: 0px 0px 2px 2px #888888;
-        border-radius: 10px;
-        text-align: left; */
-        transform: scale(130%);
-        height: 45%;
-        width: 35%;
-        margin-left: 7%;
-        margin-top: 2%;
-    }
-
-    .details-area {
-        /* resize: none; */
-        /* outline: none; */
-        /* font-family: Helvetica; */
-        /* font-size: 14px;
-        line-height: 1.5;
-        background-color: rgb(230,230,230);
-        border: 0.5px solid gray;
-        overflow-y: auto;
+    .edit-cell{
+        width: 90%;
+        outline:none;
         padding: 10px;
-        border-radius: 5px;
-        margin-left: 4%;
-        width: 89%; */
-        height: 50%;
+        border: 1.25px solid gray
     }
 
-    .alert-msg{
-        margin-left: 5%;
+    .student-line{
+        width: 67%
     }
-
-    .details-buttons{
-        margin-top: 2%;
-    } 
-
-    .popup-box {
-        transform: scale(130%);
-        height: 45%;
-        width: 35%;
-        margin-left: 7%;
-        margin-top: 2%;
-    }
-
-  }
+}

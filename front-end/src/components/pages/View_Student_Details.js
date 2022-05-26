@@ -33,6 +33,12 @@ const View_Student_Details =()=>{
         middle_name:"",
         suffix:""
     })
+
+    const[newGrade, setNewGrade] = useState({
+        cumulative_sum:0,
+        gwa: 0, 
+        units:0
+    })
     const [state, setState]= useState({
         student_details:[],
         record_details:[],
@@ -120,12 +126,17 @@ const View_Student_Details =()=>{
     }
     
     const handleUpdate=()=>{
-        
+        const studno_format = /^[0-9]{4,}-[0-9]{5,}$/
+
         if (!isCompleteFields()){
             notifyError("Please complete missing fields")
         }
         else if(!checkChanges()){
             notifyError("Please apply changes first")
+
+        }else if(new_studno && !new_studno.match(studno_format)){
+            notifyError("invalid student number format")
+            setStudno(state.student_details.student_number)
         }
         else {
             setNewCourses(getCourses())
@@ -134,12 +145,7 @@ const View_Student_Details =()=>{
         
     }
     const confirmEdit = async(decision,details)=>{
-        const studno_format = /^20[0-9]{2,}-[0-9]{5,}$/
 
-        if(!new_studno.match(studno_format)){
-            notifyError("invalid student number format")
-            setStudno(state.student_details.student_number)
-        }else{
         setShowEditConfirmation(false)
         document.getElementById("submit-changes-btn").disabled = false;
         document.getElementById("cancel-editing-btn").disabled = false;
@@ -163,38 +169,38 @@ const View_Student_Details =()=>{
             }
 
             fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/"+ state.student_details.student_id, {
-
-                    method:'PATCH',
-                    credentials:'include',
-                    headers:{
-                        'Content-Type':'application/json'
-                    },
-                    body: JSON.stringify({
-                        updatedStudent,
-                        details,
-                        user_id: user.user_id,
-                        
-                    }) 
-                })
-                .then((response) => {return response.json()})
-                .then(json => {
-                    if (json.result.session.silentRefresh) {
-                        setAuth(json.result.session.user, json.result.session.silentRefresh)
-                    }
-                    if(json.result.success){
-                        const student = state.student_details
-                        const full_name = student.first_name+" "+student.last_name+", "+student.degree_program+":\n"
-                        let message =  full_name+json.result.message
-                        notifySuccess(message)
-                        setPage(!pageState)
-                    }else{
-                        setDegree(state.student_details.degree_program)
-                        setStudno(state.student_details.student_number)
-                    notifyError(json.result.message)}
-                })
-            }
+                
+                method:'PATCH',
+                credentials:'include',
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                body: JSON.stringify({
+                    updatedStudent,
+                    details,
+                    user_id: user.user_id,
+                    
+                }) 
+            })
+            .then((response) => {return response.json()})
+            .then(json => {
+                if (json.result.session.silentRefresh) {
+                    setAuth(json.result.session.user, json.result.session.silentRefresh)
+                }
+                if(json.result.success){
+                    const student = state.student_details
+                    const full_name = student.first_name+" "+student.last_name+", "+student.degree_program+":\n"
+                    let message =  full_name+json.result.message
+                    notifySuccess(message)
+                    setPage(!pageState)
+                }else{
+                    setDegree(state.student_details.degree_program)
+                    setStudno(state.student_details.student_number)
+                notifyError(json.result.message)}
+            })
         }
     }
+    
 
     const getEdits = () =>{
         let terms_count = state.term_details.length
@@ -294,7 +300,11 @@ const View_Student_Details =()=>{
                 
                 <div className='cancel-edit-buttons'>
                     <button onClick={() => {setShowCancelConfirmation(false)}} className = 'no-btn'>No</button>
-                    <button onClick={() => {setShowCancelConfirmation(false), setEditable(false);}} className = 'yes-btn'>Yes</button>
+                    <button onClick={() => {setShowCancelConfirmation(false), setEditable(false), 
+                        document.getElementsByName("record-cumulative")[0].innerHTML = state.record_details.cumulative_sum
+                        document.getElementsByName("record-units")[0].innerHTML = state.record_details.total_units
+                        document.getElementsByName("record-gwa")[0].innerHTML = state.record_details.gwa
+                        ;}} className = 'yes-btn'>Yes</button>
                 </div>
             </div>
         )

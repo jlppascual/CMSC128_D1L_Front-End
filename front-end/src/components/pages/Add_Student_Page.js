@@ -26,7 +26,7 @@
 
     const { user, setAuth } = useStore();
     const navigate = useNavigate();     // navigation hook
- 
+    const programs = ["BACA", "BAPHLO", "BASOC", "BSAGRICHEM", "BSAMAT", "BSAPHY", "BSBIO", "BSCHEM", "BSCS", "BSMATH","BSMST", "BSSTAT"]
  
      //https://stackoverflow.com/a/67296403
      const setCSVFile = async (e) => {
@@ -56,10 +56,40 @@
          await setResults(res)
      }
 
-     const closePrompts = (value) => {
-        setShowPrompts(value);
+     const closePrompts =async(value, arr) => {
+        await setShowPrompts(value);
+        if(showPrompts===true){
+            setPrompts([]) //clears prompts upon closing
+        }
      }
- 
+
+    // checks if name, student number or degree program is null
+    const checkStudentDetails = (student_data) => {
+        const studno_format = /^[0-9]{4}-[0-9]{5}$/;    // Student number can be null
+        if (!student_data.first_name && student_data.first_name == "") 
+            return ("missing first name: record not added"); //First name cannot be null
+        if (!student_data.last_name && student_data.last_name == "") 
+            return ("missing last name: record not added"); // Last name cannot be null
+        if (!student_data.degree_program && student_data.degree_program == "")
+            return ("missing degree program: record not added"); // Degree Program cannot be null
+        else if(!programs.includes(student_data.degree_program)){
+            return ("invalid degree program: record not added");
+        }
+        if (!studno_format.test(student_data.student_number)) {
+          return ("Wrong student number format: record not added");
+        }
+        return true;
+    };
+      
+    //Check record_data (adding student onli)
+    const checkRecordDetails = (record_data) => {
+        if (record_data.gwa === "") return ("missing GWA: student not added"); // Gwa cannot be null
+        if (record_data.total_units === "") return("missing total units: student not added");   // Total units cannot be null   
+        if (record_data.cumulative_sum === "") return("missing cumulative sum: student not added"); // Cumulative sum cannot be null     
+        return true
+    };
+
+     //gets all details of a student_record
      const getRecords = async(array) =>{
          let headers = [];
          let courses = [];
@@ -146,11 +176,19 @@
                  term_data
              }
          }
-         setFullName(data.first_name+" "+data.last_name+ " " + data.degree_program)
- 
-         return data
+         
+        setFullName(data.first_name+" "+data.last_name+ " " + data.degree_program)
+        if(!checkStudentDetails(data.student_data)){
+        prompts.push(checkStudentDetails(data.student_data))
+        }
+        if(!checkRecordDetails(data.record_data)){
+        prompts.push(checkRecordDetails(data.record_data))
+        }
+        // console.log(prompts)
+        return data
      }
  
+     //parses data taken from the text area
      const parseData = async(content)=>{
          //separates file content by new line
          if(!content) {
@@ -170,34 +208,37 @@
      }
  
      ///function to read the read csv file as text
-     const submitButton=(e)=>{
+     const submitButton=async(e)=>{
         e.preventDefault();
         if(results.length > 0){
             results.map(async(result) => {
                 let data = await parseData(result);
-                if(data) await sendData(data);
+                if(data){
+                    if(!checkStudentDetails(data.student_data) || !checkRecordDetails(data.record_data)){ //do nothing
+                    }else(await sendData(data))
+                };
             });
-        }
+        }    
         setShowPrompts(true);
-                     
         setFiles([]);
         setResults([]);
      }
  
      const sendData = async(data)=>{
-         fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student',{
-             method:'POST',
-             credentials:'include',
-             headers:{
-                 'Content-Type':'application/json'
-             },
-             body: JSON.stringify({
-                 student_data: data.student_data,
-                 record_data: data.record_data,
-                 user_id: user.user_id
-             })
-         }).then((response) => {return response.json()})
-         .then(json => {
+
+        fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student',{
+            method:'POST',
+            credentials:'include',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body: JSON.stringify({
+                student_data: data.student_data,
+                record_data: data.record_data,
+                user_id: user.user_id
+            })
+        }).then((response) => {return response.json()})
+        .then(json => {
             if (json.result.session.silentRefresh) {
                 setAuth(json.result.session.user, json.result.session.silentRefresh)
             }
@@ -209,8 +250,7 @@
             let message =  full_name+json.result.message
             prompts.push(message)
 
-         })
-         
+        })       
      }
  
      return(

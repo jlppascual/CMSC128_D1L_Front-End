@@ -42,6 +42,7 @@
     margin-left: 2rem; 
     font-size: 1.8rem;
     background: none;
+    margin-bottom: 20px;
 }
 
 .menu-icon{
@@ -125,15 +126,17 @@ ul{
     color: #3f3f3f;
 }
 
-@media screen and (min-width:  1921px)  {
+@media screen and (min-width: 1920px) {
+
     .menu-navbar{
-        margin-top: 175px;
+        margin-top: 185px;
     }
 
     .menu-side{
         top: 75px;
+
     }
-    
+
     .menu-name {
         margin-top: 62px;
         font-size: 28px;

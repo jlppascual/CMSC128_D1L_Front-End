@@ -280,7 +280,7 @@ const MyProfile =()=>{
                             new_username : toPassCred
                         })
                      }).then(response=>{return response.json()})
-                        .then(json=>{
+                        .then(async json=>{
                             if (json.result.session.silentRefresh) {
                                 setAuth(json.result.session.user, json.result.session.silentRefresh)
                             }
