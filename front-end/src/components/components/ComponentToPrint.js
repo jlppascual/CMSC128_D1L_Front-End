@@ -37,6 +37,7 @@ class ComponentToPrint extends React.Component{
     }
    
     render(){
+        console.log(this.props.record)
         return(
             <div className='view-print-preview'>
                 <img src = {UPLB} className = "univ-logo" />
@@ -68,6 +69,8 @@ class ComponentToPrint extends React.Component{
                         
                         {this.props.record.map((rec, i) => {
                             return (
+                                <Fragment>
+
                                 <tr className='view-print-element' key = {i}>
                                     <td className='gwa-cell' >{i+1}</td>
                                     <td className='name-cell' >{rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""}
@@ -75,7 +78,9 @@ class ComponentToPrint extends React.Component{
                                     <td className='degree-cell'>{rec.degree_program}</td>
                                     <td className='gwa-cell'>{rec.gwa}</td>
                                     <td className='latin-cell'>{rec.latin_honor}</td>
-                                </tr>
+                                </tr>                              
+                                
+                                </Fragment>
                             );
                         })}
                     </tbody>

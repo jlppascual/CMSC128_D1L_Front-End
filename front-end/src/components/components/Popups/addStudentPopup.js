@@ -3,7 +3,7 @@ import '../../../css/studentprompts.css'
 const addStudentPopup=({props})=>{
 
     const handleButton = async() => {
-        await props.closePrompts(false)
+        await props.closePrompts(false);
     }
 
     
