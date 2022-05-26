@@ -2,21 +2,23 @@
  * authors: Janica, Andrew
  */
 
- import React, { useEffect, useState, useRef } from 'react';
- import Menu from '../components/Menu'
- import Header from '../components/Header';
- import Footer from '../components/Footer';
- import useStore from '../hooks/authHook'
- import { useNavigate } from 'react-router-dom';
- import {VscSettings}  from 'react-icons/vsc';
- import DeleteConfirmPopup from '../components/Popups/DeleteConfirmPopup';
- import '../../css/view_users.css'
- import USER from '../../images/dp_default.jpg'
- import { ToastContainer } from 'react-toastify';
- import { notifyError, notifySuccess } from '../components/Popups/toastNotifUtil';
- import '../../css/toast_container.css';
+import React, { useEffect, useState, useRef } from 'react';
+import Menu from '../components/Menu'
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import useStore from '../hooks/authHook'
+import { useNavigate } from 'react-router-dom';
+import {VscSettings}  from 'react-icons/vsc';
+import DeleteConfirmPopup from '../components/Popups/DeleteConfirmPopup';
+import '../../css/view_users.css'
+import USER from '../../images/dp_default.jpg'
+import { ToastContainer } from 'react-toastify';
+import { notifyError, notifySuccess } from '../components/Popups/toastNotifUtil';
+import '../../css/toast_container.css';
+import useLoadStore from '../hooks/loaderHook';
+import Users_Loader from '../loaders/Users_Loader';
 
- export default function View_Users_Page (){
+export default function View_Users_Page (){
 
     const {REACT_APP_HOST_IP} = process.env
     const [users, setUsers] = useState([]);
@@ -27,6 +29,7 @@
     const [toDelete, setToDelete] = useState("")
 
     const { user, setAuth } = useStore();
+    const { isLoading, setIsLoading } = useLoadStore();
     const navigate = useNavigate();     // navigation hook
     const prev_view_state = useRef();
 
@@ -39,9 +42,10 @@
     ]
 
     prev_view_state.current = [viewValue];
- 
+
     useEffect(() =>{
         if(user.user_role==="CHAIR/HEAD"){
+            // setIsLoading(true);
             fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/user",
             {
                 method: "GET",
@@ -54,15 +58,16 @@
                     setAuth(user,json.result.session)
                 }            
             })
+            // setIsLoading(false);
         }else{
             navigate("/home")
             notifyError("Must be an admin to access this page")
         }
-        
-     },[pageState]);
+    },[pageState]);
 
      //if viewValue changes, this function is executed
     useEffect(()=>{
+        setIsLoading(true);
         if(prev_view_state.current != [viewValue]){
             prev_view_state.current = [viewValue];
             if (viewValue==="ALL"||viewValue===""){
@@ -102,6 +107,7 @@
                 })
             }
         }
+        setIsLoading(false);
     },[viewValue]);
  
      const handleUserInput = (e) => {
@@ -117,6 +123,7 @@
     
         let url = 'http:'+REACT_APP_HOST_IP+':3001/api/0.1/user/search?name=';
         
+        setIsLoading(true);
         //if a specific role is selected, url changes to view users by role
         if(viewValue === "OCS REP" || viewValue === "ACS" || viewValue === "UNIT REP" || viewValue === "MEMBER"){
             url = 'http://'+REACT_APP_HOST_IP+':3001/api/0.1/user/role/' + viewValue + '/search?name='
@@ -161,9 +168,10 @@
                 }
             })
         }
+        setIsLoading(false);
     }
 
-     const viewChange=(e)=>{
+    const viewChange=(e)=>{
         setViewValue(e.target.value);
     }
 
@@ -172,6 +180,7 @@
         setToDelete(todeluser);
     }
      const confirmDelete = async(decision,details) => {
+        setIsLoading(true);
         setShowDeleteConfirmation(false)
         if(decision){
             let delete_id = toDelete.user.user_id
@@ -193,6 +202,7 @@
                }
             })
         }
+        setIsLoading(false);
      }
  
      const DropDown =({value,options,onChange})=>{
@@ -229,9 +239,14 @@
                     <button onClick={handleSubmit} className = "users-search-button"><i className = "search-icon"><VscSettings /></i></button>
                 </div>
                 </div>
-               
+
                 <div className='tile-page'>
-                    {users != undefined? users.map((user, i) => {
+                    {
+                        // Display Loader
+                        isLoading ? <Users_Loader /> :
+
+                        // Display users
+                        users != undefined? users.map((user, i) => {
                             if (i % 2 === 0) {
                                 return <span key={i}>
                                     <div className="user-tile" >
@@ -254,10 +269,11 @@
                                     </div>
                                 </span>
                             }
-                    }): <div className="no-users">
-                        <p>No users found.</p>
-                        <button onClick={()=> navigate('/users/new')}> Add User Account</button>
-                        </div>}
+                        }): <div className="no-users">
+                            <p>No users found.</p>
+                            <button onClick={()=> navigate('/users/new')}> Add User Account</button>
+                            </div>
+                    }
                 </div>
                 
                 {showDeleteConfirmation===true? <DeleteConfirmPopup props={{confirmDelete: confirmDelete.bind()}} />:""}</div>
