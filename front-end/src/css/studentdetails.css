@@ -336,11 +336,18 @@
     padding-bottom: 28px;
     background-color: rgba(141, 20, 54, 0.1);
     border-radius: 5px;
+    cursor: pointer;
 }
+
+.warning:hover{
+    background-color: rgba(141, 20, 54, 0.3);
+}
+
 
 .warning h5{
     font-size: 13px;
     margin: 0px;
+    color: black;
 }
 .warning p{
     margin: 0px;
@@ -353,6 +360,7 @@
     float: right;
     font-size: 13px;
     margin: 0px;
+    color: black;
 }
 
 .warning-badge {
@@ -367,6 +375,12 @@
     top: 65px;
     right: 16.5%;
   }
+
+.anchor{
+    top: 500px;
+    text-decoration: none;
+    
+}
 
 .deleted-watermark{
     position:fixed;

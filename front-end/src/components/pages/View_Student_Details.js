@@ -24,6 +24,8 @@ const View_Student_Details =()=>{
     const [showCancelConfirmation, setShowCancelConfirmation] = useState("")
     const [showEditConfirmation, setShowEditConfirmation] = useState("")
     const [showWarnings, setShowWarnings] = useState(false)
+    const [highlightedRow, setHighlightedRow] = useState(-1)
+    const [warningsScrollPos, setWarningsScrollPos] = useState(0)
     const [new_courses, setNewCourses] = useState([])
     const [new_degree, setDegree] = useState("")
     const [new_studno, setStudno] = useState("")
@@ -301,31 +303,51 @@ const View_Student_Details =()=>{
     }
 
     const WarningPopup=({})=>{
+        
         return(
-            <div className="warning-popup-box">
+            <div className="warning-popup-box" id = "warning-div" >
                 <h3 className='warning-header'>Record Warnings</h3>
                 {state.warnings.length > 0? 
-                <div className='warnings-body'>
+                <div className='warnings-body' >
                     {state.warnings.map((warning,i) => {
-                        return <div key = {i} className = "warning">
-                            <h5>{warning.course}</h5>
-                            <h5>{warning.term}</h5>
-                            
-                            <p>{warning.details}</p>
-                            <span>{warning.warning_type}</span>
-                        </div>
+                        let anchor_value,bg_color,border_value;
+                        if(warning.row_number < 3) anchor_value = "#top"
+                        else if(warning.row_number < 8) anchor_value = "#top1"
+                        else anchor_value = "#"+(warning.row_number-7)
+                        if(highlightedRow === warning.row_number){
+                            bg_color = "rgba(141, 20, 54, 0.2)"
+                            border_value = "solid 1px black"
+                        } 
+                        else {
+                            bg_color = "rgba(141, 20, 54, 0.1)"
+                            border_value = "none"
+                        }
+                        return <a className = "anchor" href={anchor_value} onClick = {() => {highlightRow(warning.row_number)}}>
+                            <div key = {i}   className = "warning" style = {{backgroundColor: bg_color, border:border_value}}>
+                                <h5>{warning.course}</h5>
+                                <h5>{warning.term}</h5>
+                                
+                                <p>{warning.details}</p>
+                                <span>{warning.warning_type}</span>
+                            </div></a>
                     })}
                 </div>
                 : <p>No record warnings found</p>}
+                
             </div>
+            
         )
+    }
+
+    const highlightRow = (row_num) => {
+        setHighlightedRow(row_num)
     }
 
     return(
         <div>
-        <div className='details-body'>
+        <div className='details-body' >
             {state.student_details.isDeleted? <div className='deleted-watermark'>DELETED STUDENT RECORD</div>:""}
-            <div className = "top-header">
+            <div className = "top-header" id ="top">
                 {!state.student_details.isDeleted?
                 <div className='icons'>
                     <i className = "icon" onClick={handleEdit}><BiEdit size= {25} title="Edit student record"/></i>
@@ -397,10 +419,10 @@ const View_Student_Details =()=>{
                     <button type = "button" onClick={handleCancel} className="cancel-edit-btn" id="cancel-editing-btn">Cancel Editing</button>
                     <button type = "button" onClick={handleUpdate} className="submit-edit-btn" id="submit-changes-btn">Submit Changes</button>
                     </span>:""}
-                <hr className='student-line'></hr>
+                <hr className='student-line' ></hr>
             </div>
             
-            < div className='student-record'>
+            < div className='student-record' id ="top1">
                 {editable == true? (
                 <div className='student-info-edit-left'>
                     <tr><b>Degree Program:</b><input className="edit-top-cell"
@@ -460,16 +482,23 @@ const View_Student_Details =()=>{
                             <tr style={headStyle}>
                                 <td colSpan="100%" ><hr /></td>
                             </tr>
-                            {term.course_data!=[]? term.course_data.map((course,index)=>(
-                                <Fragment key={index}>
+                            {term.course_data!=[]? term.course_data.map((course,index)=>{
+                                let bg_color, border_value;
+                                {index % 2 === 0? bg_color = 'rgba(0, 86, 63, 0.2)':bg_color = 'white'}
+                                border_value = 'none'
+                                if (highlightedRow===course.row_number ){
+                                    bg_color = 'rgba(141, 20, 54, 0.3)'
+                                    border_value = "solid 1px black"
+                                } 
+                                return <Fragment key={index}>
                                     {editable === true ? (
-                                    <Edit_Row  term_index = {i} course = {course} index = {index}/>
+                                    <Edit_Row  term_index = {i} course = {course} index = {index} bg_color = {bg_color}/>
                                     ) : (
-                                    <Read_Row course = {course} index = {index}/>
+                                    <Read_Row course = {course} bg_color = {bg_color} border = {border_value}/>
                                     ) }
                                 </Fragment>
                                 
-                            )):""}
+                                    }):""}
                         </tbody>
                     </table>
                 </form>

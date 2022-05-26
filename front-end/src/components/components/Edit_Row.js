@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 
-const Edit_Row = ( { course, term_index,index}) => {
+const Edit_Row = ( { course, term_index,index,bg_color}) => {
     const [course_code, setCourse] = useState(course.course_code);
     const [grade, setGrade] = useState(course.grade);
     const [units, setUnits] = useState(course.units);
@@ -8,14 +8,12 @@ const Edit_Row = ( { course, term_index,index}) => {
     const [cumulated, setCumulated] = useState(course.cumulated)
     const not_counted = ["5","5.0","5.00","4","4.0","4.00","INC","DFG","U"]
     let prevCumulated = 0
-    let bg_color;
-    {index % 2 === 0? bg_color = 'rgba(0, 86, 63, 0.2)': bg_color = 'white'}
 
     // Check for empty fields
     if (course_code === "" || grade === "" || units === "" ){
         bg_color = 'rgba(141, 20, 54, 0.3)'
     } 
-    
+
     const computeCumulated =  (curr_weight) => {
     
         if(isNaN(curr_weight)) curr_weight = 0
@@ -116,9 +114,11 @@ const Edit_Row = ( { course, term_index,index}) => {
                 curr_u = document.getElementsByName("units-"+t_index+"-"+c_index)[0]
                 curr_w = document.getElementsByName("weight-"+t_index+"-"+c_index)[0];
             }
+            let term_gpa = parseFloat((weights/units).toFixed(4))
+            if(isNaN(term_gpa)) term_gpa = 0
             document.getElementsByName("weights-term"+t_index)[0].innerHTML = weights
             document.getElementsByName("units-term"+t_index)[0].innerHTML = units
-            document.getElementsByName("gpa-term"+t_index)[0].innerHTML = parseFloat((weights/units).toFixed(4))
+            document.getElementsByName("gpa-term"+t_index)[0].innerHTML = term_gpa
             if(term_name != "II/19/20")
                 cumulative = cumulative + weights
             total_units = total_units + units
@@ -130,7 +130,7 @@ const Edit_Row = ( { course, term_index,index}) => {
     }
     
     return(
-        <tr>
+        <tr style = {{backgroundColor: bg_color}}>
             <td>
                 <input
                     className="edit-cell"
