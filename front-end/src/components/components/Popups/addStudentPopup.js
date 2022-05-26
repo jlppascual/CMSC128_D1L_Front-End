@@ -6,7 +6,7 @@ const addStudentPopup=({props})=>{
         await props.closePrompts(false);
     }
 
-    const prompts = props.prompts;
+    
     
     return(
         <div className="popup-box">
@@ -15,7 +15,9 @@ const addStudentPopup=({props})=>{
                 {props.prompts.length > 0? (
                     props.prompts.map((prompt,i)=>{
                      return <tr className='prompt-element' key = {i}>
-                         <td className='prompt-cell'>{prompt}</td></tr>
+                         { prompt.success? <td className='prompt-cell-success'>{prompt.message}</td>
+                         :<td className='prompt-cell-error'>{prompt.message}</td>}
+                         </tr>
                     })
                 ):"" }
             </div> 
