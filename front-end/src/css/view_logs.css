@@ -138,13 +138,13 @@
     border-radius: 8px;
     font-size: 12px;
     text-align: center;
-    font-family: Helvetica;
+    font-family: Helvetica, FontAwesome;
 }
 
-.download-icon{
+/* .download-icon{
     margin-top: 3%;
-    font-size: 11px;
-}
+    font-size: 14px;
+} */
 .no-logs{
     text-align: center;
     font-family: Optima;
@@ -183,6 +183,8 @@
     border: none;
     outline: none;
     padding-left: 15px;
+    font-family: FontAwesome;
+    font-size: 15px;
 }
 
 .search-button{
@@ -204,7 +206,7 @@
     .view-line{
         /* text-align: center;
         width: 70%; */
-        margin-bottom: 1%;
+        margin-bottom: 20px;
     }
 /*     
     .view-logs-body{
@@ -229,7 +231,7 @@
         margin-top: 15px;
         padding-top: 15px;
         background-color: rgb(206, 206, 206);
-        height: 50%;
+        height: 500px;
         border-radius: 10px;
         width: 70%;
         margin-left: 15%;
@@ -321,9 +323,9 @@
         right: 15%;
         top: 120px;
         list-style-type:none; */
-        transform: scale(145%);
-        top: 14%;
-        right: 18%
+        transform: scale(120%);
+        top: 150px;
+        right: 300px;
     }
     
     /* .filter-list li{
@@ -379,7 +381,10 @@
         /* background-color: #00563f; */
         /* margin: 5px; */
         /* height: 40px; */
-        margin-left: 23%;
+        /* margin-left: 23%; */
+
+        margin-left: 440px;
+
         /* align-items: center; */
         /* display: flex; */
         /* border-radius: 8px; */

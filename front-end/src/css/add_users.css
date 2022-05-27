@@ -8,7 +8,7 @@
 
 .signup-field{
     text-align: center;
-    font-family: 'Segoe UI';
+    font-family: 'Segoe UI', FontAwesome;
     background-color: #ffffff;
     height: 450px;
     width: 30%;
@@ -29,11 +29,12 @@ h2{
     padding: 7px;
     margin : 1px;
     width : 75%;
-    font-family: Optima;
+    font-family: 'Optima', FontAwesome;
     outline:none;
     border: 1px solid gray;
     margin-bottom:5px;
     border-radius: 5px;
+    font-size: 14px;
 
 }
 
@@ -41,14 +42,19 @@ h2{
     padding: 7px;
     margin : 1px;
     width : 79%;
-    font-family: Optima;
+    font-family: 'Optima', FontAwesome;
     margin-bottom: 5px;
     border-radius: 5px;
     border: 1px solid gray;
     outline:none;
     cursor: pointer;
+    /* color: gray; */
+    font-size: 14px;
 }
 
+.rolefield option{
+    font-family: FontAwesome;
+}
 
 .create-user-buttons{
     text-align: center;
@@ -94,7 +100,7 @@ h2{
 
     .signup-field{
         text-align: center;
-        font-family: 'Segoe UI';
+        font-family: 'Segoe UI', FontAwesome;
         background-color: #ffffff;
         height: 562.5px;
         width: 30%;
@@ -121,7 +127,7 @@ h2{
         padding: 7px;
         margin : 5px;
         width : 75%;
-        font-family: Optima;
+        font-family: 'Optima', FontAwesome;
         outline:none;
         border: 1px solid gray;
         margin-bottom:6.25px;

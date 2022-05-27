@@ -53,17 +53,18 @@
      
          // At this point you'll have an array of results
          let res = await Promise.all(files);
-         setResults(res)
+         await setResults(res)
      }
 
      const closePrompts =async(value, arr) => {
         await setShowPrompts(value);
         if(showPrompts===true){
-            setPrompts([]) //clears prompts upon closing
+            console.log("flush")
+            setPrompts([])
         }
      }
 
-    // checks if name, student number or degree program is null
+
     const checkStudentDetails = (student_data) => {
         const studno_format = /^[0-9]{4}-[0-9]{5}$/;    // Student number can be null
         if (!student_data.first_name && student_data.first_name == "") 
@@ -73,6 +74,7 @@
         if (!student_data.degree_program && student_data.degree_program == "")
             return ("missing degree program: record not added"); // Degree Program cannot be null
         else if(!programs.includes(student_data.degree_program)){
+            console.log("here")
             return ("invalid degree program: record not added");
         }
         if (!studno_format.test(student_data.student_number)) {
@@ -83,9 +85,10 @@
       
     //Check record_data (adding student onli)
     const checkRecordDetails = (record_data) => {
-        if (record_data.gwa === "") return ("missing GWA: student not added"); // Gwa cannot be null
-        if (record_data.total_units === "") return("missing total units: student not added");   // Total units cannot be null   
-        if (record_data.cumulative_sum === "") return("missing cumulative sum: student not added"); // Cumulative sum cannot be null     
+    console.log(record_data)
+        if (record_data.gwa === "") return ("missing GWA"); // Gwa cannot be null
+        if (record_data.total_units === "") return("missing total units");   // Total units cannot be null   
+        if (record_data.cumulative_sum === "") return("missing cumulative sum"); // Cumulative sum cannot be null     
         return true
     };
 
@@ -97,7 +100,6 @@
          let term = {};
          let weightPerTerm = 0;
          let cumulative_sum = 0;
-         let course_row = 0
  
          for(var i = 1; i < array[10].length; i++){
              if (array[10][i] != ''){
@@ -115,7 +117,7 @@
                  //if course is found at the beginning of the record
                  if(courses.length <=0 && array[j][7] != ''){
                      courses.push({course_code: array[j][1], grade: array[j][2], units: array[j][3], 
-                     weight: Number(array[j][4]), cumulated: Number(array[j][5]), row_number: course_row++})
+                     weight: Number(array[j][4]), cumulated: Number(array[j][5])})
                      weightPerTerm = weightPerTerm + (Number(array[j][4]))
                         
                      semester.current = sem;
@@ -141,12 +143,12 @@
                      term = {};
 
                      courses.push({course_code: array[j][1], grade: array[j][2], units: array[j][3], 
-                     weight: Number(array[j][4]), cumulated: Number(array[j][5]), row_number: course_row++})
+                     weight: Number(array[j][4]), cumulated: Number(array[j][5])})
                      weightPerTerm = weightPerTerm + (Number(array[j][4]))
                  // all courses under the current term will be appended until a new term is found
                  }else{
                      courses.push({course_code: array[j][1], grade: array[j][2], units: array[j][3], 
-                         weight: Number(array[j][4]), cumulated: Number(array[j][5]), row_number: course_row++})
+                         weight: Number(array[j][4]), cumulated: Number(array[j][5])})
  
                      weightPerTerm = weightPerTerm + (Number(array[j][4]))
                  }
@@ -177,16 +179,14 @@
                  term_data
              }
          }
-         
-        setFullName(data.first_name+" "+data.last_name+ " " + data.degree_program)
-        if(!checkStudentDetails(data.student_data)){
-        prompts.push(checkStudentDetails(data.student_data))
-        }
-        if(!checkRecordDetails(data.record_data)){
-        prompts.push(checkRecordDetails(data.record_data))
-        }
-        // console.log(prompts)
-        return data
+         setFullName(data.first_name+" "+data.last_name+ " " + data.degree_program)
+         if(!checkStudentDetails(data.student_data)){
+            prompts.push(checkStudentDetails(data.student_data))
+         }
+         if(!checkRecordDetails(data.record_data)){
+            prompts.push(checkRecordDetails(data.record_data))
+         }
+         return data
      }
  
      //parses data taken from the text area
@@ -249,8 +249,9 @@
             {student.suffix!==""? (full_name = student.first_name+" "+ student.middle_name+ " " +student.last_name+ " " + student.suffix + ", "+ student.degree_program+":\n"): (full_name = student.first_name+" " + student.middle_name+ " " +student.last_name+", "+ student.degree_program+":\n")}
 
             let message =  full_name+json.result.message
-            prompts.push({message,success:json.result.success})
-         })
+            prompts.push(message)
+
+        })       
      }
  
      return(

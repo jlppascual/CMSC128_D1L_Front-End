@@ -11,6 +11,7 @@
  import {VscSettings}  from 'react-icons/vsc';
  import DeleteConfirmPopup from '../components/Popups/DeleteConfirmPopup';
  import '../../css/view_users.css'
+ import USER from '../../images/dp_default.jpg'
  import { ToastContainer } from 'react-toastify';
  import { notifyError, notifySuccess } from '../components/Popups/toastNotifUtil';
  import '../../css/toast_container.css';
@@ -234,9 +235,9 @@
                             if (i % 2 === 0) {
                                 return <span key={i}>
                                     <div className="user-tile" >
-                                    <img src = {require(`../../images/user_dp/${user.display_picture}`)} className='user-dp' onClick={()=> navigate('/user/'+user.user_id)}/>
+                                    <img src = {USER} className='user-dp' onClick={()=> navigate('/user/'+user.user_id)}/>
                                     <div className='user-name' onClick={()=> navigate('/user/'+user.user_id)}>
-                                        {user.first_name} {user.last_name} <br />
+                                        {user.first_name} {user.last_name}<br />
                                         <span onClick={()=> navigate('/user/'+user.user_id)}>{user.user_role}</span>
                                     </div>
                                         <button onClick={()=>{onDelete({user})}} className = "delete-button">Remove</button>                                    </div>
@@ -244,9 +245,9 @@
                             } else {
                                 return <span key={i}>
                                     <div className="user-odd-tile" >
-                                    <img src = {require(`../../images/user_dp/${user.display_picture}`)} className='user-dp' onClick={()=> navigate('/user/'+user.user_id)}/>
+                                    <img src = {USER} className='user-dp' />
                                     <div className='user-name' onClick={()=> navigate('/user/'+user.user_id)}>
-                                        {user.first_name} {user.last_name} <br />
+                                        {user.first_name} {user.last_name}<br />
                                         <span onClick={()=> navigate('/user/'+user.user_id)}>{user.user_role}</span >
                                     </div>
                                     <button onClick={()=>{onDelete({user})}} className = "delete-button">Remove</button>

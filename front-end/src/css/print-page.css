@@ -17,23 +17,8 @@
         margin-right: 0.5in;
     }
 
-    .univ-logo{
-        height: 75px;
-        position: relative;
-        top: -40px;
-        left:0;
-    }
-
-    .college-logo{
-        height: 80px;
-        position: relative;
-        top: -40px;
-        left:76.5%;
-    }
-
-
     .view-print-table{
-        margin-top: -140px;
+        margin-top: -70px;
         width:100%;
         margin-left: auto;
         margin-right: auto;
@@ -50,7 +35,7 @@
         opacity: 0.2;
         position:fixed;
         font-weight: bold;
-        top: 20%;
+        top: 15%;
         left: 19%;
     }
     .watermark-textt{
@@ -62,32 +47,27 @@
         opacity: 0.2;
         position:fixed;
         font-weight: bold;
-        top: 65%;
+        top: 60%;
         left: 19%;
     }
     .summary-title{
         text-align: center;
         position:relative;
-        top:-130px;
-        margin: 0px;
-    }
-    .term-details{
-        text-align: center;
-        position:relative;
-        top:-125px;
-        margin: 0px;
-        font-size: 22px;
+        top:-50px;
+        margin-bottom: 0px;
     }
     .filter{
         text-align: center;
         position:relative;
-        top:-140px;
+        top:-60px;
     }
     .system-watermark{
         transform: rotate(-90deg);
         position:fixed;
         top: 50%;
-        left:-250px;
+        left:-270px;
+        z-index: -1;
+        page-break-after: always;
         opacity:0.6;
     }
     .view-print-element{
