@@ -163,34 +163,44 @@ const View_Students =()=>{
     },[viewValue]);
 
     const handleSubmit = (e) => {
+        alert(viewValue);
         e.preventDefault();
+        
+        let url
 
-        let url = 'http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/search?name=';
+        if(viewValue === 'ALL' || viewValue === '') url = 'http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/search?name=';
+        else {
+            url = 'http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/degree/'+[viewValue]+'/search?name='+input;
+            alert(input);
+            alert(url);
+        }
 
         if(searchValue === "student_number"){
             url = 'http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/search?student_number='
+            if(viewValue !== 'ALL') url = 'http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/degree/'+[viewValue]+'/search?student_number='+input;
         }
 
         if(input === "" || input === undefined){
             setRecord(undefined)
             setMessage("Loading students...")
             fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student?orderby="+"",
-        {
-            method: "GET",
-            credentials:'include'
-        })
-        .then(response => {return response.json()})
-        .then(json=>{
-            if (json.result.session.silentRefresh) {
-                setAuth(json.result.session.user, json.result.session.silentRefresh)
-            }
-            if(json.result.success){
-                setRecord(json.result.output)
-            }else{
-                setRecord(undefined)
-                setMessage(json.result.message)
-            }
-        })} else {
+            {
+                method: "GET",
+                credentials:'include'
+            })
+            .then(response => {return response.json()})
+            .then(json=>{
+                if (json.result.session.silentRefresh) {
+                    setAuth(json.result.session.user, json.result.session.silentRefresh)
+                }
+                if(json.result.success){
+                    setRecord(json.result.output)
+                }else{
+                    setRecord(undefined)
+                    setMessage(json.result.message)
+                }
+            })
+        } else {
         if(viewValue !== ""){setViewValue("ALL")}
         setRecord(undefined)
         setMessage("Loading results...")
@@ -260,9 +270,9 @@ const View_Students =()=>{
 
     const handleUserInput = (e) => {
         input = e.target.value;
-        if (viewValue!=="ALL" || viewValue!==""){
-            setViewValue("ALL")
-        }
+        // if (viewValue!=="ALL" || viewValue!==""){
+        //     setViewValue("ALL")
+        // }
     }
 
     const confirmDelete= async(decision, reason) =>{
