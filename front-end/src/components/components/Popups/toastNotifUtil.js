@@ -3,14 +3,14 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export const notifyError = (notif) => {
     toast.error(notif, { 
-        position: toast.POSITION.BOTTOM_RIGHT,
+        position: toast.POSITION.TOP_RIGHT,
         autoClose: true,
     });
 }
 
 export const notifySuccess = (notif) => {
     toast.success(notif, { 
-        position: toast.POSITION.BOTTOM_RIGHT,
+        position: toast.POSITION.TOP_RIGHT,
         autoClose: true,
      });
 }
