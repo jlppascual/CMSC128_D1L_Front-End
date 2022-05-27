@@ -35,7 +35,7 @@ const MyProfile =()=>{
     const [icon2, setIcon2] = useState(eyeOff)
     const [toEdit, setToEdit] = useState('');
     const [toPassCred, setToPassCred] = useState('');
-
+    const [passToggle, setPassToggle] = useState(false);
 
     const { user, setAuth} = useStore();
     
@@ -52,7 +52,8 @@ const MyProfile =()=>{
         .then(response => {return response.json()})
         .then(json=>{
             if(json.result.success){
-                setUsers(json.result.output) 
+                setUsers(json.result.output)
+                
             }          
         })
         fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/all",
@@ -66,7 +67,9 @@ const MyProfile =()=>{
                 setStudents(json.result.output)
                 setPage(!pageState)
             }          
-        })        
+        })
+
+        
     },[user])
 
     useEffect(()=>{
@@ -122,6 +125,7 @@ const MyProfile =()=>{
     ]
 
     const userLogout=()=>{ 
+        
         fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/auth' ,{
             method:'GET',
             credentials:'include'
@@ -140,6 +144,7 @@ const MyProfile =()=>{
 
     const confirmClicked=()=>{
         if(popType ==='username'){
+
             let new_uname = document.getElementById('new-username').value
             const username_format = /^[A-Za-z]\w*$/
 
@@ -293,25 +298,85 @@ const MyProfile =()=>{
     }
 
     const cancelClicked=async()=>{
-        await setToggle(!isToggled);
+        if(isToggled) await setToggle(!isToggled);
+        else {
+            await setPassToggle(!passToggle);
+        }
         setType("");
     }
 
+    const Popup=(props)=>{
+        let body;
+        // checks what field will be edited by the user before rendering it in the body of the popup
+        if(props.type === 'username'){
+            body = 
+            <div> 
+                <div  className='username-box'>
+                    <p className='change-popup-text'>Change Username</p>
+                    <input type="text" className = "setting-fields"id="new-username" placeholder="Enter new username"></input><br/>
+                    <div className='popup-buttons'>
+                        <button className="cancel" onClick={cancelClicked}>Cancel</button> <button className="confirm" onClick={confirmClicked}>Confirm</button> 
+                    </div> 
+                </div>               
+            </div>
+        } else if(props.type === 'email'){
+            body =
+            <div> 
+                <div  className='username-box'>
+                    <p className='change-popup-text'>Change Email</p>
+                    <input type="text" className = "setting-fields"id="new-email" placeholder="Enter new email"></input><br/>
+                    <div className='popup-buttons'>
+                        <button className="cancel" onClick={cancelClicked}>Cancel</button> <button className="confirm" onClick={confirmClicked}>Confirm</button> 
+                    </div> 
+                </div>               
+            </div>
+        } else if(props.type === 'number'){
+            body =
+            <div> 
+                <div  className='username-box'>
+                    <p className='change-popup-text'>Change Mobile Number</p>
+                    <span className='number-prompt'>+63</span><input type="number" className = "setting-fields-number" id="new-number" placeholder='9XXXXXXXXX'></input><br/>
+                    <div className='popup-buttons'>
+                        <button className="cancel" onClick={cancelClicked}>Cancel</button> <button className="confirm" onClick={confirmClicked}>Confirm</button> 
+                    </div> 
+                </div>               
+            </div>
+        } else if(props.type === 'pass-validation'){
+            body =
+            <div> 
+                <div  className='username-box'>
+                    <p>Please enter password</p>
+                    <input type="password" className = "setting-fields" id="pass-validation" placeholder="Enter password"></input><br/>
+                    <div className='popup-buttons'>
+                        <button className="cancel" onClick={cancelClicked}>Cancel</button> <button className="confirm" onClick={confirmClicked}>Confirm</button> 
+                    </div> 
+                </div>               
+            </div>
+        }
+        return (
+            <div className="settings-popup-box">
+                {body}
+            </div>
+        )
+    }
 
     const handleChange=async(foo)=>{
-        await setToggle(!isToggled);
 
         if(foo.value === 'username'){
-             setType('username');
+            await setToggle(!isToggled);
+            setType('username');
         }else if(foo.value ==='password'){
-             setType('password');
+            setPassToggle(!passToggle);
         }else if (foo.value === 'email'){
+            await setToggle(!isToggled);
             setType('email');
         } else if (foo.value === 'number'){
+            await setToggle(!isToggled);
             setType('number');
         } else {
+            await setToggle(!isToggled);
             setType('');
-        }
+        }    
     }
 
     const handleSettings = () =>{
@@ -348,74 +413,22 @@ const MyProfile =()=>{
     }
     }
 
-    let body = "";
-        // checks what field will be edited by the user before rendering it in the body of the popup
-        if(popType === 'username'){
-            body = 
-            <div> 
-                <div  className='username-box'>
-                    <p className='change-popup-text'>Change Username</p>
-                    <input type="text" className = "setting-fields"id="new-username" placeholder="Enter new username"></input><br/>
-                    <div className='popup-buttons'>
-                        <button className="cancel" onClick={cancelClicked}>Cancel</button> <button className="confirm" onClick={confirmClicked}>Confirm</button> 
-                    </div> 
-                </div>               
-            </div>
-        } else if(popType === 'password'){
-            body = 
-            <div>
-                <div className='password-box'>
-                <p className='change-popup-text'>Change Password</p>
-                    <input type={type} className = "setting-fields" id="current-password" placeholder="Enter current password"></input><br/>
-                    <i onClick={handleToggle} id = "visibilityBtn" className='eyeProfile'><Icon icon = {icon} ></Icon></i>
-                    <input type={type1} className = "setting-fields" id="new-password" placeholder="Enter new password"></input><br/>
-                    <i onClick={handleToggle1} id = "visibilityBtn" className='eyeProfile'><Icon icon = {icon1} ></Icon></i>
-                    <input type={type2} className = "setting-fields" id="confirm-password" placeholder="Confirm new password"></input><br/>
-                    <i onClick={handleToggle2} id = "visibilityBtn" className='eyeProfile1'><Icon icon = {icon2} ></Icon></i>
-                </div>
-                <div className='popup-buttons'>
-                    <button className="cancel" onClick={cancelClicked}>Cancel</button><button className="confirm" onClick={confirmClicked}>Confirm</button> 
-                </div>
-            </div>
-        } else if(popType === 'email'){
-            body =
-            <div> 
-                <div  className='username-box'>
-                    <p className='change-popup-text'>Change Email</p>
-                    <input type="text" className = "setting-fields"id="new-email" placeholder="Enter new email"></input><br/>
-                    <div className='popup-buttons'>
-                        <button className="cancel" onClick={cancelClicked}>Cancel</button> <button className="confirm" onClick={confirmClicked}>Confirm</button> 
-                    </div> 
-                </div>               
-            </div>
-        } else if(popType === 'number'){
-            body =
-            <div> 
-                <div  className='username-box'>
-                    <p className='change-popup-text'>Change Mobile Number</p>
-                    <span className='number-prompt'>+63</span><input type="number" className = "setting-fields-number" id="new-number" placeholder='9XXXXXXXXX'></input><br/>
-                    <div className='popup-buttons'>
-                        <button className="cancel" onClick={cancelClicked}>Cancel</button> <button className="confirm" onClick={confirmClicked}>Confirm</button> 
-                    </div> 
-                </div>               
-            </div>
-        } else if(popType === 'pass-validation'){
-            body =
-            <div> 
-                <div  className='username-box'>
-                    <p>Please enter password</p>
-                    <input type="password" className = "setting-fields" id="pass-validation" placeholder="Enter password"></input><br/>
-                    <div className='popup-buttons'>
-                        <button className="cancel" onClick={cancelClicked}>Cancel</button> <button className="confirm" onClick={confirmClicked}>Confirm</button> 
-                    </div> 
-                </div>               
-            </div>
-        }
-
-    let popUp = 
-    <div className="settings-popup-box">
-        {body}
+    let passBody = 
+    <div className='settings-popup-box'>
+        <div className='password-box'>
+        <p className='change-popup-text'>Change Password</p>
+            <input type={type} className = "setting-fields" id="current-password" placeholder="Enter current password"></input><br/>
+            <i onClick={handleToggle} id = "visibilityBtn" className='eyeProfile'><Icon icon = {icon} ></Icon></i>
+            <input type={type1} className = "setting-fields" id="new-password" placeholder="Enter new password"></input><br/>
+            <i onClick={handleToggle1} id = "visibilityBtn" className='eyeProfile'><Icon icon = {icon1} ></Icon></i>
+            <input type={type2} className = "setting-fields" id="confirm-password" placeholder="Confirm new password"></input><br/>
+            <i onClick={handleToggle2} id = "visibilityBtn" className='eyeProfile1'><Icon icon = {icon2} ></Icon></i>
+        </div>
+        <div className='popup-buttons'>
+            <button className="cancel" onClick={cancelClicked}>Cancel</button><button className="confirm" onClick={confirmClicked}>Confirm</button> 
+        </div>
     </div>
+
     return(
         <div>
             <div>
@@ -438,6 +451,8 @@ const MyProfile =()=>{
                     </ul>
                 :
                 ""}
+                
+                
             </div>
             <br />
             <hr className='profile-line' />
@@ -469,6 +484,7 @@ const MyProfile =()=>{
                                 :
                                 <td className='subject-cell'>-</td>}
                             <td className='log-cell'> {log.details!==null? log.details:"-"}</td>
+                            
                             </tr>)
                             })}
                         </tbody>
@@ -478,7 +494,8 @@ const MyProfile =()=>{
                     <div className='no-logs'>{emptyLogs}</div>}
                     </div> 
             </div>
-            {isToggled===true? popUp:""}
+            {isToggled===true? <Popup type={popType}/>:""}
+            {passToggle===true? passBody:''}
             <Header/>
             <Menu/>
             <Footer/>
