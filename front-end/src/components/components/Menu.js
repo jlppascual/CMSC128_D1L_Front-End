@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { FaBars } from 'react-icons/fa';
 import  { AiOutlineClose, AiFillHome } from 'react-icons/ai'
 import { IconContext } from 'react-icons/lib';
 import { Link, useNavigate } from 'react-router-dom';
 import { SidebarDataUser, SidebarDataStudent } from './menu_components/SidebarData';
 import useStore from '../hooks/authHook'
+import OutsideClick from '../hooks/outsideClick'
 import '../../css/menu.css'
 
 class Menu extends React.Component{
@@ -39,20 +40,24 @@ function Menubar(){
     const user_title = user.user_role
 
     const showSidebar = () => setSidebar(!sidebar);
-    
+    const boxRef = useRef(null);
+    const boxOutsideClick = OutsideClick(boxRef);
+    console.log(boxOutsideClick)
+ 
+
     return(
         <IconContext.Provider value={{ color: 'black' }}>
             <div className='menu-navbar'>
                 <Link to='#' className='menu-bars'>
                     <FaBars className='menu-icon' onClick={showSidebar}/>
-                </Link >
-                <div className="menu-name" >Menu</div>
+                </Link>
+                <div className="menu-name">Menu</div>
             </div>
-            <nav className={sidebar ? 'menu-side active' : 'menu-side'}>
-                <ul key = {1} onClick={showSidebar}>
+            <nav className={sidebar ? 'menu-side active' : 'menu-side'} ref={boxRef}>
+                <ul key = {1}>
                     <li className={'menu-navbar-toggle'}>
                         <Link to='#' className={'menu-bars'}>
-                            <AiOutlineClose className={'menu-icon'}/>
+                            <AiOutlineClose className={'menu-icon'} onClick={showSidebar}/>
                         </Link>
                     </li>
                     <br />
@@ -81,10 +86,13 @@ function Menubar(){
                         );
                     })}</div>) : ""}              
                 </ul>
+                {(() => {
+                    if (boxOutsideClick == true) {
+                        showSidebar()
+                    }
+                })}
             </nav>
         </IconContext.Provider>
     );
 }
-
-
 export default Menu;
