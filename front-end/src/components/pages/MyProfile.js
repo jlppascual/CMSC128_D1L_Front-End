@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useRef} from 'react';
 import { useNavigate } from 'react-router-dom'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
@@ -14,6 +14,7 @@ import '../../css/toast_container.css';
 import { Icon } from 'react-icons-kit';
 import {eyeOff} from 'react-icons-kit/feather/eyeOff';
 import {eye} from 'react-icons-kit/feather/eye';
+import OutsideClick from '../hooks/outsideClick'
 
 
 const MyProfile =()=>{
@@ -42,7 +43,12 @@ const MyProfile =()=>{
     
     const validEmail = new RegExp('^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$');
     const validNumber = new RegExp('^(09|9|639)[0-9]{9}$');
+    const boxRef = useRef(null);
 
+    OutsideClick(boxRef,() => {
+        {showSettings? setShowSettings(false):""};
+    });
+    
     useEffect(()=>{
        
         fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/user/all",
@@ -448,7 +454,7 @@ const MyProfile =()=>{
                     <li className='user-email'><HiMail size={28} className="contact-icon"/><span>{user.email}</span></li>
                     {user.phone_number? <li className='user-phone'><RiPhoneFill size={28} className="contact-icon-phone"/><span>{user.phone_number}</span></li>:""}
                 </ul>
-                <button className ="settings-icon" onClick={()=> {handleSettings()}}><RiSettings5Line size={25} /></button>
+                <button className ="settings-icon" ref = {boxRef} onClick={()=> {handleSettings()}}><RiSettings5Line size={25} /></button>
                 {showSettings ?
                     <ul className='settings-box'>
                     {settings_list.map((foo,i)=>{

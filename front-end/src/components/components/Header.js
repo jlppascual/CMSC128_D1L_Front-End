@@ -3,19 +3,28 @@
 
     This is the source code for the header of the application
 */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Dp from '../../images/dp_default.jpg';
 import Logo from '../../images/asteris-logo.webp';
 import useStore from '../hooks/authHook';
 import '../../css/header.css'
+import OutsideClick from '../hooks/outsideClick'
 
 const Header =()=>{
 
     const[userType, setType]=useState();
     const navigate = useNavigate();     // hook for navigation
     const {user, host, setAuth} = useStore();
-    
+    const [open, setOpen] = useState(false);
+    const boxRef = useRef(null);
+
+    OutsideClick(boxRef,() => {
+        {open? setOpen(false):""};
+    });
+
+
+
     const userLogout=()=>{ 
         
         fetch('http://'+host+':3001/api/0.1/auth' ,{
@@ -35,7 +44,6 @@ const Header =()=>{
     }
 
     function Dropdown(props){
-        const [open, setOpen] = useState(false);
         return(
             <span>
                 <a onClick={() => setOpen(!open)}>
@@ -62,7 +70,7 @@ const Header =()=>{
             <span className='header-user'>{ userType }</span>
             <img src = {Dp} className={'header-dp'}/>
             <Dropdown>
-                <div className={'header-dropdown'}>
+                <div className={'header-dropdown'} ref={boxRef}>
                     <Link to = '/profile' className={'header-dropitem'}>
                         Profile
                     </Link>
