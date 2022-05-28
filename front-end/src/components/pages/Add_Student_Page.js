@@ -10,6 +10,7 @@
  import Footer from '../components/Footer';
  import Menu from '../components/Menu'
  import Prompts from '../components/Popups/addStudentPopup'
+ import {IoMdRemoveCircle} from 'react-icons/io'
  import '../../css/addstudent.css'
  
  const Add_Student_Page=()=>{
@@ -57,7 +58,7 @@
      }
 
      const closePrompts =async(value, arr) => {
-        await setShowPrompts(value);
+        setShowPrompts(value);
         if(showPrompts===true){
             setPrompts([]) //clears prompts upon closing
         }
@@ -69,14 +70,13 @@
         if (!student_data.first_name && student_data.first_name == "") 
             return ("missing first name: record not added"); //First name cannot be null
         if (!student_data.last_name && student_data.last_name == "") 
-            return ("missing last name: record not added"); // Last name cannot be null
+                return ("missing last name: record not added"); // Last name cannot be null
         if (!student_data.degree_program && student_data.degree_program == "")
-            return ("missing degree program: record not added"); // Degree Program cannot be null
-        else if(!programs.includes(student_data.degree_program)){
+                return ("missing degree program: record not added"); // Degree Program cannot be null
+        if(!programs.includes(student_data.degree_program))
             return ("invalid degree program: record not added");
-        }
         if (!studno_format.test(student_data.student_number)) {
-          return ("Wrong student number format: record not added");
+            return ("Wrong student number format: record not added");
         }
         return true;
     };
@@ -179,13 +179,6 @@
          }
          
         setFullName(data.first_name+" "+data.last_name+ " " + data.degree_program)
-        if(!checkStudentDetails(data.student_data)){
-        prompts.push(checkStudentDetails(data.student_data))
-        }
-        if(!checkRecordDetails(data.record_data)){
-        prompts.push(checkRecordDetails(data.record_data))
-        }
-        // console.log(prompts)
         return data
      }
  
@@ -212,10 +205,15 @@
      const submitButton=async(e)=>{
         e.preventDefault();
         if(results.length > 0){
-            results.map(async(result) => {
+            results.map(async(result, i) => {
                 let data = await parseData(result);
                 if(data){
-                    if(!checkStudentDetails(data.student_data) || !checkRecordDetails(data.record_data)){ //do nothing
+                    let stud_mess =  (files[i]+": "+checkStudentDetails(data.student_data));
+                    let rec_mess = (files[i]+": "+checkRecordDetails(data.record_data)).toS
+                    if(checkStudentDetails(data.student_data) !== true){
+                        prompts.push({success: false, message: stud_mess}) //do nothing
+                    }else if (checkRecordDetails(data.record_data) !==true){
+                        prompts.push({success: false, message: rec_mess}) //do nothing
                     }else(await sendData(data))
                 };
             });
@@ -252,6 +250,14 @@
             prompts.push({message,success:json.result.success})
          })
      }
+
+     const removeFile =async(index)=>{
+        let reducedFile = files.filter((file, fileIndex )=>{
+            return fileIndex !==index;
+        })
+        setFiles(reducedFile);
+        console.log(files)
+     }
  
      return(
      <div>         
@@ -266,9 +272,9 @@
                  <input type='file' accept='.csv' id='file-acceptor' multiple="multiple" onChange={setCSVFile}/>
                  <div className='chosen-files'>
                      {files != []? 
-                     files.map((file,i) => {
-                         return <span key={i} className='file'>
-                         <p>{i+1}. {file}</p>
+                     files.map((file,index) => {
+                         return <span key={index} className='file'>
+                         <p>{<i className='remove-stud' onClick={async ()=> {await removeFile(index)}}><IoMdRemoveCircle/></i>} {file}</p>
                          </span>
                      }): ""}
                  </div>
@@ -278,7 +284,7 @@
                  <br/><br/>          
              </form>
          </div>
-         {showPrompts? <Prompts props={{closePrompts:closePrompts.bind(this),prompts:prompts}}/>: ""}
+         {showPrompts? <Prompts props={{closePrompts:closePrompts.bind(this), prompts:prompts}}/>: ""}
          <Header/>
          <Menu />
          <Footer/>

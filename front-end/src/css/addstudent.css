@@ -61,7 +61,7 @@ label{
     width: 27%;
     height: 35px;
     position:absolute;
-    top:490px;
+    top:470px;
     left:53%;
     font-size: 15px;
     background-color: #00563F;
@@ -78,7 +78,7 @@ label{
     width: 27%;
     height: 35px;
     position:absolute;
-    top:490px;
+    top:470px;
     left:53%;
     font-size: 15px;
     background-color: gray;
@@ -153,7 +153,7 @@ label{
     .submit-button{
         width: 27%;
         height: 43.75 px;
-        top:575px;
+        top:590px;
         left:53%;
         font-size: 18.75px;
         margin-top: 10px;
@@ -163,7 +163,7 @@ label{
     .submit-disabled-button{
         width: 27%;
         height: 43.75 px;
-        top:575px;
+        top:590px;
         left:53%;
         font-size: 18.75px;
         margin-top: 10px;
