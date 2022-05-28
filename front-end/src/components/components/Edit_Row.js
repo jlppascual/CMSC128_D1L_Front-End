@@ -130,7 +130,7 @@ const Edit_Row = ( { course, term_index,index,bg_color}) => {
     }
     
     return(
-        <tr style = {{backgroundColor: bg_color}}>
+        <tr style = {{backgroundColor: bg_color}} id = {course.row_number}>
             <td>
                 <input
                     className="edit-cell"

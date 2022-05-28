@@ -51,7 +51,6 @@ const Login = () => {
         }
        
         const password_format = /^(?=.*[-_.!"'#%&,:;<>=@{}~\$\(\)\*\+\/\\\?\[\]\^\|])(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/
-        // const password_format = /^(?=.[0-9])(?=.[-.!"'#%&,:;<>=@{}~\$\(\)\*\+\/\\\?\[\]\^\|])(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9-._!"'#%&,:;<>=@{}~$()*+/\?\[\]\^\|]{8,}$/ 
         const username_format = /^[A-Za-z]\w*$/
         if(!credentials.username.match(username_format)){
             notifyError("username must start with a letter")
@@ -93,7 +92,6 @@ const Login = () => {
         <div>
             <div className='login-body'>
                 <div className='header'>
-                {/* <p className="app-name">ASTERIS</p> */}
                 <p><img src={Logo} alt="" className='asteris-logo-login'/></p>
                     <img src = {UPLB} id="uplb-logo" alt="UPLB logo"/>
                     <div className='text-header'>
@@ -111,8 +109,8 @@ const Login = () => {
                         <i onClick={handleToggle} id = "visibilityBtn" className='eyeLogin'><Icon icon = {icon} ></Icon></i>
 
                         {/* Submit */}
-                        <input type="submit" value="LOG IN" className='submit-btn' onClick={login}/>
-                        <br/><p className='forgot-password'>Forgot Password?</p>
+                        <input type="submit" value="LOG IN" className='submit-btn' onClick={login}/><br/>
+                        <div className='forgot-password-cont' ><a className='forgot-password' href={'/user/identify'}>Forgot Password?</a></div>
                     </form><br/>
                 </div>
                 

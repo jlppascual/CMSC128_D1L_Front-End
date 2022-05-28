@@ -65,7 +65,8 @@ const View_Students =()=>{
 
     //if state changes, this function is executed
     useEffect(()=>{
-        setRecord(undefined)
+        console.log(record);
+        setRecord([])
         setMessage("Loading students...")
         fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student?orderby="+"",
         {
@@ -84,6 +85,7 @@ const View_Students =()=>{
                 setMessage(json.result.message)
             }
         })
+        console.log(record);
     },[state]);
 
     // if students exist/updated, creates an array of checkboxes with the record length
@@ -320,9 +322,8 @@ const View_Students =()=>{
             })
         }
         if(selectedValue===true){
-            await setRecord([]);
-            await changeState(!state)
-            await changeState(!state)
+            setRecord([]);
+            changeState(!state)
             setSelectVal(false);
         }
     }

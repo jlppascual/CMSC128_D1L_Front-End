@@ -15,6 +15,7 @@ import { notifyError, notifySuccess } from '../components/Popups/toastNotifUtil'
 import { Icon } from 'react-icons-kit';
 import {eyeOff} from 'react-icons-kit/feather/eyeOff';
 import {eye} from 'react-icons-kit/feather/eye';
+import dp_default from '../../images/user_dp/dp_default.jpg'
 
 const Add_User_Page=()=>{
 

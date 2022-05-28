@@ -41,21 +41,11 @@ body{
     font-size: 14px;
 }
 
-/* .app-name{
-    color:#fcfff6;
-    font-family: "Segoe UI";
-    font-weight: 500;
-    font-size: 20px;
-    position:fixed;
-    right:5%;
-} */
-
 .asteris-logo-login{
     width: 140px;
     position: fixed;
     right: 5%
 }
-
 
 .login-form{
     text-align: center;
@@ -99,6 +89,7 @@ body{
     color:#fcfff6;
     font-weight: bold;
     padding:4px;
+    cursor: pointer;
 }
 
 .eyeLogin{
@@ -112,7 +103,10 @@ body{
     font-size: 12px;
     text-decoration: underline;
     color:  gray;
-    margin-top: 25px;
+}
+
+.forgot-password-cont{
+    margin-top: 15px;
 }
 
 
@@ -199,16 +193,13 @@ body{
     }
 
     .forgot-password{
-        /* font-size: 12px;
-        text-decoration: underline;
-        color:  gray; */
-        transform: scale(130%);
+        font-size: 15px;
         padding-top: 7px;
     }
 
-    /* Footer {
-        transform: scale(125%);
-    } */
+    .forgot-password-cont{
+        margin-top: 26px;
+    }
     
 } 
 
