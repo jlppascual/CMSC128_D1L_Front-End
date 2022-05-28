@@ -12,7 +12,8 @@ import {BiEdit, BiTrash, BiArrowBack}  from 'react-icons/bi';
 import {RiAlertLine}  from 'react-icons/ri';
 import '../../css/studentdetails.css'
 import { ToastContainer } from 'react-toastify';
-import { notifyError, notifySuccess } from '../components/Popups/toastNotifUtil';
+import { toast } from 'react-toastify';
+import { notifyDelete, notifyError, notifySuccess } from '../components/Popups/toastNotifUtil';
 import '../../css/toast_container.css';
 
 const View_Student_Details =()=>{
@@ -107,8 +108,11 @@ const View_Student_Details =()=>{
                     setAuth(json.result.session.user, json.result.session.silentRefresh)
                 }
                 if(json.result.success){
-                    notifySuccess(json.result.message)
-                    navigate('/students')
+                    notifyDelete(json.result.message)
+                    // setTimeout(() => {
+                    //     navigate('/students');
+                    // }, 6000);
+                      
                 }
             })
         }

@@ -13,4 +13,13 @@ export const notifySuccess = (notif) => {
         position: toast.POSITION.TOP_RIGHT,
         autoClose: true,
      });
+
+}
+
+export const notifyDelete = (notif) => {
+    toast.success(notif, {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: true, 
+        onClose:()=>(window.location.href='/students'),
+    });
 }

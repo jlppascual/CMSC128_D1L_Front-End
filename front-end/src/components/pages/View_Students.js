@@ -11,6 +11,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Menu from '../components/Menu';
 import DeletePopup from '../components/Popups/DeletePopup';
+import DeletedPrompt from '../components/Popups/MultipleDeletionPopup'
 import { ToastContainer } from 'react-toastify';
 import { notifyError, notifySuccess } from '../components/Popups/toastNotifUtil';
 import { RiAlertLine } from 'react-icons/ri'
@@ -31,6 +32,8 @@ const View_Students =()=>{
     const [toDelete, setToDelete] = useState("")
     const [message, setMessage] = useState("Loading students...")
     const [selectedValue, setSelectVal] = useState(false);
+    const [deleted_students, setDeletedStudents] = useState([]);
+    const [showPrompts, setShowPrompts] = useState(false);
     const prev_view_state = useRef();
     
     let input ;
@@ -350,6 +353,13 @@ const View_Students =()=>{
         }
     }
 
+    const closePrompts =async(value) => {
+        setShowPrompts(value);
+        if(showPrompts===true){
+            setDeletedStudents([]) //clears prompts upon closing
+        }
+     }
+
     const onDelete=(student)=>{
         setShowConfirmation(true)
         setToDelete(student);
@@ -431,6 +441,7 @@ const View_Students =()=>{
                 </div>
                 }
             </div>
+            {showPrompts? <DeletedPrompt props={{closePrompts:closePrompts.bind(this), students:deleted_students}}/>: ""}
         </div>
         <Header />
         <Menu />

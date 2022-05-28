@@ -15,7 +15,6 @@ import { notifyError, notifySuccess } from '../components/Popups/toastNotifUtil'
 import { Icon } from 'react-icons-kit';
 import {eyeOff} from 'react-icons-kit/feather/eyeOff';
 import {eye} from 'react-icons-kit/feather/eye';
-import dp_default from '../../images/user_dp/dp_default.jpg'
 
 const Add_User_Page=()=>{
 
@@ -79,7 +78,7 @@ const Add_User_Page=()=>{
         const password_format = /^(?=.*[-_.!"'#%&,:;<>=@{}~\$\(\)\*\+\/\\\?\[\]\^\|])(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/
         const username_format = /^[A-Za-z]\w*$/
         const mail_format = /^[a-zA-Z0-9]+([.-]?[a-zA-Z0-9]+)*@[a-zA-Z]+([.-]?[a-zA-Z0-9]+)*(.[a-zA-Z]{2,3})+$/
-        const phone_format = /^\+639[0-9]{9,}$/
+        const phone_format = /^\+639[0-9]{9}$/
         if(user_details.first_name === ""){
             notifyError("missing first name")
         }else if(user_details.last_name === "") {
@@ -134,6 +133,7 @@ const Add_User_Page=()=>{
         document.getElementById("confirm_password").value = ""
         document.getElementById("email").value = ""
         document.getElementById("phone_number").value = ""
+        setFileInputKey(Date.now())
     }
 
     const handleChange=()=>{
@@ -191,7 +191,7 @@ const Add_User_Page=()=>{
                 <p className='prof-pic-text'>Add Profile Picture:</p>
                 <input type="file" className='picfield' accept=".png, .jpg, .jpeg" name="image" onChange={fileChangeHandler} />
                 <div className='create-user-buttons'>
-                    <input type="reset" value="Reset" className='reset-button'/>
+                    <input type="reset" value="Reset" className='reset-button' onClick={clearInputs}/>
                     <input type="submit" value="Confirm" className='confirm-button' onClick={readInput}/>
                 </div>
             </form>
