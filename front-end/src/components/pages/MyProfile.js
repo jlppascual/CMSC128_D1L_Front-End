@@ -42,7 +42,7 @@ const MyProfile =()=>{
     const { user, setAuth} = useStore();
     
     const validEmail = new RegExp('^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$');
-    const validNumber = new RegExp('^(09|9|639)[0-9]{9}$');
+    const validNumber = /^\+639[0-9]{9}$/;
     const boxRef = useRef(null);
 
     OutsideClick(boxRef,() => {
@@ -215,10 +215,10 @@ const MyProfile =()=>{
                 }
                 
             } else if(popType==="number"){
-                let new_number = document.getElementById('new-number').value;
-                
+                let new_number = "+63"+document.getElementById('new-number').value;
+                console.log(new_number)
                 if(new_number !== ''){
-                    if (validNumber.test(new_number)){
+                    if (new_number.match(validNumber)){
                         setType('pass-validation');
                         setToEdit('number');
                         setToPassCred(new_number);
@@ -256,6 +256,7 @@ const MyProfile =()=>{
                             notifyError(json.result.message)
                         }})
                 } else if (toEdit === 'number'){
+                    console.log(toPassCred)
                     fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/user/'+user.user_id+'/number', {
                         method: 'PATCH', 
                         credentials:'include',
@@ -316,6 +317,7 @@ const MyProfile =()=>{
     }
 
     const Popup=(props)=>{
+        setShowSettings(false);
         let body;
         // checks what field will be edited by the user before rendering it in the body of the popup
         if(props.type === 'username'){
@@ -393,6 +395,7 @@ const MyProfile =()=>{
 
     const handleSettings = () =>{
         setShowSettings(!showSettings)
+        console.log("true")
     }
 
     const handleToggle = () => {
@@ -446,7 +449,8 @@ const MyProfile =()=>{
             <div>
             <div className='body'>
             <div className='user-header'>
-                <img src = {USER} className = "user-photo" />
+            {user.display_picture?( <img src = {require(`../../images/user_dp/${user.display_picture}`)} className = "user-photo" />):
+                (<img src = {USER} className = "user-photo" />)}                
                 <p className='profile-title'>{user.first_name} &nbsp;{user.last_name}</p> 
                 <p className='username'>{user.username}</p>
                 <p className='user-role'>{user.user_role}</p>
@@ -454,7 +458,8 @@ const MyProfile =()=>{
                     <li className='user-email'><HiMail size={28} className="contact-icon"/><span>{user.email}</span></li>
                     {user.phone_number? <li className='user-phone'><RiPhoneFill size={28} className="contact-icon-phone"/><span>{user.phone_number}</span></li>:""}
                 </ul>
-                <button className ="settings-icon" ref = {boxRef} onClick={()=> {handleSettings()}}><RiSettings5Line size={25} /></button>
+                <div  ref = {boxRef}>
+                <button className ="settings-icon" onClick={()=> {handleSettings()}}><RiSettings5Line size={25} /></button>
                 {showSettings ?
                     <ul className='settings-box'>
                     {settings_list.map((foo,i)=>{
@@ -463,6 +468,7 @@ const MyProfile =()=>{
                     </ul>
                 :
                 ""}
+                </div>
                 
                 
             </div>

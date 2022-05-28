@@ -48,8 +48,10 @@
 }
 
 .header-dp{
-    border-radius: 50%;
-    width: 30px;
+    border-radius: 50px;
+    width: 35px;
+    object-fit: cover;
+    height:35px;
 }
 
 .header-caret{
@@ -128,8 +130,10 @@
     }
     
     .header-dp{
-        border-radius: 62.5%;
         width: 38px;
+        border-radius: 50px;
+        object-fit: cover;
+        height:38px;
     }
     
     .header-caret{

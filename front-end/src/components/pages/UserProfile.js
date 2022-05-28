@@ -108,11 +108,11 @@ const UserProfile =()=>{
             <div className='body'>
             <div className='user-header'>
             {!user_profile.isDeleted?
-            <i className = "back-icon" onClick={()=> navigate('/users')} style={{top:"20px",left:"20%"}}><BiArrowBack size= {35} /></i>
+            <i className = "user-back-icon" onClick={()=> navigate('/users')} style={{top:"20px",left:"20%"}}><BiArrowBack size= {35} /></i>
             : <div className='deleted-user-watermark'>DELETED USER ACCOUNT</div>   
             }
-            
-                <img src = {USER} className = "user-photo" />
+                {user_profile.display_picture?( <img src = {require(`../../images/user_dp/${user_profile.display_picture}`)} className = "user-photo" />):
+                (<img src = {USER} className = "user-photo" />)}
                 <p className='profile-title'>{user_profile.first_name} {user_profile.last_name}</p>
                 <p className='username'>{user_profile.username}</p>
                 <p className='user-role'>{user_profile.user_role}</p>

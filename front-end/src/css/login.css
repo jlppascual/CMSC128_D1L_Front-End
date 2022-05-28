@@ -113,6 +113,9 @@ body{
     font-size: 12px;
     text-decoration: underline;
     color:  gray;
+}
+
+.forgot-password-cont{
     margin-top: 25px;
 }
 
@@ -200,15 +203,12 @@ body{
     }
 
     .forgot-password{
-        /* font-size: 12px;
-        text-decoration: underline;
-        color:  gray; */
+        font-size: 17px;
         transform: scale(130%);
         padding-top: 7px;
     }
 
-    /* Footer {
-        transform: scale(125%);
-    } */
-    
+    .forgot-password-cont{
+        margin-top: 35px;
+    }
 } 

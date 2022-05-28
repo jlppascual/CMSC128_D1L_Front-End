@@ -68,7 +68,9 @@ const Header =()=>{
         <h1 className='header-name' onClick={()=> window.location.href='/home'}><img src={Logo} alt="" className='asteris-logo'/></h1>
         <div className='header-right'>
             <span className='header-user'>{ userType }</span>
-            <img src = {Dp} className={'header-dp'}/>
+            {user.display_picture? (<img src = {require(`../../images/user_dp/${user.display_picture}`)} className={'header-dp'}/>):
+            ( <img src = {Dp} className={'header-dp'}/>)
+            }
             <Dropdown>
                 <div className={'header-dropdown'} ref={boxRef}>
                     <Link to = '/profile' className={'header-dropitem'}>
