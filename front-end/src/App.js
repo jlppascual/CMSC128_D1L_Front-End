@@ -11,6 +11,7 @@ import View_Logs from './components/pages/View_Logs'
 import View_Summary from './components/pages/View_Summary'
 import User_Profile from './components/pages/UserProfile'
 import My_Profile from './components/pages/MyProfile'
+import ForgotPassword from './components/pages/ForgotPassword';
 
 
 
@@ -29,6 +30,7 @@ function App() {
         <Route path='/logs' element={<RequireAuth children={<View_Logs/>}/>}/>
         <Route path='/user/:id' element={<RequireAuth children={<User_Profile/>}/>}/>
         <Route path='/profile' element={<RequireAuth children={<My_Profile/>}/>}/>
+        <Route path='/user/identify' element={<ForgotPassword/>}/>
 
       </Routes>
     </BrowserRouter>

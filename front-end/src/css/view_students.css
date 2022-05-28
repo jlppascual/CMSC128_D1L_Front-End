@@ -66,6 +66,8 @@ option{
     border: none;
     outline: none;
     padding-left: 15px;
+    font-family: Arial, FontAwesome;
+    font-size: 14px;
 }
 
 .view-student-preview{
@@ -152,25 +154,29 @@ option{
 .student-warning-badge{
     color: red;
     float: left;
-    margin-top: 1px;
-    margin-left: 5px;
+    margin-top: 2px;
+    margin-left: 7px;
     margin-right: -130px;
 }
 
 .student-warning-badge .badge-text{
     visibility: hidden;
     width: 150px;
-    background-color: black;
-    color: #fff;
+    background-color: rgb(197, 197, 197);
+    color: rgb(0, 0, 0);
     text-align: center;
     padding: 4px 5px;
-    font-size: 10px;
+    font-size: 11px;
     border-radius: 6px;
+    margin-left: 5px;
+    font-style: italic;
+    font-weight: 500;
+    /* opacity: 0.4; */
 }
 
 .student-warning-badge:hover .badge-text{
     visibility: visible;
-    opacity: 1;
+    /* opacity: 1; */
 }
 /* 
 .warning-count{
@@ -193,6 +199,7 @@ option{
 .empty-students{
     margin-top: 10%;
     text-align: center;
+    font-weight: bold;
 }
 
 .empty-students button{
@@ -225,5 +232,23 @@ option{
 
 .student-checkbox{
     cursor:pointer;
+}
+
+@media screen and (min-width: 1920px) {
+    .view-student-dropdown{
+        margin-top: 40px;
+    }
+
+    .empty-students{
+        /* margin-top: 10%;
+        text-align: center;
+        font-weight: bold; */
+        transform: scale(110%);
+    }
+
+    /* .view-student-body{
+        transform: scale(105%);
+    } */
+    
 }
 

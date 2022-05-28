@@ -65,7 +65,8 @@ const View_Students =()=>{
 
     //if state changes, this function is executed
     useEffect(()=>{
-        setRecord(undefined)
+        console.log(record);
+        setRecord([])
         setMessage("Loading students...")
         fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student?orderby="+"",
         {
@@ -84,6 +85,7 @@ const View_Students =()=>{
                 setMessage(json.result.message)
             }
         })
+        console.log(record);
     },[state]);
 
     // if students exist/updated, creates an array of checkboxes with the record length
@@ -342,9 +344,8 @@ const View_Students =()=>{
             })
         }
         if(selectedValue===true){
-            await setRecord([]);
-            await changeState(!state)
-            await changeState(!state)
+            setRecord([]);
+            changeState(!state)
             setSelectVal(false);
         }
     }
@@ -388,7 +389,9 @@ const View_Students =()=>{
                 </ul>
             </div>
             <div className='view-student-search'>
-                <input type = "text" className = 'view-student-input' id = 'input' placeholder = "🔎 Search a student record" onChange = {handleUserInput} required></input>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
+                <input type = "text" className = 'view-student-input' placeholder = "&#xf002;  Search a student record" value = {input} onChange = {handleUserInput} required></input>
+
                 <a onClick={handleSubmit} ><BsSearch className='student-search-icon'/></a>      
             </div>
             <div className='view-student-preview'>
@@ -436,5 +439,4 @@ const View_Students =()=>{
     </div>
     );
 }
-
 export default View_Students;

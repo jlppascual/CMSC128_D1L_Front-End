@@ -61,7 +61,7 @@ label{
     width: 27%;
     height: 35px;
     position:absolute;
-    top:490px;
+    top:465px;
     left:53%;
     font-size: 15px;
     background-color: #00563F;
@@ -78,7 +78,7 @@ label{
     width: 27%;
     height: 35px;
     position:absolute;
-    top:490px;
+    top:465px;
     left:53%;
     font-size: 15px;
     background-color: gray;
@@ -104,6 +104,7 @@ label{
     width: 25%;
     height:280px;
     border-radius: 10px;
+    font-weight: 500;
 }
 
 .chosen-files::-webkit-scrollbar {
