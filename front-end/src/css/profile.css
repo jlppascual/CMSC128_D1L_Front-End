@@ -91,6 +91,12 @@
     height: auto;
 }
 
+.pass-valid-note{
+    margin-top: 10px;
+    font-size: 12px;
+    color: rgb(137, 137, 137);
+}
+
 .password-box{
     margin-top:2%;
 }
@@ -304,6 +310,12 @@
         height: auto;
     }
 
+    .pass-valid-note{
+        margin-top: 10px;
+        font-size: 12px;
+        color: rgb(137, 137, 137);
+    }
+
     .password-box{
         /* margin-top: 6%; */
         margin-top: 20px;
@@ -439,7 +451,5 @@
         font-size: 300%;
     }
      */
-
-
 
 }
