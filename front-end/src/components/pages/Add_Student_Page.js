@@ -1,15 +1,14 @@
 /**
  * author: Jem, Thomas
  */
- import { useEffect } from 'react'
  import { useNavigate } from 'react-router-dom'
  import React, { useRef, useState } from 'react';
  import useStore from '../hooks/authHook'
- import { notifyError } from '../components/Popups/toastNotifUtil';
  import Header from '../components/Header';
  import Footer from '../components/Footer';
  import Menu from '../components/Menu'
  import Prompts from '../components/Popups/addStudentPopup'
+ import {IoMdRemoveCircle} from 'react-icons/io'
  import '../../css/addstudent.css'
  
  const Add_Student_Page=()=>{
@@ -26,40 +25,71 @@
 
     const { user, setAuth } = useStore();
     const navigate = useNavigate();     // navigation hook
- 
+    const programs = ["BACA", "BAPHLO", "BASOC", "BSAGCHEM", "BSAMAT", "BSAPHY", "BSBIO", "BSCHEM", "BSCS", "BSMATH","BSMST", "BSSTAT"]
  
      //https://stackoverflow.com/a/67296403
-     const setCSVFile = async (e) => {
-   
+     const setCSVFile = (e) => {
          // Convert the FileList into an array and iterate
-         let files = Array.from(e.target.files).map(file => {
-             let filenames = []
-             for (let i = 0; i< e.target.files.length; i++) {
-                 filenames.push(e.target.files[i].name)
-             }
-             setFiles(filenames)
-             
-             // Define a new file reader
-             let reader = new FileReader();
-     
-             // Create a new promise
-             return new Promise(resolve => {
-                 // Resolve the promise after reading file
-                 reader.onload = () => resolve(reader.result);
-                 // Read the file as a text
-                 reader.readAsText(file);
-             });
+         let selected_files = []
+         Array.from(e.target.files).map(file => {
+             selected_files.push(file)
          });
-     
-         // At this point you'll have an array of results
-         let res = await Promise.all(files);
-         await setResults(res)
+         setFiles(selected_files)
      }
 
-     const closePrompts = (value) => {
+     const getResults =async() => {
+        // Convert the FileList into an array and iterate
+        let result = files.map(file => {
+            // Define a new file reader
+            let reader = new FileReader();
+    
+            // Create a new promise
+            return new Promise(resolve => {
+                // Resolve the promise after reading file
+                reader.onload = () => resolve(reader.result);
+                // Read the file as a text
+                reader.readAsText(file);
+            });
+        });
+        
+        // At this point you'll have an array of results
+        let res = await Promise.all(result);
+        return res
+    }
+
+     const closePrompts =async(value) => {
         setShowPrompts(value);
+        if(showPrompts===true){
+            setPrompts([]) //clears prompts upon closing
+        }
      }
- 
+
+    // checks if name, student number or degree program is null
+    const checkStudentDetails = (student_data) => {
+        const studno_format = /^[0-9]{4}-[0-9]{5}$/;    // Student number can be null
+        if (!student_data.first_name && student_data.first_name == "") 
+            return ("Student not added: Missing first name"); //First name cannot be null
+        if (!student_data.last_name && student_data.last_name == "") 
+                return ("Student not added: Missing last name"); // Last name cannot be null
+        if (!student_data.degree_program && student_data.degree_program == "")
+                return ("Student not added: Missing degree program"); // Degree Program cannot be null
+        if(!programs.includes(student_data.degree_program))
+            return ("Student not added: Invalid degree program");
+        if (!studno_format.test(student_data.student_number)) {
+            return ("Student not added: Wrong student number format");
+        }
+        return true;
+    };
+      
+    //Check record_data (adding student onli)
+    const checkRecordDetails = (record_data) => {
+        if (record_data.gwa === "") return ("Student not added: Missing value of GWA"); // Gwa cannot be null
+        if (record_data.total_units === "") return("Student not added: Missing value of Total Units");   // Total units cannot be null   
+        if (record_data.cumulative_sum === "") return("Student not added: Missing value of Cumulative Sum"); // Cumulative sum cannot be null     
+        return true
+    };
+
+     //gets all details of a student_record
      const getRecords = async(array) =>{
          let headers = [];
          let courses = [];
@@ -67,6 +97,7 @@
          let term = {};
          let weightPerTerm = 0;
          let cumulative_sum = 0;
+         let course_row = 0
  
          for(var i = 1; i < array[10].length; i++){
              if (array[10][i] != ''){
@@ -84,7 +115,7 @@
                  //if course is found at the beginning of the record
                  if(courses.length <=0 && array[j][7] != ''){
                      courses.push({course_code: array[j][1], grade: array[j][2], units: array[j][3], 
-                     weight: Number(array[j][4]), cumulated: Number(array[j][5])})
+                     weight: Number(array[j][4]), cumulated: Number(array[j][5]), row_number: course_row++})
                      weightPerTerm = weightPerTerm + (Number(array[j][4]))
                         
                      semester.current = sem;
@@ -110,12 +141,12 @@
                      term = {};
 
                      courses.push({course_code: array[j][1], grade: array[j][2], units: array[j][3], 
-                     weight: Number(array[j][4]), cumulated: Number(array[j][5])})
+                     weight: Number(array[j][4]), cumulated: Number(array[j][5]), row_number: course_row++})
                      weightPerTerm = weightPerTerm + (Number(array[j][4]))
                  // all courses under the current term will be appended until a new term is found
                  }else{
                      courses.push({course_code: array[j][1], grade: array[j][2], units: array[j][3], 
-                         weight: Number(array[j][4]), cumulated: Number(array[j][5])})
+                         weight: Number(array[j][4]), cumulated: Number(array[j][5]), row_number: course_row++})
  
                      weightPerTerm = weightPerTerm + (Number(array[j][4]))
                  }
@@ -146,19 +177,20 @@
                  term_data
              }
          }
-         setFullName(data.first_name+" "+data.last_name+ " " + data.degree_program)
- 
-         return data
+         
+        setFullName(data.first_name+" "+data.last_name+ " " + data.degree_program)
+        return data
      }
  
-     const parseData = async(content)=>{
+     //parses data taken from the text area
+     const parseData = async(content,i)=>{
          //separates file content by new line
          if(!content) {
-            notifyError('Invalid file/format')
+            prompts.push({success: false, message: files[i].name +": Invalid file type/format" })
             return}
          let rows = content.slice(content.indexOf('\n')+1).split('\n');
          if(!rows || rows[0].split(",")[1] !== "STUDENT INFORMATION"){
-            notifyError('Invalid file/format')
+            prompts.push({success: false, message: files[i].name +": Invalid file type/format" })
             return;
          }
          //returns filecontent in an array of strings splited by ','
@@ -170,34 +202,43 @@
      }
  
      ///function to read the read csv file as text
-     const submitButton=(e)=>{
+     const submitButton=async(e)=>{
         e.preventDefault();
+        const results = await getResults();
         if(results.length > 0){
-            results.map(async(result) => {
-                let data = await parseData(result);
-                if(data) await sendData(data);
+            results.map(async(result, i) => {
+                let data = await parseData(result,i);
+                if(data){
+                    let stud_mess =  (files[i].name+": "+checkStudentDetails(data.student_data));
+                    let rec_mess = (files[i].name+": "+checkRecordDetails(data.record_data)).toS
+                    if(checkStudentDetails(data.student_data) !== true){
+                        prompts.push({success: false, message: stud_mess}) 
+                    }else if (checkRecordDetails(data.record_data) !==true){
+                        prompts.push({success: false, message: rec_mess}) 
+                    }else(await sendData(data))
+                };
             });
-        }
+        }    
         setShowPrompts(true);
-                     
         setFiles([]);
-        setResults([]);
+        
      }
  
      const sendData = async(data)=>{
-         fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student',{
-             method:'POST',
-             credentials:'include',
-             headers:{
-                 'Content-Type':'application/json'
-             },
-             body: JSON.stringify({
-                 student_data: data.student_data,
-                 record_data: data.record_data,
-                 user_id: user.user_id
-             })
-         }).then((response) => {return response.json()})
-         .then(json => {
+
+        fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student',{
+            method:'POST',
+            credentials:'include',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body: JSON.stringify({
+                student_data: data.student_data,
+                record_data: data.record_data,
+                user_id: user.user_id
+            })
+        }).then((response) => {return response.json()})
+        .then(json => {
             if (json.result.session.silentRefresh) {
                 setAuth(json.result.session.user, json.result.session.silentRefresh)
             }
@@ -207,10 +248,15 @@
             {student.suffix!==""? (full_name = student.first_name+" "+ student.middle_name+ " " +student.last_name+ " " + student.suffix + ", "+ student.degree_program+":\n"): (full_name = student.first_name+" " + student.middle_name+ " " +student.last_name+", "+ student.degree_program+":\n")}
 
             let message =  full_name+json.result.message
-            prompts.push(message)
-
+            prompts.push({message,success:json.result.success})
          })
-         
+     }
+
+     const removeFile = (index)=>{
+        let reducedFile = files.filter((file, fileIndex )=>{
+            return fileIndex !==index;
+        })
+        setFiles(reducedFile);
      }
  
      return(
@@ -226,9 +272,9 @@
                  <input type='file' accept='.csv' id='file-acceptor' multiple="multiple" onChange={setCSVFile}/>
                  <div className='chosen-files'>
                      {files != []? 
-                     files.map((file,i) => {
-                         return <span key={i} className='file'>
-                         <p>{i+1}. {file}</p>
+                     files.map((file,index) => {
+                         return <span key={index} className='file'>
+                         <p>{<i className='remove-stud' onClick={()=>removeFile(index)}><IoMdRemoveCircle color='red'/></i>} {file.name}</p>
                          </span>
                      }): ""}
                  </div>
@@ -238,13 +284,12 @@
                  <br/><br/>          
              </form>
          </div>
-         {showPrompts? <Prompts props={{closePrompts:closePrompts.bind(this),prompts:prompts}}/>: ""}
+         {showPrompts? <Prompts props={{closePrompts:closePrompts.bind(this), prompts:prompts}}/>: ""}
          <Header/>
          <Menu />
          <Footer/>
      </div>
      );
  }
- 
- 
+
  export default Add_Student_Page;
