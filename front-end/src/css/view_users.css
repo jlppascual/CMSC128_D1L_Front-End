@@ -67,6 +67,7 @@
     border: none;
     outline: none;
     padding-left: 15px;
+    font-family: Arial, FontAwesome;
 }
 
 .users-search-button{

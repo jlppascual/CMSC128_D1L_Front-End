@@ -8,9 +8,9 @@
 
 .signup-field{
     text-align: center;
-    font-family: 'Segoe UI';
+    font-family: 'Segoe UI', FontAwesome;
     background-color: #ffffff;
-    height: 450px;
+    height: 500px;
     width: 30%;
     border-radius: 15px;
     position: absolute;
@@ -29,30 +29,61 @@ h2{
     padding: 7px;
     margin : 1px;
     width : 75%;
-    font-family: Optima;
+    font-family: 'Segoe UI', FontAwesome;
     outline:none;
     border: 1px solid gray;
     margin-bottom:5px;
     border-radius: 5px;
+    font-size: 13px;
+    font-weight: 500;
+}
 
+.prof-pic-text{
+    font-size: 12px;
+    font-weight: 500;
+    margin: 5px;
+    float: left;
+    padding-left: 10%;
+}
+
+.picfield{
+    border: 1px solid gray; 
+    padding: 5px;
+    width:50%;
+    /* margin-left: -50px; */
+    margin-right: 40px;
+    font-size: 12px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    margin-top: 3px;
+    font-family: 'Segoe UI';
 }
 
 .rolefield{
-    padding: 7px;
+    /* padding-left: 1px; */
+    padding: 7px 7px 7px 0px;
     margin : 1px;
-    width : 79%;
-    font-family: Optima;
+    width : 78%;
+    font-family: 'Segoe UI', FontAwesome;
     margin-bottom: 5px;
     border-radius: 5px;
     border: 1px solid gray;
     outline:none;
     cursor: pointer;
+    /* color: gray; */
+    font-size: 13px;
+
+    font-weight: 500;}
+
+.rolefield option{
+    font-family: 'Segoe UI',FontAwesome;
 }
+
 
 
 .create-user-buttons{
     text-align: center;
-    margin-top: 15px;
+    margin-top: 20px;
 }
 
 .confirm-button{
@@ -94,9 +125,9 @@ h2{
 
     .signup-field{
         text-align: center;
-        font-family: 'Segoe UI';
+        font-family: 'Segoe UI', FontAwesome;
         background-color: #ffffff;
-        height: 562.5px;
+        height: 590px;
         width: 30%;
         border-radius: 18.75px;
         position: absolute;
@@ -121,17 +152,18 @@ h2{
         padding: 7px;
         margin : 5px;
         width : 75%;
-        font-family: Optima;
+        font-family: 'Segoe UI', FontAwesome;
         outline:none;
         border: 1px solid gray;
         margin-bottom:6.25px;
         border-radius: 6.25px;
-        font-size:17px;
+        font-size:15px;
+        font-weight: 500;
     }
 
     .create-user-buttons{
         text-align: center;
-        margin-top: 18.75px;
+        margin-top: 25px;
     }
 
     .confirm-button{
@@ -145,5 +177,43 @@ h2{
         font-size: 18.75px;
         border-radius: 8.75px;
         padding: 8.75px;
+    }
+
+    .prof-pic-text{
+        font-size: 14px;
+        font-weight: 500;
+        margin: 5px;
+        float: left;
+        padding-left: 10%;
+        margin-top: 7px;
+    }
+    
+    .picfield{
+        border: 1px solid gray; 
+        padding: 5px;
+        width:51%;
+        /* margin-left: -50px; */
+        margin-right: 50px;
+        font-size: 13px;
+        border-radius: 5px;
+        margin-bottom: 5px;
+        margin-top: 3px;
+        font-family: 'Segoe UI';
+    }
+
+    .rolefield{
+        /* padding-left: 1px; */
+        padding: 7px 7px 7px 2px;
+        margin : 1px;
+        width : 78%;
+        font-family: 'Segoe UI', FontAwesome;
+        margin-bottom: 5px;
+        border-radius: 5px;
+        border: 1px solid gray;
+        outline:none;
+        cursor: pointer;
+        /* color: gray; */
+        font-size: 15px;
+        font-weight: 500;
     }
   }

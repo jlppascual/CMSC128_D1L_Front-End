@@ -99,6 +99,7 @@ body{
     color:#fcfff6;
     font-weight: bold;
     padding:4px;
+    cursor: pointer;
 }
 
 .eyeLogin{
