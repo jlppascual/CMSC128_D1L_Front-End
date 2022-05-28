@@ -326,7 +326,8 @@ import { ToastContainer } from 'react-toastify';
 
 
                     <div className="search-field">
-                        <input type = "text" name = "input" placeholder = "🔎 Search by YYYY-MM-DD"
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
+                        <input type = "text" name = "input" placeholder = "&#xf002;  Search by YYYY-MM-DD"
                         value = {input} onChange = {handleUserInput} className = "input-search" required></input>
                         <a onClick={handleSubmit} ><BsSearch className='student-search-icon'/></a>
 
