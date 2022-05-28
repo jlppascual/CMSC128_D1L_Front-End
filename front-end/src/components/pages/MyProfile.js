@@ -15,6 +15,7 @@ import { Icon } from 'react-icons-kit';
 import {eyeOff} from 'react-icons-kit/feather/eyeOff';
 import {eye} from 'react-icons-kit/feather/eye';
 
+
 const MyProfile =()=>{
 
     const {REACT_APP_HOST_IP} = process.env
@@ -117,6 +118,7 @@ const MyProfile =()=>{
         }
     }
     
+
     const settings_list=[
         {label:"Change username", value:'username'},
         {label:"Change password", value:'password'},
@@ -124,7 +126,7 @@ const MyProfile =()=>{
         {label:"Change mobile number", value:'number'}
     ]
 
-    const userLogout=()=>{ 
+    const userLogout = () =>{ 
         
         fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/auth' ,{
             method:'GET',
@@ -134,10 +136,11 @@ const MyProfile =()=>{
         .then(body => {
             if(!body.success) notifyError(body.message);
             else{
+                
                 navigate('/');
                 setTimeout(() => {
                     setAuth(null, false);
-                }, 500);
+                }, 5000);
             }
         })
     }
@@ -184,8 +187,7 @@ const MyProfile =()=>{
                                 setAuth(json.result.session.user, json.result.session.silentRefresh)
                             }
                             if(json.result.success){
-                                setToggle(!isToggled)
-                                notifySuccess(json.result.message)
+                                setToggle(!passToggle)
                                 userLogout()
                             }else{
                                 notifyError(json.result.message)
@@ -244,6 +246,7 @@ const MyProfile =()=>{
                             setToggle(!isToggled)
                             notifySuccess(json.result.message)
                         }else{
+                            if(json.result.message === 'Email address is already being used') setToggle(!isToggled)
                             notifyError(json.result.message)
                         }})
                 } else if (toEdit === 'number'){
@@ -266,6 +269,7 @@ const MyProfile =()=>{
                             setToggle(!isToggled)
                             notifySuccess(json.result.message)
                         }else{
+                            if(json.result.message === 'Phone number is already being used') setToggle(!isToggled)
                             notifyError(json.result.message)
                         }})
                 }else if (toEdit === 'username'){
@@ -286,9 +290,9 @@ const MyProfile =()=>{
                             }
                             if(json.result.success){
                                 setToggle(!isToggled)
-                                notifySuccess(json.result.message)
-                                userLogout()  
+                                userLogout()
                             }else{
+                                if(json.result.message === 'Username is already being used') setToggle(!isToggled)
                                 notifyError(json.result.message)
                             }
                         })
@@ -345,8 +349,9 @@ const MyProfile =()=>{
             body =
             <div> 
                 <div  className='username-box'>
-                    <p>Please enter password</p>
-                    <input type="password" className = "setting-fields" id="pass-validation" placeholder="Enter password"></input><br/>
+                    <p>Password confirmation</p>
+                    {toEdit === 'username'? <span className = 'pass-valid-note'>You will be logged out after confirmation</span>:''}
+                    <input type="password" className = "setting-fields" id="pass-validation" placeholder="Password"></input><br/>
                     <div className='popup-buttons'>
                         <button className="cancel" onClick={cancelClicked}>Cancel</button> <button className="confirm" onClick={confirmClicked}>Confirm</button> 
                     </div> 
@@ -366,7 +371,8 @@ const MyProfile =()=>{
             await setToggle(!isToggled);
             setType('username');
         }else if(foo.value ==='password'){
-            setPassToggle(!passToggle);
+            await setPassToggle(!passToggle);
+            setType('password');
         }else if (foo.value === 'email'){
             await setToggle(!isToggled);
             setType('email');
@@ -413,7 +419,7 @@ const MyProfile =()=>{
     }
     }
 
-    let passBody = 
+    let changePassBody = 
     <div className='settings-popup-box'>
         <div className='password-box'>
         <p className='change-popup-text'>Change Password</p>
@@ -495,7 +501,7 @@ const MyProfile =()=>{
                     </div> 
             </div>
             {isToggled===true? <Popup type={popType}/>:""}
-            {passToggle===true? passBody:''}
+            {passToggle===true? changePassBody:''}
             <Header/>
             <Menu/>
             <Footer/>
