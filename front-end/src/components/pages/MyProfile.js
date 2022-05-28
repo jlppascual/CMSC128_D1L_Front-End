@@ -436,8 +436,8 @@ const MyProfile =()=>{
                 <p className='username'>{user.username}</p>
                 <p className='user-role'>{user.user_role}</p>
                 <ul className='contact-info'>
-                    <li className='user-email'><HiMail size={28} className="contact-icon"/><span>{user.email}</span></li>
-                    {user.phone_number? <li className='user-phone'><RiPhoneFill size={28} className="contact-icon-phone"/><span>{user.phone_number}</span></li>:""}
+                    <li><HiMail size={28} className="contact-icon"/><span>{user.email}</span></li>
+                    {user.phone_number? <li style = {{paddingTop:'0px'}}><RiPhoneFill size={28} className="contact-icon"/><span>{user.phone_number}</span></li>:""}
                 </ul>
                 <button className ="settings-icon" onClick={()=> {handleSettings()}}><RiSettings5Line size={25} /></button>
                 {showSettings ?

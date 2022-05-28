@@ -42,7 +42,7 @@
     margin-left: 2rem; 
     font-size: 1.8rem;
     background: none;
-    /* margin-bottom: 20px; */
+    margin-bottom: 20px;
 }
 
 .menu-icon{
@@ -54,7 +54,7 @@
     font-weight: bold;
     color: #3f3f3f;
     position:fixed;
-    top:130px;
+    top:125px;
     left: 75px;
 }
 
@@ -129,7 +129,7 @@ ul{
 @media screen and (min-width: 1920px) {
 
     .menu-navbar{
-        margin-top: 175px;
+        margin-top: 185px;
     }
 
     .menu-side{

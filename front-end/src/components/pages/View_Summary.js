@@ -291,8 +291,7 @@
                 </div>    
 
                 <div className="view-summary-search">
-                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
-                    <input type = "text" className = "view-summary-input" placeholder = "&#xf002;   Search by Name"
+                    <input type = "text" className = "view-summary-input" placeholder = "🔎 Search by Name"
                     value = {input} onChange = {handleUserInput} required></input>
                     <a onClick={handleSubmit}><BsSearch className='view-summary-sicon'/></a>  
                 </div>

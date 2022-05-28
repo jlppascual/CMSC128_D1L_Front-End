@@ -223,8 +223,7 @@
                 
                 
                 <div className="users-search-field">
-                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
-                    <input type = "text" name = "input" placeholder = "&#xf002;  Search by name"
+                    <input type = "text" name = "input" placeholder = "🔎 Search by name"
                     value = {input} onChange = {handleUserInput} className = "user-search" required></input>
                     <button onClick={handleSubmit} className = "users-search-button"><i className = "search-icon"><VscSettings /></i></button>
                 </div>
@@ -235,17 +234,24 @@
                             if (i % 2 === 0) {
                                 return <span key={i}>
                                     <div className="user-tile" >
-                                    <img src = {require(`../../images/user_dp/${user.display_picture}`)} className='user-dp' onClick={()=> navigate('/user/'+user.user_id)}/>
+                                    {!user.display_picture?
+                                        (<img src = {require(`../../images/user_dp/dp_default.jpg`)} className='user-dp' onClick={()=> navigate('/user/'+user.user_id)}/>):
+                                        (<img src = {require(`../../images/user_dp/${user.display_picture}`)} className='user-dp' onClick={()=> navigate('/user/'+user.user_id)}/>)
+                                    }
                                     <div className='user-name' onClick={()=> navigate('/user/'+user.user_id)}>
                                         {user.first_name} {user.last_name} <br />
                                         <span onClick={()=> navigate('/user/'+user.user_id)}>{user.user_role}</span>
                                     </div>
-                                        <button onClick={()=>{onDelete({user})}} className = "delete-button">Remove</button>                                    </div>
+                                        <button onClick={()=>{onDelete({user})}} className = "delete-button">Remove</button></div>
                                 </span>
                             } else {
                                 return <span key={i}>
                                     <div className="user-odd-tile" >
-                                    <img src = {require(`../../images/user_dp/${user.display_picture}`)} className='user-dp' onClick={()=> navigate('/user/'+user.user_id)}/>
+                                    {!user.display_picture?
+                                        (<img src = {require(`../../images/user_dp/dp_default.jpg`)} className='user-dp' onClick={()=> navigate('/user/'+user.user_id)}/>):
+                                        (<img src = {require(`../../images/user_dp/${user.display_picture}`)} className='user-dp' onClick={()=> navigate('/user/'+user.user_id)}/>)
+                                    }
+                                    {/* <img src = {require(`../../images/user_dp/${user.display_picture}`)} className='user-dp' onClick={()=> navigate('/user/'+user.user_id)}/> */}
                                     <div className='user-name' onClick={()=> navigate('/user/'+user.user_id)}>
                                         {user.first_name} {user.last_name} <br />
                                         <span onClick={()=> navigate('/user/'+user.user_id)}>{user.user_role}</span >

@@ -151,7 +151,7 @@
 .contact-info{
     position:fixed;
     left: 30%;
-    top: 180px;
+    top: 170px;
     padding-left:0;
 }
 
@@ -168,7 +168,7 @@
     margin-top: 0px;
 }
 
-.contact-icon, .contact-icon-phone{
+.contact-icon{
     margin: 0px;
     color:#888888;
     margin-right: 10px;
@@ -231,14 +231,9 @@
         /* height: 30px; */
         /* cursor:pointer; */
         transform: scale(120%);
-        margin-top: -40px;
-        margin-left: 295px;
-
-        /* transform: scale(120%);
-        margin-top: -11%;
-        margin-left: 75%; */
+        margin-top: -10%;
+        margin-left: 75%;
     }
-    
     
     .eyeProfile1{
         /* position: absolute;
@@ -246,29 +241,19 @@
         margin-left: 140px;
         height: 40px;
         cursor:pointer; */
-
         transform: scale(120%);
-        margin-top: -40px;
-        margin-left: 135px;
-
-        /* transform: scale(120%);
-        margin-top: -11%;
-        margin-left: 35%; */
+        margin-top: -10%;
+        margin-left: 35%;
     }
 
     .settings-box{
         transform: scale(130%);
-        /* margin-top: 5%; */
-        margin-top: 100px;
+        margin-top: 5%;
 
     }
     
    .settings-popup-box{
-        /* width: 20%;
-        height: auto;
-        transform: scale(110%); */
-
-        width: 400px;
+        width: 20%;
         height: auto;
         transform: scale(110%);
     }
@@ -279,41 +264,34 @@
         
     .setting-fields{
         transform: scale(110%);
-        margin-top: 18px; /*3%*/
+        margin-top: 3%;
         font-size: 15px;
     }
 
    
     .setting-fields-number{
-        margin-top: 18px;
+        margin-top: 3%;
         font-size: 16px;
     }
     .popup-buttons{
         transform: scale(120%);
-        /* margin-top: 5%;
-        margin-bottom: 7%; */
-        
-        margin-top: 20px;
-        margin-bottom: 25px;
-
+        margin-top: 5%;
+        margin-bottom: 7%;
     }
     
     .username-box{
-        /* margin-top: 6%; */
-        margin-top: 20px;
+        margin-top: 6%;
         height: auto;
     }
 
     .password-box{
-        /* margin-top: 6%; */
-        margin-top: 20px;
+        margin-top: 6%;
         height: auto;
     }
 
     
     .number-prompt{
-        /* margin-right:1%; */
-        margin-right: 5px;
+        margin-right:1%;
     }  
 
     .change-popup-text{
@@ -321,37 +299,28 @@
     }
     
     .user-photo{
-        /* margin-top: 3%;  */
-        /* margin-left: 21%; */
-
-        margin-top: 55px;
-        margin-left: 410px;
+        margin-top: 3%; 
+        margin-left: 21%;
         transform: scale(130%);
     }
         
     .profile-title{
         font-size: 40px;
-        /* padding-top: 2.5%; */
-        padding-top: 45px;
-        /* margin-left: 30%; */
-        margin-left: 580px;
+        padding-top: 2.5%;
+        /* margin-bottom: 0px; */
+        margin-left: 30%;
     }
     
     .profile-line{
         /* text-align: center; */
-        /* width: 60%; */
-        width: 1150px;
-        /* margin-top: 8%; */
-        margin-top: 150px;
+        width: 60%;
+        margin-top: 8%;
     }
 
    
     .user-role{
-        /* margin-top: 5.5%;
-        margin-left: 21%;  */
-
-        margin-top: 100px;
-        margin-left: 410px; 
+        margin-top: 5.5%;
+        margin-left: 21%; 
         transform: scale(140%);
     }
     
@@ -359,53 +328,46 @@
         /* position: absolute; */
         margin-top: 0px;
         font-size: 30px;
-        /* margin-left: 30%; */
-        margin-left: 580px;
-    }
-
-    .contact-info{
-        margin-left: 8px;
-    }
-
-
-  
-    .contact-info li span{
-        /* position: absolute;
-        margin-top: 0px; */
-        margin-top: 70px;
-        font-size: 23px;
-        /* font-weight: 500; */
+        /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;; */
+        margin-left: 30%;
     }
      
-    .contact-icon, .contact-icon-phone{
+    /* .contact-info{
+        position:fixed;
+        left: 30%;
+        top: 170px;
+        padding-left:0;
+    } */
+    
+    
+    .contact-info li{
+        /* display: inline-block; */
+        margin-top: 20%;
+        /* outline:none; */
+        font-size: 26px;
+        /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
+    }
+
+  
+    /* .contact-info li span{
+        position: absolute;
+        margin-top: 0px;
+    } */
+     
+    .contact-icon{
         /* margin: 0px; */
         /* color:#888888; */
         margin-right: 14px;
-        /* margin-top: 12%; */
-        margin-top: 70px;
+        margin-top: 12%;
         transform: scale(125%);
     }
-
-    .contact-icon-phone{
-        margin-left: 50px;
-    }
-
-    /* .user-phone{
-        margin-top: 90%;
-        font-size: 26px;
-        margin-right: 20px;
-        margin-left: 1000px;
-    } */
 
      
     .settings-icon{
         /* position: absolute; */
         transform: scale(135%);
-        /* right: 20%; */
-        /* top: 12%;  */
-        right: 390px;
-        top: 120px;
-
+        right: 20%;
+        top: 12%; 
         /* color:#6b6b6b; */
         /* cursor:pointer; */
         /* border:none; */
@@ -413,7 +375,10 @@
         background: none; */
     }
    
-     
+    /* .settings-icon:hover{
+        color:#383838;
+    } */
+      
     .user-logs-title{
         margin-bottom: 20px;
         margin-top: 10px;
