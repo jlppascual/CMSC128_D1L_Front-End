@@ -195,5 +195,4 @@ const Edit_Row = ( { course, term_index,index,bg_color}) => {
         </tr>
     )
 }
-
 export default Edit_Row
