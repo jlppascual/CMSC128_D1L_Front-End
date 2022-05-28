@@ -291,6 +291,5 @@
      </div>
      );
  }
- 
- 
+
  export default Add_Student_Page;
