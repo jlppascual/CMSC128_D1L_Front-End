@@ -67,7 +67,6 @@
     border: none;
     outline: none;
     padding-left: 15px;
-    font-family: Arial, FontAwesome;
 }
 
 .users-search-button{
@@ -100,7 +99,7 @@
     margin-bottom:10px;
     display:flex;
     float:left;
-    height: 55px;
+    height: auto;
     cursor: pointer;
     border-radius: 10px;
 }
@@ -110,14 +109,17 @@
 }
 
 .user-name{
-    margin-top: 10px;
+    /* margin-top: 2%; */
     font-weight: bold;
-}
+    /* margin-bottom: 20px; */
+    padding-right: 5px;
+}   
 
 .user-name span{
     font-family: Helvetica;
     font-weight: 100;
     font-size: 14px;
+    padding-top: 10px;
 }
 
 .user-odd-tile{
@@ -129,7 +131,8 @@
     padding: 10px;
     margin-bottom:10px;
     display:flex;
-    height: 55px;
+    /* height: 55px; */
+    height: auto;
     cursor:pointer;
     border-radius: 10px;
 }
@@ -164,7 +167,7 @@
     border:none;
     outline:none;
     width: auto;
-    margin-top: auto;
+    margin: 12px 0px 12px 0px;
     font-size: 15px;
     font-family: Helvetica;
     background-color: #e5e5e5;
@@ -189,9 +192,14 @@
 }
 
 .user-dp{
-    height: 90%;
-    margin-top: 2px;
-    margin-right: 10px;
+    /* height: 90%; */
+    /* margin-top: 1px; */
+    margin-right: 15px;
+    object-fit: cover;
+    width: 55px;
+    height: 55px;
+    /* border-radius: 50px; */
+    border-radius: 4px;
 }
 
 
@@ -271,28 +279,36 @@
         width: 43%;
         border-color: #9e9e9e;
         border-style: solid;
-        border-width: 8.75px;
-        padding: 12.5px;
+        border-width: 7px;
+        padding: 10px;
         margin-right: 2.5%;
-        margin-bottom:12.5px;
+        margin-bottom:10px;
         display:flex;
         float:left;
-        height: 68.75px;
+        height: auto;
         cursor: pointer;
-        border-radius: 12.5px;
+        border-radius: 10px;
     }
 
-    .user-name{
+    /* .user-name{
         margin-top: 10px;
         font-weight: bold;
         font-size: 20px;
         
-    }
+    } */
+
+    .user-name{
+        /* margin-top: 2%; */
+        font-weight: bold;
+        /* margin-bottom: 20px; */
+        padding-right: 10px;
+        font-size: 20px;
+    }   
     
     .user-name span{
         font-family: Helvetica;
         font-weight: 100;
-        font-size: 17.5px;
+        font-size: 17px;
     }
     
     .user-odd-tile{
@@ -300,13 +316,14 @@
         width:43%;
         border-color: #9e9e9e;
         border-style: solid;
-        border-width: 8.75px;
-        padding: 12.5px;
-        margin-bottom:12.5px;
+        border-width: 7px;
+        padding: 10px;
+        margin-bottom:10px;
         display:flex;
-        height: 68.75px;
+        /* height: 55px; */
+        height: auto;
         cursor:pointer;
-        border-radius: 12.5px;
+        border-radius: 10px;
     }
     
     .user-odd-tile span{
@@ -339,9 +356,11 @@
     }
     
     .user-dp{
-        height: 90%;
-        margin-top: 2px;
         margin-right: 10px;
+        object-fit: cover;
+        width: 63px;
+        height: 63px;
+        /* border-radius: 50px; */
     }
 
   }
