@@ -349,8 +349,8 @@ const MyProfile =()=>{
             body =
             <div> 
                 <div  className='username-box'>
-                    <p>Password confirmation</p>
-                    {toEdit === 'username'? <span className = 'pass-valid-note'>You will be logged out after confirmation</span>:''}
+                    <p>Password confirmation{toEdit === 'username'? <div className = 'pass-valid-note'>You will be logged out after confirmation</div>:''}</p>
+                    
                     <input type="password" className = "setting-fields" id="pass-validation" placeholder="Password"></input><br/>
                     <div className='popup-buttons'>
                         <button className="cancel" onClick={cancelClicked}>Cancel</button> <button className="confirm" onClick={confirmClicked}>Confirm</button> 
