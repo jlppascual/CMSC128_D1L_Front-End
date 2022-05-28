@@ -383,7 +383,7 @@ const View_Students =()=>{
 
             <div className='view-student-header'>
                 <ul className='view-student-list'>
-                    <li><DropDown options={searchFilter} className='view-student-dropdown' value = {searchValue} type ="search"/></li>
+                    <li><DropDown options={searchFilter} className='view-student-dropdown' value = {searchValue} onChange={(e) => setSearchValue(e.target.value)} type ="search"/></li>
                     <li><DropDown options={viewFilter} className='view-student-dropdown' value = {viewValue} onChange={viewChange} type="view"/></li>
                 </ul>
             </div>
