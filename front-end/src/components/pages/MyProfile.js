@@ -316,6 +316,7 @@ const MyProfile =()=>{
     }
 
     const Popup=(props)=>{
+        setShowSettings(false);
         let body;
         // checks what field will be edited by the user before rendering it in the body of the popup
         if(props.type === 'username'){
@@ -454,9 +455,9 @@ const MyProfile =()=>{
                     <li className='user-email'><HiMail size={28} className="contact-icon"/><span>{user.email}</span></li>
                     {user.phone_number? <li className='user-phone'><RiPhoneFill size={28} className="contact-icon-phone"/><span>{user.phone_number}</span></li>:""}
                 </ul>
-                <button className ="settings-icon" ref = {boxRef} onClick={()=> {handleSettings()}}><RiSettings5Line size={25} /></button>
+                <button className ="settings-icon" onClick={()=> {handleSettings()}}><RiSettings5Line size={25} /></button>
                 {showSettings ?
-                    <ul className='settings-box'>
+                    <ul className='settings-box' ref = {boxRef}>
                     {settings_list.map((foo,i)=>{
                         return <button key={i} className='edit-button' onClick={()=>handleChange(foo)}>{foo.label} </button>
                     })}
