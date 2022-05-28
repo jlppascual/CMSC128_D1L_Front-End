@@ -223,7 +223,8 @@
                 
                 
                 <div className="users-search-field">
-                    <input type = "text" name = "input" placeholder = "🔎 Search by name"
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
+                    <input type = "text" name = "input" placeholder = "&#xf002;  Search by name"
                     value = {input} onChange = {handleUserInput} className = "user-search" required></input>
                     <button onClick={handleSubmit} className = "users-search-button"><i className = "search-icon"><BsSearch /></i></button>
                 </div>

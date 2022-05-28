@@ -367,7 +367,8 @@ const View_Students =()=>{
                 </ul>
             </div>
             <div className='view-student-search'>
-                <input type = "text" className = 'view-student-input' placeholder = "🔎 Search a student record" value = {input} onChange = {handleUserInput} required></input>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
+                <input type = "text" className = 'view-student-input' placeholder = "&#xf002;  Search a student record" value = {input} onChange = {handleUserInput} required></input>
                 <a onClick={handleSubmit} ><BsSearch className='student-search-icon'/></a>      
             </div>
             <div className='view-student-preview'>
