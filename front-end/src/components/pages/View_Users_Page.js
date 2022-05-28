@@ -8,7 +8,7 @@
  import Footer from '../components/Footer';
  import useStore from '../hooks/authHook'
  import { useNavigate } from 'react-router-dom';
- import {VscSettings}  from 'react-icons/vsc';
+ import {BsSearch}  from 'react-icons/bs';
  import DeleteConfirmPopup from '../components/Popups/DeleteConfirmPopup';
  import '../../css/view_users.css'
  import { ToastContainer } from 'react-toastify';
@@ -225,7 +225,7 @@
                 <div className="users-search-field">
                     <input type = "text" name = "input" placeholder = "🔎 Search by name"
                     value = {input} onChange = {handleUserInput} className = "user-search" required></input>
-                    <button onClick={handleSubmit} className = "users-search-button"><i className = "search-icon"><VscSettings /></i></button>
+                    <button onClick={handleSubmit} className = "users-search-button"><i className = "search-icon"><BsSearch /></i></button>
                 </div>
                 </div>
                

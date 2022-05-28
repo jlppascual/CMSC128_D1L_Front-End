@@ -1,11 +1,9 @@
 /**
  * author: Jem, Thomas
  */
- import { useEffect } from 'react'
  import { useNavigate } from 'react-router-dom'
  import React, { useRef, useState } from 'react';
  import useStore from '../hooks/authHook'
- import { notifyError } from '../components/Popups/toastNotifUtil';
  import Header from '../components/Header';
  import Footer from '../components/Footer';
  import Menu from '../components/Menu'
@@ -27,37 +25,39 @@
 
     const { user, setAuth } = useStore();
     const navigate = useNavigate();     // navigation hook
-    const programs = ["BACA", "BAPHLO", "BASOC", "BSAGRICHEM", "BSAMAT", "BSAPHY", "BSBIO", "BSCHEM", "BSCS", "BSMATH","BSMST", "BSSTAT"]
+    const programs = ["BACA", "BAPHLO", "BASOC", "BSAGCHEM", "BSAMAT", "BSAPHY", "BSBIO", "BSCHEM", "BSCS", "BSMATH","BSMST", "BSSTAT"]
  
      //https://stackoverflow.com/a/67296403
-     const setCSVFile = async (e) => {
-   
+     const setCSVFile = (e) => {
          // Convert the FileList into an array and iterate
-         let files = Array.from(e.target.files).map(file => {
-             let filenames = []
-             for (let i = 0; i< e.target.files.length; i++) {
-                 filenames.push(e.target.files[i].name)
-             }
-             setFiles(filenames)
-             
-             // Define a new file reader
-             let reader = new FileReader();
-     
-             // Create a new promise
-             return new Promise(resolve => {
-                 // Resolve the promise after reading file
-                 reader.onload = () => resolve(reader.result);
-                 // Read the file as a text
-                 reader.readAsText(file);
-             });
+         let selected_files = []
+         Array.from(e.target.files).map(file => {
+             selected_files.push(file)
          });
-     
-         // At this point you'll have an array of results
-         let res = await Promise.all(files);
-         setResults(res)
+         setFiles(selected_files)
      }
 
-     const closePrompts =async(value, arr) => {
+     const getResults =async() => {
+        // Convert the FileList into an array and iterate
+        let result = files.map(file => {
+            // Define a new file reader
+            let reader = new FileReader();
+    
+            // Create a new promise
+            return new Promise(resolve => {
+                // Resolve the promise after reading file
+                reader.onload = () => resolve(reader.result);
+                // Read the file as a text
+                reader.readAsText(file);
+            });
+        });
+        
+        // At this point you'll have an array of results
+        let res = await Promise.all(result);
+        return res
+    }
+
+     const closePrompts =async(value) => {
         setShowPrompts(value);
         if(showPrompts===true){
             setPrompts([]) //clears prompts upon closing
@@ -68,24 +68,24 @@
     const checkStudentDetails = (student_data) => {
         const studno_format = /^[0-9]{4}-[0-9]{5}$/;    // Student number can be null
         if (!student_data.first_name && student_data.first_name == "") 
-            return ("missing first name: record not added"); //First name cannot be null
+            return ("Student not added: Missing first name"); //First name cannot be null
         if (!student_data.last_name && student_data.last_name == "") 
-                return ("missing last name: record not added"); // Last name cannot be null
+                return ("Student not added: Missing last name"); // Last name cannot be null
         if (!student_data.degree_program && student_data.degree_program == "")
-                return ("missing degree program: record not added"); // Degree Program cannot be null
+                return ("Student not added: Missing degree program"); // Degree Program cannot be null
         if(!programs.includes(student_data.degree_program))
-            return ("invalid degree program: record not added");
+            return ("Student not added: Invalid degree program");
         if (!studno_format.test(student_data.student_number)) {
-            return ("Wrong student number format: record not added");
+            return ("Student not added: Wrong student number format");
         }
         return true;
     };
       
     //Check record_data (adding student onli)
     const checkRecordDetails = (record_data) => {
-        if (record_data.gwa === "") return ("missing GWA: student not added"); // Gwa cannot be null
-        if (record_data.total_units === "") return("missing total units: student not added");   // Total units cannot be null   
-        if (record_data.cumulative_sum === "") return("missing cumulative sum: student not added"); // Cumulative sum cannot be null     
+        if (record_data.gwa === "") return ("Student not added: Missing value of GWA"); // Gwa cannot be null
+        if (record_data.total_units === "") return("Student not added: Missing value of Total Units");   // Total units cannot be null   
+        if (record_data.cumulative_sum === "") return("Student not added: Missing value of Cumulative Sum"); // Cumulative sum cannot be null     
         return true
     };
 
@@ -183,14 +183,14 @@
      }
  
      //parses data taken from the text area
-     const parseData = async(content)=>{
+     const parseData = async(content,i)=>{
          //separates file content by new line
          if(!content) {
-            notifyError('Invalid file/format')
+            prompts.push({success: false, message: files[i].name +": Invalid file type/format" })
             return}
          let rows = content.slice(content.indexOf('\n')+1).split('\n');
          if(!rows || rows[0].split(",")[1] !== "STUDENT INFORMATION"){
-            notifyError('Invalid file/format')
+            prompts.push({success: false, message: files[i].name +": Invalid file type/format" })
             return;
          }
          //returns filecontent in an array of strings splited by ','
@@ -204,23 +204,24 @@
      ///function to read the read csv file as text
      const submitButton=async(e)=>{
         e.preventDefault();
+        const results = await getResults();
         if(results.length > 0){
             results.map(async(result, i) => {
-                let data = await parseData(result);
+                let data = await parseData(result,i);
                 if(data){
-                    let stud_mess =  (files[i]+": "+checkStudentDetails(data.student_data));
-                    let rec_mess = (files[i]+": "+checkRecordDetails(data.record_data)).toS
+                    let stud_mess =  (files[i].name+": "+checkStudentDetails(data.student_data));
+                    let rec_mess = (files[i].name+": "+checkRecordDetails(data.record_data)).toS
                     if(checkStudentDetails(data.student_data) !== true){
-                        prompts.push({success: false, message: stud_mess}) //do nothing
+                        prompts.push({success: false, message: stud_mess}) 
                     }else if (checkRecordDetails(data.record_data) !==true){
-                        prompts.push({success: false, message: rec_mess}) //do nothing
+                        prompts.push({success: false, message: rec_mess}) 
                     }else(await sendData(data))
                 };
             });
         }    
         setShowPrompts(true);
         setFiles([]);
-        setResults([]);
+        
      }
  
      const sendData = async(data)=>{
@@ -251,12 +252,11 @@
          })
      }
 
-     const removeFile =async(index)=>{
+     const removeFile = (index)=>{
         let reducedFile = files.filter((file, fileIndex )=>{
             return fileIndex !==index;
         })
         setFiles(reducedFile);
-        console.log(files)
      }
  
      return(
@@ -274,7 +274,7 @@
                      {files != []? 
                      files.map((file,index) => {
                          return <span key={index} className='file'>
-                         <p>{<i className='remove-stud' onClick={async ()=> {await removeFile(index)}}><IoMdRemoveCircle/></i>} {file}</p>
+                         <p>{<i className='remove-stud' onClick={()=>removeFile(index)}><IoMdRemoveCircle color='red'/></i>} {file.name}</p>
                          </span>
                      }): ""}
                  </div>
@@ -291,6 +291,5 @@
      </div>
      );
  }
- 
- 
+
  export default Add_Student_Page;
