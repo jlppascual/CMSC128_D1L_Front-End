@@ -35,18 +35,13 @@ const View_Student_Details =()=>{
         middle_name:"",
         suffix:""
     })
-
-    const[newGrade, setNewGrade] = useState({
-        cumulative_sum:0,
-        gwa: 0, 
-        units:0
-    })
+    
     const [state, setState]= useState({
         student_details:[],
         record_details:[],
         term_details:[],        
     })
-
+    const programs = ["BACA", "BAPHLO", "BASOC", "BSAGCHEM", "BSAMAT", "BSAPHY", "BSBIO", "BSCHEM", "BSCS", "BSMATH","BSMST", "BSSTAT"]
     const { user, setAuth } = useStore();
     const navigate = useNavigate();     // navigation hook
 
@@ -69,7 +64,8 @@ const View_Student_Details =()=>{
                 warnings:json.result.output.warnings })         
         })
     },[pageState])
-
+    
+    // For cancelling 
     useEffect(()=>{
         setDegree(state.student_details.degree_program);
         setStudno(state.student_details.student_number);
@@ -79,7 +75,19 @@ const View_Student_Details =()=>{
             middle_name: state.student_details.middle_name,
             suffix: state.student_details.suffix
         })
+        document.getElementsByName("record-cumulative")[0].innerHTML = state.record_details.cumulative_sum
+        document.getElementsByName("record-units")[0].innerHTML = state.record_details.total_units
+        document.getElementsByName("record-gwa")[0].innerHTML = state.record_details.gwa
+        let terms_count = state.term_details.length
+        for (let i = 0; i < terms_count; i++) {
+            document.getElementsByName("weights-term"+i)[0].innerHTML = state.term_details[i].total_weights
+            document.getElementsByName("units-term"+i)[0].innerHTML = state.term_details[i].no_of_units
+            let term_gpa = parseFloat((state.term_details[i].total_weights/state.term_details[i].no_of_units).toFixed(4))
+            if(isNaN(term_gpa)) term_gpa = 0
+            document.getElementsByName("gpa-term"+i)[0].innerHTML = term_gpa
+        }
     },[state])
+
     
     const handleDelete=(event)=>{
         event.preventDefault();
@@ -109,6 +117,7 @@ const View_Student_Details =()=>{
     const handleWarnings = (event) => {
         event.preventDefault();
         setShowWarnings(!showWarnings)
+        setHighlightedRow(-1)
     }
 
     const handleEdit=(event)=>{
@@ -137,8 +146,11 @@ const View_Student_Details =()=>{
             notifyError("Please apply changes first")
 
         }else if(new_studno && !new_studno.match(studno_format)){
-            notifyError("invalid student number format")
+            notifyError("Invalid student number format")
             setStudno(state.student_details.student_number)
+        }
+        else if(!programs.includes(new_degree)){
+            notifyError("Invalid degree program")
         }
         else {
             setNewCourses(getCourses())
@@ -194,11 +206,10 @@ const View_Student_Details =()=>{
                     const full_name = student.first_name+" "+student.last_name+", "+student.degree_program+":\n"
                     let message =  full_name+json.result.message
                     notifySuccess(message)
-                    setPage(!pageState)
                 }else{
-                    setDegree(state.student_details.degree_program)
-                    setStudno(state.student_details.student_number)
-                notifyError(json.result.message)}
+                    notifyError(json.result.message)}
+                setPage(!pageState)
+                setHighlightedRow(-1)
             })
         }
     }
@@ -224,10 +235,9 @@ const View_Student_Details =()=>{
 
     const isCompleteFields = () =>{
         let temp;
-        if(document.getElementsByName('last_name') == "") return false;
-        if(document.getElementsByName('first_name') == "") return false;
-        if(document.getElementsByName('student_number') == "") return false;
-        if(document.getElementsByName('degree_program') == "") return false;
+        if(document.getElementsByName('last_name')[0].value == "") return false;
+        if(document.getElementsByName('first_name')[0].value == "") return false;
+        if(document.getElementsByName('degree_program')[0].value == "") return false;
 
 
         const terms = state.term_details
@@ -250,12 +260,12 @@ const View_Student_Details =()=>{
     const checkChanges = () =>{
        let temp;
 
-       if(document.getElementsByName("first_name")!==state.student_details.first_name) return true;
-       if(document.getElementsByName("last_name")!==state.student_details.last_name) return true;
-       if(document.getElementsByName("middle_name")!==state.student_details.middle_name) return true;
-       if(document.getElementsByName("suffix")!==state.student_details.suffix) return true;
-       if(document.getElementsByName("student_number")!==state.student_details.student_number) return true;
-       if(document.getElementsByName("degree_program")!==state.student_details.degree_program) return true;
+       if(document.getElementsByName("first_name")[0].value!==state.student_details.first_name) return true;
+       if(document.getElementsByName("last_name")[0].value!==state.student_details.last_name) return true;
+       if(document.getElementsByName("middle_name")[0].value!==state.student_details.middle_name) return true;
+       if(document.getElementsByName("suffix")[0].value!==state.student_details.suffix) return true;
+       if(document.getElementsByName("student_number")[0].value!==state.student_details.student_number) return true;
+       if(document.getElementsByName("degree_program")[0].value!==state.student_details.degree_program) return true;
 
         const terms = state.term_details
         for (let i = 0; i < terms.length; i++) {
@@ -302,16 +312,23 @@ const View_Student_Details =()=>{
                 
                 <div className='cancel-edit-buttons'>
                     <button onClick={() => {setShowCancelConfirmation(false)}} className = 'no-btn'>No</button>
-                    <button onClick={() => {setShowCancelConfirmation(false), setEditable(false), 
-                        document.getElementsByName("record-cumulative")[0].innerHTML = state.record_details.cumulative_sum
-                        document.getElementsByName("record-units")[0].innerHTML = state.record_details.total_units
-                        document.getElementsByName("record-gwa")[0].innerHTML = state.record_details.gwa
-                        ;}} className = 'yes-btn'>Yes</button>
+                    <button onClick={() => {setShowCancelConfirmation(false), setEditable(false), setPage(!pageState);}} className = 'yes-btn'>Yes</button>
                 </div>
             </div>
         )
     }
-
+    // For cancelling 
+    useEffect(()=>{
+        let id_val;
+        if(document.getElementById("warning-div"))
+            document.getElementById("warning-div").scrollTop = warningsScrollPos
+        if(!highlightedRow || highlightRow === "") id_val = 0
+        else id_val = highlightedRow
+        const elementToView = document.getElementById(id_val);
+        if(elementToView)
+            elementToView.scrollIntoView({block: 'center',behavior: 'smooth'});
+    },[highlightedRow])
+    
     const WarningPopup=({})=>{
         
         return(
@@ -321,9 +338,8 @@ const View_Student_Details =()=>{
                 <div className='warnings-body' >
                     {state.warnings.map((warning,i) => {
                         let anchor_value,bg_color,border_value;
-                        if(warning.row_number < 3) anchor_value = "#top"
-                        else if(warning.row_number < 8) anchor_value = "#top1"
-                        else anchor_value = "#"+(warning.row_number-7)
+                        if(!warning.row_number || warning.row_number === "") anchor_value = 0
+                        else anchor_value = warning.row_number
                         if(highlightedRow === warning.row_number){
                             bg_color = "rgba(141, 20, 54, 0.2)"
                             border_value = "solid 1px black"
@@ -332,18 +348,15 @@ const View_Student_Details =()=>{
                             bg_color = "rgba(141, 20, 54, 0.1)"
                             border_value = "none"
                         }
-                        return <a className = "anchor" href={anchor_value} onClick = {() => {highlightRow(warning.row_number)}}>
-                            <div key = {i}   className = "warning" style = {{backgroundColor: bg_color, border:border_value}}>
-                                <h5>{warning.course}</h5>
-                                <h5>{warning.term}</h5>
-                                
-                                <p>{warning.details}</p>
-                                <span>{warning.warning_type}</span>
-                            </div></a>
+                        return <div key = {i}   id={"warning"+anchor_value} className = "warning" style = {{backgroundColor: bg_color, border:border_value}} onClick = {() => {highlightRow(warning.row_number)}}>
+                        <h5>{warning.course}</h5>
+                        <h5>{warning.term}</h5>
+                        <p>{warning.details}</p>
+                        <span>{warning.warning_type}</span>
+                    </div>
                     })}
                 </div>
                 : <p>No record warnings found</p>}
-                
             </div>
             
         )
@@ -351,13 +364,15 @@ const View_Student_Details =()=>{
 
     const highlightRow = (row_num) => {
         setHighlightedRow(row_num)
+        setWarningsScrollPos(document.getElementById("warning-div").scrollTop)
     }
-
+   
     return(
         <div>
-        <div className='details-body' >
+            
+        <div className='details-body'  id ="top">
             {state.student_details.isDeleted? <div className='deleted-watermark'>DELETED STUDENT RECORD</div>:""}
-            <div className = "top-header" id ="top">
+            <div className = "top-header" >
                 {!state.student_details.isDeleted?
                 <div className='icons'>
                     <i className = "icon" onClick={handleEdit}><BiEdit size= {25} title="Edit student record"/></i>
@@ -367,6 +382,7 @@ const View_Student_Details =()=>{
                     : ""}
                 </div>:""
                 }
+
                 {!state.student_details.isDeleted?
                 <i className = "back-icon" onClick={()=> navigate('/students')}><BiArrowBack size= {30} /></i>:""}
                 {!state.student_details.isDeleted? 
@@ -422,7 +438,7 @@ const View_Student_Details =()=>{
                         ></input></div>
                     )
                     :
-                    (<p className="student-name">{state.student_details.last_name}, {state.student_details.first_name} {state.student_details.middle_name} {state.student_details.suffix} </p>)
+                    (<p className="student-name" >{state.student_details.last_name}, {state.student_details.first_name} {state.student_details.middle_name} {state.student_details.suffix} </p>)
                 : <p className="student-name" style={{marginLeft:'16.5%'}}>{state.student_details.last_name}, {state.student_details.first_name} {state.student_details.middle_name} {state.student_details.suffix} </p>
                 }
                 {editable === true ? <span className='edit-btns'>
@@ -432,7 +448,7 @@ const View_Student_Details =()=>{
                 <hr className='student-line' ></hr>
             </div>
             
-            < div className='student-record' id ="top1">
+            < div className='student-record' >
                 {editable == true? (
                 <div className='student-info-edit-left'>
                     <tr><b>Degree Program:</b><input className="edit-top-cell"
@@ -451,11 +467,13 @@ const View_Student_Details =()=>{
                         value = {new_studno} 
                         onChange={(e)=>{setStudno(e.target.value)}}
                     ></input><br/></tr>
-                    <tr><b>Latin Honor:</b> <input className = "info-edit-cell"
+                    <tr>
+                    <b>Latin Honor:</b> <input className = "info-edit-cell"
                         type = "text"
-                        required = "required"
-                    defaultValue = {state.student_details.latin_honor} 
-                    ></input><br/></tr>
+                        disabled
+                        defaultValue = {state.student_details.latin_honor} 
+                    ></input><br/>
+                    </tr>
                 </div>)
                 :(
                 <div className='student-info-left'>
@@ -469,11 +487,13 @@ const View_Student_Details =()=>{
                 <div><b>GWA:</b> <span name={"record-gwa"} className='info-r'>{state.record_details.gwa}</span></div><br/>
             </div>
             <br/>
-            <hr className='record-line'></hr>
+            <hr className='record-line' id ="line"></hr>
             <br/>
             <div className='record'>
             {state.term_details!=[]? state.term_details.map((term, i)=>{
                 let headStyle = {textAlign:'left'}
+                let term_gpa = parseFloat((term.total_weights/term.no_of_units).toFixed(4))
+                if(isNaN(term_gpa)) term_gpa = 0
                 return <span key={i} name = {"term"+i}>
                 <form>
                     <table className='record-table'>
@@ -516,7 +536,7 @@ const View_Student_Details =()=>{
                 Term: <u name = {"term-name"+i}>{term.semester}/{term.acad_year}</u> &nbsp;&nbsp;&nbsp;&nbsp;  <span >|</span> &nbsp;&nbsp;&nbsp;&nbsp;
                 Total units: <u name = {"units-term"+i}>{term.no_of_units}</u> &nbsp;&nbsp;&nbsp;&nbsp;  <span >|</span> &nbsp;&nbsp;&nbsp;&nbsp;
                 Total weights: <u name = {"weights-term"+i}>{term.total_weights} </u> &nbsp;&nbsp;&nbsp;&nbsp;<span>|</span> &nbsp;&nbsp;&nbsp;&nbsp;
-                GPA: <u name = {"gpa-term"+i}>{parseFloat((term.total_weights/term.no_of_units).toFixed(4))} </u>
+                GPA: <u name = {"gpa-term"+i}>{term_gpa} </u>
                 </div>
                 <br/>
                 </span>

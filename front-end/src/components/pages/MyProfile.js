@@ -15,7 +15,6 @@ import { Icon } from 'react-icons-kit';
 import {eyeOff} from 'react-icons-kit/feather/eyeOff';
 import {eye} from 'react-icons-kit/feather/eye';
 
-
 const MyProfile =()=>{
 
     const {REACT_APP_HOST_IP} = process.env
@@ -36,7 +35,7 @@ const MyProfile =()=>{
     const [icon2, setIcon2] = useState(eyeOff)
     const [toEdit, setToEdit] = useState('');
     const [toPassCred, setToPassCred] = useState('');
-    const [passToggle, setPassToggle] = useState(false);
+
 
     const { user, setAuth} = useStore();
     
@@ -118,7 +117,6 @@ const MyProfile =()=>{
         }
     }
     
-
     const settings_list=[
         {label:"Change username", value:'username'},
         {label:"Change password", value:'password'},
@@ -126,7 +124,7 @@ const MyProfile =()=>{
         {label:"Change mobile number", value:'number'}
     ]
 
-    const userLogout = () =>{ 
+    const userLogout=()=>{ 
         
         fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/auth' ,{
             method:'GET',
@@ -136,11 +134,10 @@ const MyProfile =()=>{
         .then(body => {
             if(!body.success) notifyError(body.message);
             else{
-                
                 navigate('/');
                 setTimeout(() => {
                     setAuth(null, false);
-                }, 5000);
+                }, 500);
             }
         })
     }
@@ -187,7 +184,8 @@ const MyProfile =()=>{
                                 setAuth(json.result.session.user, json.result.session.silentRefresh)
                             }
                             if(json.result.success){
-                                setToggle(!passToggle)
+                                setToggle(!isToggled)
+                                notifySuccess(json.result.message)
                                 userLogout()
                             }else{
                                 notifyError(json.result.message)
@@ -246,7 +244,6 @@ const MyProfile =()=>{
                             setToggle(!isToggled)
                             notifySuccess(json.result.message)
                         }else{
-                            if(json.result.message === 'Email address is already being used') setToggle(!isToggled)
                             notifyError(json.result.message)
                         }})
                 } else if (toEdit === 'number'){
@@ -269,7 +266,6 @@ const MyProfile =()=>{
                             setToggle(!isToggled)
                             notifySuccess(json.result.message)
                         }else{
-                            if(json.result.message === 'Phone number is already being used') setToggle(!isToggled)
                             notifyError(json.result.message)
                         }})
                 }else if (toEdit === 'username'){
@@ -290,9 +286,9 @@ const MyProfile =()=>{
                             }
                             if(json.result.success){
                                 setToggle(!isToggled)
-                                userLogout()
+                                notifySuccess(json.result.message)
+                                userLogout()  
                             }else{
-                                if(json.result.message === 'Username is already being used') setToggle(!isToggled)
                                 notifyError(json.result.message)
                             }
                         })
@@ -302,10 +298,7 @@ const MyProfile =()=>{
     }
 
     const cancelClicked=async()=>{
-        if(isToggled) await setToggle(!isToggled);
-        else {
-            await setPassToggle(!passToggle);
-        }
+        await setToggle(!isToggled);
         setType("");
     }
 
@@ -322,6 +315,22 @@ const MyProfile =()=>{
                         <button className="cancel" onClick={cancelClicked}>Cancel</button> <button className="confirm" onClick={confirmClicked}>Confirm</button> 
                     </div> 
                 </div>               
+            </div>
+        } else if(props.type === 'password'){
+            body = 
+            <div>
+                <div className='password-box'>
+                <p className='change-popup-text'>Change Password</p>
+                    <input type={type} className = "setting-fields" id="current-password" placeholder="Enter current password"></input><br/>
+                    <i onClick={handleToggle} id = "visibilityBtn" className='eyeProfile'><Icon icon = {icon} ></Icon></i>
+                    <input type={type1} className = "setting-fields" id="new-password" placeholder="Enter new password"></input><br/>
+                    <i onClick={handleToggle1} id = "visibilityBtn" className='eyeProfile'><Icon icon = {icon1} ></Icon></i>
+                    <input type={type2} className = "setting-fields" id="confirm-password" placeholder="Confirm new password"></input><br/>
+                    <i onClick={handleToggle2} id = "visibilityBtn" className='eyeProfile1'><Icon icon = {icon2} ></Icon></i>
+                </div>
+                <div className='popup-buttons'>
+                    <button className="cancel" onClick={cancelClicked}>Cancel</button><button className="confirm" onClick={confirmClicked}>Confirm</button> 
+                </div>
             </div>
         } else if(props.type === 'email'){
             body =
@@ -349,9 +358,8 @@ const MyProfile =()=>{
             body =
             <div> 
                 <div  className='username-box'>
-                    <p>Password confirmation{toEdit === 'username'? <div className = 'pass-valid-note'>You will be logged out after confirmation</div>:''}</p>
-                    
-                    <input type="password" className = "setting-fields" id="pass-validation" placeholder="Password"></input><br/>
+                    <p>Please enter password</p>
+                    <input type="password" className = "setting-fields" id="pass-validation" placeholder="Enter password"></input><br/>
                     <div className='popup-buttons'>
                         <button className="cancel" onClick={cancelClicked}>Cancel</button> <button className="confirm" onClick={confirmClicked}>Confirm</button> 
                     </div> 
@@ -366,23 +374,22 @@ const MyProfile =()=>{
     }
 
     const handleChange=async(foo)=>{
+        await setToggle(!isToggled);
 
         if(foo.value === 'username'){
-            await setToggle(!isToggled);
-            setType('username');
+             setType('username');
         }else if(foo.value ==='password'){
-            await setPassToggle(!passToggle);
-            setType('password');
+             setType('password');
         }else if (foo.value === 'email'){
-            await setToggle(!isToggled);
             setType('email');
         } else if (foo.value === 'number'){
-            await setToggle(!isToggled);
             setType('number');
         } else {
-            await setToggle(!isToggled);
             setType('');
-        }    
+        }
+            
+        
+        
     }
 
     const handleSettings = () =>{
@@ -418,22 +425,6 @@ const MyProfile =()=>{
         setType2('text');
     }
     }
-
-    let changePassBody = 
-    <div className='settings-popup-box'>
-        <div className='password-box'>
-        <p className='change-popup-text'>Change Password</p>
-            <input type={type} className = "setting-fields" id="current-password" placeholder="Enter current password"></input><br/>
-            <i onClick={handleToggle} id = "visibilityBtn" className='eyeProfile'><Icon icon = {icon} ></Icon></i>
-            <input type={type1} className = "setting-fields" id="new-password" placeholder="Enter new password"></input><br/>
-            <i onClick={handleToggle1} id = "visibilityBtn" className='eyeProfile'><Icon icon = {icon1} ></Icon></i>
-            <input type={type2} className = "setting-fields" id="confirm-password" placeholder="Confirm new password"></input><br/>
-            <i onClick={handleToggle2} id = "visibilityBtn" className='eyeProfile1'><Icon icon = {icon2} ></Icon></i>
-        </div>
-        <div className='popup-buttons'>
-            <button className="cancel" onClick={cancelClicked}>Cancel</button><button className="confirm" onClick={confirmClicked}>Confirm</button> 
-        </div>
-    </div>
 
     return(
         <div>
@@ -501,11 +492,11 @@ const MyProfile =()=>{
                     </div> 
             </div>
             {isToggled===true? <Popup type={popType}/>:""}
-            {passToggle===true? changePassBody:''}
             <Header/>
             <Menu/>
             <Footer/>
         </div>
+
             <Header/>
             <Menu/>
             <Footer/>
