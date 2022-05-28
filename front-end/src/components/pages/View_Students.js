@@ -166,37 +166,67 @@ const View_Students =()=>{
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        
+        let input = document.getElementById('input').value;
+        let url;
 
-        let url = 'http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/search?name=';
+        if(viewValue === 'ALL' || viewValue === '') url = 'http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/search?name='+input;
+        else {
+            url = 'http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/degree/'+[viewValue]+'/search?name='+input;
+        }
 
         if(searchValue === "student_number"){
-            url = 'http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/search?student_number='
+            url = 'http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/search?student_number='+input;
+            if(viewValue !== 'ALL') url = 'http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/degree/'+[viewValue]+'/search?student_number='+input;
         }
 
         if(input === "" || input === undefined){
-            setRecord(undefined)
             setMessage("Loading students...")
-            fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student?orderby="+"",
-        {
-            method: "GET",
-            credentials:'include'
-        })
-        .then(response => {return response.json()})
-        .then(json=>{
-            if (json.result.session.silentRefresh) {
-                setAuth(json.result.session.user, json.result.session.silentRefresh)
-            }
-            if(json.result.success){
-                setRecord(json.result.output)
-            }else{
+
+            if (viewValue==="ALL" || viewValue===""){
                 setRecord(undefined)
-                setMessage(json.result.message)
-            }
-        })} else {
-        if(viewValue !== ""){setViewValue("ALL")}
+                setMessage("Loading students...")
+                fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student?orderby="+"",
+                {
+                    method: "GET",
+                    credentials:'include'
+                })
+                .then(response => {return response.json()})
+                .then(json=>{
+                    if (json.result.session.silentRefresh) {
+                        setAuth(json.result.session.user, json.result.session.silentRefresh)
+                    }
+                    if(json.result.success){
+                        setRecord(json.result.output)
+                    }else{
+                        setRecord(undefined)
+                        setMessage(json.result.message)
+                    }
+                })
+            } else{
+                setRecord(undefined)
+                setMessage("Loading students...")
+                fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/degree/"+ [viewValue]+"?orderby="+"",
+            {
+                method: "GET",
+                credentials:'include'
+            })
+            .then(response => {return response.json()})
+            .then(json=>{
+                if (json.result.session.silentRefresh) {
+                    setAuth(json.result.session.user, json.result.session.silentRefresh)
+                }
+                if(json.result.success){
+                    setRecord(json.result.output)
+                }else{
+                    setRecord(undefined)
+                    setMessage(json.result.message)
+                }
+            })}
+        } else {
         setRecord(undefined)
         setMessage("Loading results...")
-        fetch(url + input,{
+        fetch(url,{
             credentials:'include'
         })
         .then((response) => {return response.json()})
@@ -213,7 +243,6 @@ const View_Students =()=>{
                 }
             }
             else{
-                setRecord(undefined)
                 setMessage(json.result.message)
             }
         })}
@@ -252,19 +281,12 @@ const View_Students =()=>{
    
     },[selectedValue])
 
-    const searchChange=(e)=>{
-        setSearchValue(e.target.value);
-    }
-
     const viewChange=(e)=>{
         setViewValue(e.target.value);
     }
 
     const handleUserInput = (e) => {
         input = e.target.value;
-        if (viewValue!=="ALL" || viewValue!==""){
-            setViewValue("ALL")
-        }
     }
 
     const confirmDelete= async(decision, reason) =>{
@@ -362,13 +384,14 @@ const View_Students =()=>{
 
             <div className='view-student-header'>
                 <ul className='view-student-list'>
-                    <li><DropDown options={searchFilter} className='view-student-dropdown' value = {searchValue} onChange={searchChange} type ="search"/></li>
+                    <li><DropDown options={searchFilter} className='view-student-dropdown' value = {searchValue} onChange={(e) => setSearchValue(e.target.value)} type ="search"/></li>
                     <li><DropDown options={viewFilter} className='view-student-dropdown' value = {viewValue} onChange={viewChange} type="view"/></li>
                 </ul>
             </div>
             <div className='view-student-search'>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
                 <input type = "text" className = 'view-student-input' placeholder = "&#xf002;  Search a student record" value = {input} onChange = {handleUserInput} required></input>
+
                 <a onClick={handleSubmit} ><BsSearch className='student-search-icon'/></a>      
             </div>
             <div className='view-student-preview'>
