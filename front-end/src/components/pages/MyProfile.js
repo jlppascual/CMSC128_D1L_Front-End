@@ -4,6 +4,7 @@ import Header from '../components/Header'
 import Footer from '../components/Footer'
 import Menu from '../components/Menu'
 import useStore from '../hooks/authHook'
+import useLoadStore from '../hooks/loaderHook';
 import '../../css/profile.css'
 import USER from '../../images/dp_default.jpg'
 import {HiMail}  from 'react-icons/hi';
@@ -14,6 +15,8 @@ import '../../css/toast_container.css';
 import { Icon } from 'react-icons-kit';
 import {eyeOff} from 'react-icons-kit/feather/eyeOff';
 import {eye} from 'react-icons-kit/feather/eye';
+import Row_Loader from '../loaders/Row_Loader';
+import { Name_Placeholder, User_Detail_Placeholder } from '../loaders/Detail_Loader';
 import OutsideClick from '../hooks/outsideClick'
 
 
@@ -40,6 +43,7 @@ const MyProfile =()=>{
     const [passToggle, setPassToggle] = useState(false);
 
     const { user, setAuth} = useStore();
+    const { isLoading, setIsLoading } = useLoadStore();
     
     const validEmail = new RegExp('^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$');
     const validNumber = /^\+639[0-9]{9}$/;
@@ -50,7 +54,7 @@ const MyProfile =()=>{
     });
     
     useEffect(()=>{
-       
+        setIsLoading(true)
         fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/user/all",
         {
             method: "GET",
@@ -75,12 +79,11 @@ const MyProfile =()=>{
                 setPage(!pageState)
             }          
         })
-
-        
+        setIsLoading(false)
     },[user])
 
     useEffect(()=>{
-       
+        setIsLoading(true)
         fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log/user/"+ user.user_id,
         {
             method: "GET",
@@ -96,8 +99,7 @@ const MyProfile =()=>{
                 setEmptyMessage("No logs to display for this user")    
             }         
         })
-        
-        
+        setIsLoading(false)   
     },[pageState])
 
     const formatLogs = (logs) => {
@@ -449,15 +451,21 @@ const MyProfile =()=>{
             <div>
             <div className='body'>
             <div className='user-header'>
-            {user.display_picture?( <img src = {require(`../../images/user_dp/${user.display_picture}`)} className = "user-photo" />):
-                (<img src = {USER} className = "user-photo" />)}                
-                <p className='profile-title'>{user.first_name} &nbsp;{user.last_name}</p> 
-                <p className='username'>{user.username}</p>
-                <p className='user-role'>{user.user_role}</p>
+                { isLoading ? <img src = {USER} className = "user-photo" /> :
+                    user.display_picture?( <img src = {require(`../../images/user_dp/${user.display_picture}`)} className = "user-photo" />)
+                    : (<img src = {USER} className = "user-photo" />)}                
+                <p className='profile-title'>
+                    { isLoading ? <Name_Placeholder /> : `${user.first_name} ${user.last_name}` }
+                </p>                    
+                <p className='username'>
+                    { isLoading ? <User_Detail_Placeholder width='120px' height='26px' /> : user.username}
+                </p>
+                <p className='user-role'>
+                    { isLoading ? <User_Detail_Placeholder width='100%' height='20px' /> : user.user_role }
+                </p>
                 <ul className='contact-info'>
-                    <li className='user-email'><HiMail size={28} className="contact-icon"/><span>{user.email}</span></li>
-                    {user.phone_number? <li className='user-phone'><RiPhoneFill size={28} className="contact-icon-phone"/><span>{user.phone_number}</span></li>:""}
-                </ul>
+                    <li className='user-email'><HiMail size={28} className="contact-icon"/><span> { isLoading ? <User_Detail_Placeholder width='200px' height='26px' /> : user.email}</span></li>
+                    { isLoading ? <></> : user.phone_number ? <li style = {{paddingTop:'0px'}}><RiPhoneFill size={28} className="contact-icon"/><span>{user.phone_number}</span></li>:""}                </ul>
                 <div  ref = {boxRef}>
                 <button className ="settings-icon" onClick={()=> {handleSettings()}}><RiSettings5Line size={25} /></button>
                 {showSettings ?
@@ -468,7 +476,7 @@ const MyProfile =()=>{
                     </ul>
                 :
                 ""}
-                </div>
+            </div>
                 
                 
             </div>
@@ -478,18 +486,20 @@ const MyProfile =()=>{
             <div className ='view-log-preview' style = {{width: '60%',
                     marginLeft:'20%',
                     height: '35%',}}>
-                    {user_logs !== undefined ? 
-                    <div className='table-wrap'>
-                        <table className='view-log-table'>
-                        <thead className='view-log-thead'>
-                            <tr className='header-row'>
-                                <th className='log-header'>DATE TIME</th>
-                                <th className='log-header' >ACTIVITY</th>
-                                <th className='log-header' >SUBJECT</th>
-                                <th className='log-header' >DETAILS</th>
-                            </tr>
-                        </thead>
-                        <tbody className = 'view-log-tbody'>
+                    {
+                    isLoading ? <Row_Loader type='USER_LOGS' /> :
+                        user_logs !== undefined ? 
+                        <div className='table-wrap'>
+                            <table className='view-log-table'>
+                            <thead className='view-log-thead'>
+                                <tr className='header-row'>
+                                    <th className='log-header'>DATE TIME</th>
+                                    <th className='log-header' >ACTIVITY</th>
+                                    <th className='log-header' >SUBJECT</th>
+                                    <th className='log-header' >DETAILS</th>
+                                </tr>
+                            </thead>
+                            <tbody className = 'view-log-tbody'>
                                 
                             {user_logs.map((log, i)=>{
                             var time_stamp = log.time_stamp.split(" ")
@@ -508,9 +518,8 @@ const MyProfile =()=>{
                         </tbody>
                     </table>
                     </div>
-                    : 
-                    <div className='no-logs'>{emptyLogs}</div>}
-                    </div> 
+                    : <div className='no-logs'>{emptyLogs}</div>}
+                </div> 
             </div>
             {isToggled===true? <Popup type={popType}/>:""}
             {passToggle===true? changePassBody:''}

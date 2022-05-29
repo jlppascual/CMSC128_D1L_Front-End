@@ -8,6 +8,8 @@
     border-radius: 10px;
     box-shadow: 1px 1px 1px 1px #888888;
     padding: 10px;
+    z-index: 2;
+
 }
 
 .settings-popup-box{
@@ -33,6 +35,7 @@
     font-family:Segoe UI;
     font-size: 15px;
     border-radius: 5px;
+    cursor: pointer;
 }
 
 .edit-button:hover{
@@ -149,7 +152,7 @@
     text-align: center;
     width: 60%;
     margin-top: 100px;
-    z-index:9;
+    z-index:1;
 }
 .user-role{
     position: fixed;

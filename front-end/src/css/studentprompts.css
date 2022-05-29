@@ -47,19 +47,21 @@
 }
 
 .prompt-element{
-    text-align: left;    
+    text-align: left;  
 }
 .prompt-cell-success{
     background-color: white;
     word-break:normal;
     padding: 5px;
     border-bottom: 10px solid rgb(230,230,230);
+    margin: 0px;
 }
 .prompt-cell-error{
     background-color: rgba(141, 20, 54, 0.2);
     word-break:normal;
     padding: 5px;
     border-bottom: 10px solid rgb(230,230,230);
+    margin: 0px;
 }
 .prompts-container::-webkit-scrollbar {
     width: 12px;
@@ -112,3 +114,4 @@
         height: 70%;
     }
 } 
+

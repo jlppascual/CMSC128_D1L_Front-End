@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/material": "^5.8.1",
     "@popperjs/core": "^2.11.5",
     "body-parser": "^1.19.2",
     "bonjour": "^3.5.0",

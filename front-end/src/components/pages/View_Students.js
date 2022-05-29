@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import {BsSearch}  from 'react-icons/bs';
 import {AiFillDelete} from 'react-icons/ai';
 import useStore from '../hooks/authHook'
+import useLoadStore from '../hooks/loaderHook';
 import '../../css/view_students.css'
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -15,6 +16,7 @@ import DeletedPrompt from '../components/Popups/MultipleDeletionPopup'
 import { ToastContainer } from 'react-toastify';
 import { notifyError, notifySuccess } from '../components/Popups/toastNotifUtil';
 import { RiAlertLine } from 'react-icons/ri'
+import Row_Loader from '../loaders/Row_Loader';
 import '../../css/toast_container.css';
 
 const View_Students =()=>{
@@ -62,15 +64,15 @@ const View_Students =()=>{
     prev_view_state.current = [viewValue];
 
     const { user, setAuth } = useStore();
+    const { isLoading, setIsLoading } = useLoadStore();
 
     const navigate = useNavigate();     // navigation hook
 
 
     //if state changes, this function is executed
     useEffect(()=>{
-        console.log(record);
         setRecord([])
-        setMessage("Loading students...")
+        setIsLoading(true)
         fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student?orderby="+"",
         {
             method: "GET",
@@ -88,7 +90,7 @@ const View_Students =()=>{
                 setMessage(json.result.message)
             }
         })
-        console.log(record);
+        setTimeout(() => setIsLoading(false), 3000)
     },[state]);
 
     // if students exist/updated, creates an array of checkboxes with the record length
@@ -122,6 +124,7 @@ const View_Students =()=>{
 
     //if viewValue changes, this function is executed
     useEffect(()=>{
+        setIsLoading(true)
         if(prev_view_state.current != [viewValue]){
             prev_view_state.current = [viewValue];
             if (viewValue==="ALL" || viewValue===""){
@@ -165,11 +168,13 @@ const View_Students =()=>{
                 }
             })}
         }
+        setIsLoading(false)
     },[viewValue]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        
+        setIsLoading(true)
+
         let input = document.getElementById('input').value;
         let url;
 
@@ -249,6 +254,7 @@ const View_Students =()=>{
                 setMessage(json.result.message)
             }
         })}
+        setIsLoading(false)
     }
 
     const selectChange=async()=>{
@@ -294,6 +300,8 @@ const View_Students =()=>{
 
     const confirmDelete= async(decision, reason) =>{
         setShowConfirmation(false)
+        setIsLoading(true)
+
         if(decision){
             const student = toDelete.student_id
             await fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/'+student+'/'+user.user_id,{
@@ -317,10 +325,12 @@ const View_Students =()=>{
                 }
             })
         }
+    setIsLoading(false)
     }
 
     const confirmDeleteMany= async(decision, reason) =>{
         setShowConfirmationMany(false)
+        setIsLoading(true)
         if(decision){
             await fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/delete/'+user.user_id,{
                 method: "DELETE",
@@ -338,12 +348,13 @@ const View_Students =()=>{
                     setAuth(json.result.session.user, json.result.session.silentRefresh)
                 }
                 if(json.result.success){
-                    notifySuccess(json.result.message)
-                    changeState(!state)
-                    changeState(!state)
+                    setDeletedStudents(json.result.output)
                 }else{
                     notifyError(json.result.message)
                 }
+                
+                changeState(!state)
+                setShowPrompts(true);
             })
         }
         if(selectedValue===true){
@@ -351,6 +362,7 @@ const View_Students =()=>{
             changeState(!state)
             setSelectVal(false);
         }
+    setIsLoading(false)
     }
 
     const closePrompts =async(value) => {
@@ -409,28 +421,37 @@ const View_Students =()=>{
                     <div className='student-table-wrap'>
                     <table className='view-student-table'>
                         <thead className='view-student-thead'>
-                            <tr className='header-row'>
-                                <th className='student-header'><input className='general-checkbox'type = 'checkbox' checked = {selectedValue} value = {selectedValue} onChange={selectChange} /><AiFillDelete onClick={()=>{onDeleteMany()}} className='delete-many-icon'/></th>
-                                <th className='student-header' style ={{textAlign:'left', paddingLeft: '20px'}}>NAME</th>
-                                <th className='student-header'>STUDENT NUMBER</th>
-                                <th className='student-header'>DEGREE PROGRAM</th>
-                                <th className='student-header'></th>
-                            </tr>
+                        {
+                            isLoading? <></> :
+                                <tr className='header-row'>
+                                    <th className='student-header'><input className='general-checkbox'type = 'checkbox' checked = {selectedValue} value = {selectedValue} onChange={selectChange} /><AiFillDelete onClick={()=>{onDeleteMany()}} className='delete-many-icon'/></th>
+                                    <th className='student-header' style ={{textAlign:'left', paddingLeft: '20px'}}>NAME</th>
+                                    <th className='student-header'>STUDENT NUMBER</th>
+                                    <th className='student-header'>DEGREE PROGRAM</th>
+                                    <th className='student-header'></th>
+                                </tr>
+                        }
                         </thead>
                         
                         <tbody className = 'view-student-tbody'>
-                            {record.map((rec, i) => {
-                                return (
-                                    <tr key={i} className='view-student-element' style={{}}>
-                                        <td className='student-cell'><input className='student-checkbox'style ={{paddingLeft:'10px'}} type = 'checkbox' checked = {checkedState[i]} value = {checkedState[i]} onChange={()=>handleCheckChange(i)}></input></td>
-                                        <td className='student-cell' onClick={()=> navigate('/student/'+rec.student_id)} style ={{textAlign:'left', paddingLeft: '20px'}}><div style={{float:'left'}}>{rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""} {rec.suffix ? ', ' + rec.suffix + " ": ''}</div> {rec.warning_count > 0? <div className="student-warning-badge"><RiAlertLine />
-                                        <span className='badge-text'>no. of warnings: {rec.warning_count}</span></div> : ""}</td>
-                                        <td className='student-cell' onClick={()=> navigate('/student/'+rec.student_id)}>{rec.student_number}</td>
-                                        <td className='student-cell' onClick={()=> navigate('/student/'+rec.student_id)}>{rec.degree_program}</td>
-                                        <td className='student-cell' style ={{textAlign:'right', paddingRight: '30px'}} onClick={()=>{onDelete(rec)}}><AiFillDelete className='view-student-delete-icon'/></td>
-                                    </tr>                                        
-                            );
-                            })}
+                        
+                            {
+                                // Display loader
+                                isLoading ? <Row_Loader type='STUDENTS_LIST' /> :
+                                // Display data
+                                record.map((rec, i) => {
+                                    return (
+                                        <tr key={i} className='view-student-element' style={{}}>
+                                            <td className='student-cell'><input className='student-checkbox'style ={{paddingLeft:'10px'}} type = 'checkbox' checked = {checkedState[i]} value = {checkedState[i]} onChange={()=>handleCheckChange(i)}></input></td>
+                                            <td className='student-cell' onClick={()=> navigate('/student/'+rec.student_id)} style ={{textAlign:'left', paddingLeft: '20px'}}><div style={{float:'left'}}>{rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""} {rec.suffix ? ', ' + rec.suffix + " ": ''}</div> {rec.warning_count > 0? <div className="student-warning-badge"><RiAlertLine />
+                                            <span className='badge-text'>no. of warnings: {rec.warning_count}</span></div> : ""}</td>
+                                            <td className='student-cell' onClick={()=> navigate('/student/'+rec.student_id)}>{rec.student_number}</td>
+                                            <td className='student-cell' onClick={()=> navigate('/student/'+rec.student_id)}>{rec.degree_program}</td>
+                                            <td className='student-cell' style ={{textAlign:'right', paddingRight: '30px'}} onClick={()=>{onDelete(rec)}}><AiFillDelete className='view-student-delete-icon'/></td>
+                                        </tr>                                        
+                                );
+                                })
+                            }
                         </tbody>
                         {showConfirmation===true? <DeletePopup props={{confirmDelete: confirmDelete.bind()}} />:""}
                         {showConfirmationMany===true? <DeletePopup props={{confirmDelete: confirmDeleteMany.bind()}}/>:""}

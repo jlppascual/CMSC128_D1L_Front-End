@@ -14,6 +14,8 @@
  import { ToastContainer } from 'react-toastify';
  import { notifyError, notifySuccess } from '../components/Popups/toastNotifUtil';
  import '../../css/toast_container.css';
+ import useLoadStore from '../hooks/loaderHook';
+import Users_Loader from '../loaders/Users_Loader';
 
  export default function View_Users_Page (){
     const {REACT_APP_HOST_IP} = process.env
@@ -25,6 +27,8 @@
     const [toDelete, setToDelete] = useState("")
 
     const { user, setAuth } = useStore();
+    const { isLoading, setIsLoading } = useLoadStore();
+
     const navigate = useNavigate();     // navigation hook
     const prev_view_state = useRef();
 
@@ -40,6 +44,7 @@
  
     useEffect(() =>{
         if(user.user_role==="CHAIR/HEAD"){
+            setIsLoading(true);
             fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/user",
             {
                 method: "GET",
@@ -52,6 +57,7 @@
                     setAuth(user,json.result.session)
                 }            
             })
+        setIsLoading(false);
         }else{
             navigate("/home")
             notifyError("Must be an admin to access this page")
@@ -61,6 +67,7 @@
 
      //if viewValue changes, this function is executed
     useEffect(()=>{
+        setIsLoading(true);
         if(prev_view_state.current != [viewValue]){
             prev_view_state.current = [viewValue];
             if (viewValue==="ALL"||viewValue===""){
@@ -100,6 +107,7 @@
                 })
             }
         }
+        setIsLoading(false)
     },[viewValue]);
  
      const handleUserInput = (e) => {
@@ -114,7 +122,8 @@
         e.preventDefault();
     
         let url = 'http:'+REACT_APP_HOST_IP+':3001/api/0.1/user/search?name=';
-        
+
+        setIsLoading(true);
         //if a specific role is selected, url changes to view users by role
         if(viewValue === "OCS REP" || viewValue === "ACS" || viewValue === "UNIT REP" || viewValue === "MEMBER"){
             url = 'http://'+REACT_APP_HOST_IP+':3001/api/0.1/user/role/' + viewValue + '/search?name='
@@ -159,6 +168,7 @@
                 }
             })
         }
+        setIsLoading(false);
     }
 
      const viewChange=(e)=>{
@@ -170,6 +180,7 @@
         setToDelete(todeluser);
     }
      const confirmDelete = async(decision,details) => {
+        setIsLoading(true);
         setShowDeleteConfirmation(false)
         if(decision){
             let delete_id = toDelete.user.user_id
@@ -191,6 +202,7 @@
                }
             })
         }
+        setIsLoading(false);
      }
  
      const DropDown =({value,options,onChange})=>{
@@ -230,7 +242,9 @@
                 </div>
                
                 <div className='tile-page'>
-                    {users != undefined? users.map((user, i) => {
+                    {
+                        // Display Loader
+                        isLoading ? <Users_Loader /> : users != undefined? users.map((user, i) => {
                             if (i % 2 === 0) {
                                 return <span key={i}>
                                     <div className="user-tile" >

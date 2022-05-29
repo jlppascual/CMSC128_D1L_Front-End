@@ -81,8 +81,8 @@
     padding-bottom: 0px;
 }
 
-.search-button:hover{
-    color: lightgray;
+.search-icon:hover{
+    color:#DE9720
 }
 
 .search-icon{
