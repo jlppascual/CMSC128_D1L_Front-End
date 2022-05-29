@@ -1,6 +1,7 @@
 import React, {useState, Fragment, useEffect} from 'react'
 import { useNavigate } from 'react-router-dom'
 import useStore from '../hooks/authHook'
+import useLoadStore from '../hooks/loaderHook'
 import Menu from '../components/Menu'
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -14,12 +15,13 @@ import '../../css/studentdetails.css'
 import { ToastContainer } from 'react-toastify';
 import { notifyError, notifySuccess } from '../components/Popups/toastNotifUtil';
 import '../../css/toast_container.css';
+import { Name_Placeholder, Record_Field_Placeholder, Table_Placeholder } from '../loaders/Detail_Loader'
 
 const View_Student_Details =()=>{
 
     const {REACT_APP_HOST_IP} = process.env
-    const[pageState, setPage] = useState(false)
-    const[editable, setEditable] = useState(false);
+    const [pageState, setPage] = useState(false)
+    const [editable, setEditable] = useState(false);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState("")
     const [showCancelConfirmation, setShowCancelConfirmation] = useState("")
     const [showEditConfirmation, setShowEditConfirmation] = useState("")
@@ -40,11 +42,13 @@ const View_Student_Details =()=>{
     })
 
     const { user, setAuth } = useStore();
+    const { isLoading, setIsLoading } = useLoadStore();
     const navigate = useNavigate();     // navigation hook
 
     useEffect(()=>{
         const link = window.location.href
         const id = link.slice(link.lastIndexOf('/')+1,link.length)
+        setIsLoading(true)
         fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/'+id,{
             method:'GET',
             credentials:'include'
@@ -60,6 +64,7 @@ const View_Student_Details =()=>{
                 course_details:json.result.output.record.record_data.term_data.course_data,
                 warnings:json.result.output.warnings })         
         })
+        setIsLoading(false)
     },[pageState])
 
     useEffect(()=>{
@@ -81,6 +86,7 @@ const View_Student_Details =()=>{
     const confirmDelete = async(decision)=>{
         setShowDeleteConfirmation(false)
         if(decision){
+            setIsLoading(true)
             const student = state.student_details.student_id
             await fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/'+student+'/'+user.user_id,{
                 method: "DELETE",
@@ -95,6 +101,7 @@ const View_Student_Details =()=>{
                     navigate('/students')
                 }
             })
+            setIsLoading(false)
         }
     }
 
@@ -162,6 +169,7 @@ const View_Student_Details =()=>{
                 }
             }
 
+            setIsLoading(true)
             fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/"+ state.student_details.student_id, {
 
                     method:'PATCH',
@@ -192,7 +200,8 @@ const View_Student_Details =()=>{
                         setStudno(state.student_details.student_number)
                     notifyError(json.result.message)}
                 })
-            }
+            setIsLoading(false)
+        }
         }
     }
 
@@ -240,14 +249,14 @@ const View_Student_Details =()=>{
     }
 
     const checkChanges = () =>{
-       let temp;
+        let temp;
 
-       if(document.getElementsByName("first_name")!==state.student_details.first_name) return true;
-       if(document.getElementsByName("last_name")!==state.student_details.last_name) return true;
-       if(document.getElementsByName("middle_name")!==state.student_details.middle_name) return true;
-       if(document.getElementsByName("suffix")!==state.student_details.suffix) return true;
-       if(document.getElementsByName("student_number")!==state.student_details.student_number) return true;
-       if(document.getElementsByName("degree_program")!==state.student_details.degree_program) return true;
+        if(document.getElementsByName("first_name")!==state.student_details.first_name) return true;
+        if(document.getElementsByName("last_name")!==state.student_details.last_name) return true;
+        if(document.getElementsByName("middle_name")!==state.student_details.middle_name) return true;
+        if(document.getElementsByName("suffix")!==state.student_details.suffix) return true;
+        if(document.getElementsByName("student_number")!==state.student_details.student_number) return true;
+        if(document.getElementsByName("degree_program")!==state.student_details.degree_program) return true;
 
         const terms = state.term_details
         for (let i = 0; i < terms.length; i++) {
@@ -270,22 +279,22 @@ const View_Student_Details =()=>{
 
     const getCourses = () =>{
         let courses = [];
-         const terms = state.term_details
-         for (let i = 0; i < terms.length; i++) {
-             for (let j = 0; j < terms[i].course_data.length; j++) {
-                 courses.push({
-                    course_id: terms[i].course_data[j].course_id,
-                    term_id: terms[i].course_data[j].term_id,
-                    course_code: document.getElementsByName("code-"+i+"-"+j)[0].value,
-                    grade: document.getElementsByName("grade-"+i+"-"+j)[0].value,
-                    units: document.getElementsByName("units-"+i+"-"+j)[0].value,
-                    weight: Number(document.getElementsByName("weight-"+i+"-"+j)[0].value),
-                    cumulated: Number(document.getElementsByName("cumulated-"+i+"-"+j)[0].value)
-                 })
-             }
-         }
-         return courses
-     }
+        const terms = state.term_details
+        for (let i = 0; i < terms.length; i++) {
+            for (let j = 0; j < terms[i].course_data.length; j++) {
+                courses.push({
+                course_id: terms[i].course_data[j].course_id,
+                term_id: terms[i].course_data[j].term_id,
+                course_code: document.getElementsByName("code-"+i+"-"+j)[0].value,
+                grade: document.getElementsByName("grade-"+i+"-"+j)[0].value,
+                units: document.getElementsByName("units-"+i+"-"+j)[0].value,
+                weight: Number(document.getElementsByName("weight-"+i+"-"+j)[0].value),
+                cumulated: Number(document.getElementsByName("cumulated-"+i+"-"+j)[0].value)
+                })
+            }
+        }
+        return courses
+    }
 
     const CancelPopup=({})=>{
         return(
@@ -337,66 +346,77 @@ const View_Student_Details =()=>{
                 }
                 {!state.student_details.isDeleted?
                 <i className = "back-icon" onClick={()=> navigate('/students')}><BiArrowBack size= {30} /></i>:""}
-                {!state.student_details.isDeleted? 
-                    editable == true? (
-                        <div className='student-edit-name-container'>
-                        <input className="student-edit-name" name='last_name'
-                            type = "text"
-                            required = "required"
-                            placeholder= "Enter last name"
-                            value = {new_fullname.last_name}
-                            onChange = {(e)=>{setNewName({
-                                last_name: e.target.value,
-                                first_name: new_fullname.first_name,
-                                middle_name: new_fullname.middle_name,
-                                suffix: new_fullname.suffix
-                            })}}
-                        ></input>
-                        <input className="student-edit-name" name='first_name'
-                            type = "text"
-                            required = "required"
-                            placeholder= "Enter first name"
-                            value = {new_fullname.first_name}
-                            onChange = {(e)=>{setNewName({
-                                last_name: new_fullname.last_name,
-                                first_name: e.target.value,
-                                middle_name: new_fullname.middle_name,
-                                suffix: new_fullname.suffix
-                            })}} 
-                        ></input>
-                        <input className="student-edit-name" name='middle_name'
-                            type = "text"
-                            required = "required"
-                            placeholder= "Enter middle name"
-                            value = {new_fullname.middle_name} 
-                            onChange = {(e)=>{setNewName({
-                                last_name: new_fullname.last_name,
-                                first_name: new_fullname.first_name,
-                                middle_name: e.target.value,
-                                suffix: new_fullname.suffix
-                            })}}
-                        ></input>
-                        <input className="student-edit-name" name='suffix'
-                            type = "text"
-                            required = "required"
-                            placeholder= "Enter suffix name"
-                            value = {new_fullname.suffix}
-                            onChange = {(e)=>{setNewName({
-                                last_name: new_fullname.last_name,
-                                first_name: new_fullname.first_name,
-                                middle_name: new_fullname.middle_name,
-                                suffix: e.target.value
-                            })}}
-                        ></input></div>
-                    )
+                {
+                    !state.student_details.isDeleted ? 
+                        editable == true? (
+                            <div className='student-edit-name-container'>
+                            <input className="student-edit-name" name='last_name'
+                                type = "text"
+                                required = "required"
+                                placeholder= "Enter last name"
+                                value = {new_fullname.last_name}
+                                onChange = {(e)=>{setNewName({
+                                    last_name: e.target.value,
+                                    first_name: new_fullname.first_name,
+                                    middle_name: new_fullname.middle_name,
+                                    suffix: new_fullname.suffix
+                                })}}
+                            ></input>
+                            <input className="student-edit-name" name='first_name'
+                                type = "text"
+                                required = "required"
+                                placeholder= "Enter first name"
+                                value = {new_fullname.first_name}
+                                onChange = {(e)=>{setNewName({
+                                    last_name: new_fullname.last_name,
+                                    first_name: e.target.value,
+                                    middle_name: new_fullname.middle_name,
+                                    suffix: new_fullname.suffix
+                                })}} 
+                            ></input>
+                            <input className="student-edit-name" name='middle_name'
+                                type = "text"
+                                required = "required"
+                                placeholder= "Enter middle name"
+                                value = {new_fullname.middle_name} 
+                                onChange = {(e)=>{setNewName({
+                                    last_name: new_fullname.last_name,
+                                    first_name: new_fullname.first_name,
+                                    middle_name: e.target.value,
+                                    suffix: new_fullname.suffix
+                                })}}
+                            ></input>
+                            <input className="student-edit-name" name='suffix'
+                                type = "text"
+                                required = "required"
+                                placeholder= "Enter suffix name"
+                                value = {new_fullname.suffix}
+                                onChange = {(e)=>{setNewName({
+                                    last_name: new_fullname.last_name,
+                                    first_name: new_fullname.first_name,
+                                    middle_name: new_fullname.middle_name,
+                                    suffix: e.target.value
+                                })}}
+                            ></input></div>
+                        )
+                        :
+                        (<p className="student-name">
+                            {
+                                isLoading ? <Name_Placeholder /> : `${state.student_details.last_name}, ${state.student_details.first_name} ${state.student_details.middle_name} ${state.student_details.suffix}`
+                            }
+                            </p>)
                     :
-                    (<p className="student-name">{state.student_details.last_name}, {state.student_details.first_name} {state.student_details.middle_name} {state.student_details.suffix} </p>)
-                : <p className="student-name" style={{marginLeft:'16.5%'}}>{state.student_details.last_name}, {state.student_details.first_name} {state.student_details.middle_name} {state.student_details.suffix} </p>
+                    <p className="student-name" style={{marginLeft:'16.5%'}}>
+                        {
+                            isLoading ? <Name_Placeholder /> : `${state.student_details.last_name}, ${state.student_details.first_name} ${state.student_details.middle_name} ${state.student_details.suffix}`
+                        }
+                    </p>
                 }
                 {editable === true ? <span className='edit-btns'>
                     <button type = "button" onClick={handleCancel} className="cancel-edit-btn" id="cancel-editing-btn">Cancel Editing</button>
                     <button type = "button" onClick={handleUpdate} className="submit-edit-btn" id="submit-changes-btn">Submit Changes</button>
                     </span>:""}
+
                 <hr className='student-line'></hr>
             </div>
             
@@ -427,62 +447,94 @@ const View_Student_Details =()=>{
                 </div>)
                 :(
                 <div className='student-info-left'>
-                    <div><b>Degree Program:</b><span className='info-l'>{state.student_details.degree_program}</span></div><br/>
-                    <div><b>Student No.:</b><span className='info-l'>{state.student_details.student_number !==""? state.student_details.student_number:'-'}</span></div><br/>
-                    <div><b>Latin Honor:</b> {state.student_details.latin_honor !== ""?<span className='info-l'> {state.student_details.latin_honor}</span>: <span className='info-l'>-</span>}</div><br/>
+                    <div><b>Degree Program:</b>
+                        <span className='info-l'>
+                            {  isLoading ? <Record_Field_Placeholder /> :state.student_details.degree_program }
+                        </span>
+                    </div><br/>
+                    <div><b>Student No.:</b>
+                        <span className='info-l'>
+                            { isLoading ? <Record_Field_Placeholder /> : state.student_details.student_number !==""? state.student_details.student_number:'-'}
+                        </span>
+                    </div><br/>
+                    <div><b>Latin Honor:</b>
+                        <span className='info-l'>
+                            { 
+                                isLoading ? <Record_Field_Placeholder /> :
+                                state.student_details.latin_honor !== "" ? state.student_details.latin_honor
+                                : '-'
+                            }
+                        </span>
+                    </div><br/>
                 </div>)}
             <div className='student-info-right'>
-                <div><b>Total weights:</b> <span name={"record-cumulative"} className='info-r'>{state.record_details.cumulative_sum}</span></div>  <br/>
-                <div><b>Total Units:</b> <span name={"record-units"} className='info-r'>{state.record_details.total_units}</span></div>  <br/>
-                <div><b>GWA:</b> <span name={"record-gwa"} className='info-r'>{state.record_details.gwa}</span></div><br/>
+                <div><b>Total weights:</b>
+                    <span name={"record-cumulative"} className='info-r'>
+                        { isLoading ? <Record_Field_Placeholder /> : state.record_details.cumulative_sum }
+                    </span>
+                    </div><br/>
+                <div><b>Total Units:</b>
+                    <span name={"record-units"} className='info-r'>
+                        { isLoading ? <Record_Field_Placeholder /> : state.record_details.total_units }
+                    </span>
+                </div><br/>
+                <div><b>GWA:</b>
+                    <span name={"record-gwa"} className='info-r'>
+                        { isLoading ? <Record_Field_Placeholder /> : state.record_details.gwa }
+                    </span>
+                </div><br/>
             </div>
             <br/>
             <hr className='record-line'></hr>
             <br/>
             <div className='record'>
-            {state.term_details!=[]? state.term_details.map((term, i)=>{
-                let headStyle = {textAlign:'left'}
-                return <span key={i} name = {"term"+i}>
-                <form>
-                    <table className='record-table'>
-                        <thead className='record-head'>
-                            <tr style={headStyle}>
-                                <th style = {{paddingLeft:'40px'}}>Course Code</th> 
-                                <th style = {{paddingLeft:'40px'}}>Grade</th>
-                                <th style = {{paddingLeft:'40px'}}>Units</th>
-                                <th style = {{paddingLeft:'40px'}}>Weight</th>
-                                <th style = {{paddingLeft:'40px'}}>Enrolled</th>   
-                            </tr>
-
-                        </thead>
-                        
-                        <tbody>
-                            <tr style={headStyle}>
-                                <td colSpan="100%" ><hr /></td>
-                            </tr>
-                            {term.course_data!=[]? term.course_data.map((course,index)=>(
-                                <Fragment key={index}>
-                                    {editable === true ? (
-                                    <Edit_Row  term_index = {i} course = {course} index = {index}/>
-                                    ) : (
-                                    <Read_Row course = {course} index = {index}/>
-                                    ) }
-                                </Fragment>
-                                
-                            )):""}
-                        </tbody>
-                    </table>
-                </form>
-                <div className = "term-summary">
-                Term: <u name = {"term-name"+i}>{term.semester}/{term.acad_year}</u> &nbsp;&nbsp;&nbsp;&nbsp;  <span >|</span> &nbsp;&nbsp;&nbsp;&nbsp;
-                Total units: <u name = {"units-term"+i}>{term.no_of_units}</u> &nbsp;&nbsp;&nbsp;&nbsp;  <span >|</span> &nbsp;&nbsp;&nbsp;&nbsp;
-                Total weights: <u name = {"weights-term"+i}>{term.total_weights} </u> &nbsp;&nbsp;&nbsp;&nbsp;<span>|</span> &nbsp;&nbsp;&nbsp;&nbsp;
-                GPA: <u name = {"gpa-term"+i}>{parseFloat((term.total_weights/term.no_of_units).toFixed(4))} </u>
-                </div>
-                <br/>
-                </span>
-                
-            }):""}</div></div>
+            {
+                isLoading ? <Table_Placeholder /> :
+                state.term_details!=[]? state.term_details.map((term, i)=>{
+                    let headStyle = {textAlign:'left'}
+                    return <span key={i} name = {"term"+i}>
+                    <form>
+                        <table className='record-table'>
+                            <thead className='record-head'>
+                                <tr style={headStyle}>
+                                    <th style = {{paddingLeft:'40px'}}>Course Code</th> 
+                                    <th style = {{paddingLeft:'40px'}}>Grade</th>
+                                    <th style = {{paddingLeft:'40px'}}>Units</th>
+                                    <th style = {{paddingLeft:'40px'}}>Weight</th>
+                                    <th style = {{paddingLeft:'40px'}}>Enrolled</th>   
+                                </tr>
+    
+                            </thead>
+                            
+                            <tbody>
+                                <tr style={headStyle}>
+                                    <td colSpan="100%" ><hr /></td>
+                                </tr>
+                                {term.course_data!=[]? term.course_data.map((course,index)=>(
+                                    <Fragment key={index}>
+                                        {editable === true ? (
+                                        <Edit_Row  term_index = {i} course = {course} index = {index}/>
+                                        ) : (
+                                        <Read_Row course = {course} index = {index}/>
+                                        ) }
+                                    </Fragment>
+                                    
+                                )):""}
+                            </tbody>
+                        </table>
+                    </form>
+                    <div className = "term-summary">
+                    Term: <u name = {"term-name"+i}>{term.semester}/{term.acad_year}</u> &nbsp;&nbsp;&nbsp;&nbsp;  <span >|</span> &nbsp;&nbsp;&nbsp;&nbsp;
+                    Total units: <u name = {"units-term"+i}>{term.no_of_units}</u> &nbsp;&nbsp;&nbsp;&nbsp;  <span >|</span> &nbsp;&nbsp;&nbsp;&nbsp;
+                    Total weights: <u name = {"weights-term"+i}>{term.total_weights} </u> &nbsp;&nbsp;&nbsp;&nbsp;<span>|</span> &nbsp;&nbsp;&nbsp;&nbsp;
+                    GPA: <u name = {"gpa-term"+i}>{parseFloat((term.total_weights/term.no_of_units).toFixed(4))} </u>
+                    </div>
+                    <br/>
+                    </span>
+                    
+                }):""
+            }
+            {}</div></div>
             {showDeleteConfirmation ? <DeletePopup props={{confirmDelete: confirmDelete.bind()}} />:""}
             {showEditConfirmation ? <DetailsPopup props={{confirmEdit: confirmEdit.bind()}} />:""}
             {showCancelConfirmation ? <CancelPopup />:""}

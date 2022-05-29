@@ -1,19 +1,21 @@
 /**
  * author: Jem, Leila
  */
- import React, { useEffect, useState, useRef } from 'react';
- import useStore from '../hooks/authHook';
- import { useNavigate } from 'react-router-dom';
- import {BsSearch}  from 'react-icons/bs';
- import {AiFillPrinter} from 'react-icons/ai';
- import Header from '../components/Header';
- import Footer from '../components/Footer';
- import Menu from '../components/Menu'
- import { useReactToPrint } from 'react-to-print';
- import ComponentToPrint from '../components/ComponentToPrint'
- import '../../css/view_summary.css'
- 
- const View_Summary =()=>{
+import React, { useEffect, useState, useRef } from 'react';
+import useStore from '../hooks/authHook';
+import { useNavigate } from 'react-router-dom';
+import {BsSearch}  from 'react-icons/bs';
+import {AiFillPrinter} from 'react-icons/ai';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import Menu from '../components/Menu'
+import { useReactToPrint } from 'react-to-print';
+import ComponentToPrint from '../components/ComponentToPrint'
+import '../../css/view_summary.css'
+import useLoadStore from '../hooks/loaderHook';
+import Row_Loader from '../loaders/Row_Loader';
+
+const View_Summary =()=>{
 
     const {REACT_APP_HOST_IP} = process.env
     const [record, setRecord] = useState();
@@ -26,6 +28,7 @@
     const { user,setAuth } = useStore();
     const [fileName, setFileName] = useState();
     const [message, setMessage] = useState("Loading students...")
+    const { isLoading, setIsLoading } = useLoadStore();
 
     const orderFilter = [
         {label: 'NAME', value:'name'},
@@ -68,10 +71,10 @@
         // })
 
     //if state changes, this function is executed
-     useEffect(()=>{
+    useEffect(()=>{
         getDate();
         setRecord(undefined)
-        setMessage("Loading students...")
+        setIsLoading(true)
         fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/summary?orderby="+[orderValue],
         {
             method: "GET",
@@ -91,11 +94,13 @@
                 setMessage(json.result.message)
             }
         }) 
+        setIsLoading(false)
     },[state]);
 
     //if orderValue changes, this function is executed
     useEffect(()=>{
         getDate();
+        setIsLoading(true)
         if(prev_order_state.current != [orderValue]){
             prev_order_state.current = [orderValue];
             if(viewValue === "ALL" || viewValue===""){
@@ -139,11 +144,13 @@
             }
 
         }
+        setIsLoading(false)
     },[orderValue]);
 
     //if viewValue changes, this function is executed
     useEffect(()=>{
         getDate();
+        setIsLoading(true)
         if(prev_view_state.current != [viewValue]){
             prev_view_state.current = [viewValue];
             if (viewValue==="ALL" || viewValue===""){
@@ -187,11 +194,13 @@
                 }
             })}
         }
+        setIsLoading(false)
     },[viewValue]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         getDate();
+        setIsLoading(true)
 
         if(input === "" || input===undefined){
                 setRecord(undefined)
@@ -232,6 +241,7 @@
                 setMessage(json.result.message)
             }
         })}
+        setIsLoading(false)
     }
 
     const getDate=()=>{
@@ -266,7 +276,7 @@
                 <select className='summary-dropdown' value={value} onChange={onChange}>
                     { type==="view"?  <option value = "" disabled hidden>VIEW BY</option>: <option value = "" disabled hidden>ORDER BY</option> }
                     {options.map((option,i)=>(
-                      <option key={i} value = {option.value}>{option.label}</option>
+                        <option key={i} value = {option.value}>{option.label}</option>
                     ))}
                 </select>
             </label>
@@ -286,7 +296,6 @@
                         <li><DropDown options={orderFilter} value = {orderValue} onChange={orderChange} type={"order"}/></li>
                         <li><DropDown options={viewFilter} value = {viewValue} onChange={viewChange} type={"view"}/></li>
                     </ul>
-                               
 
                 </div>    
 
@@ -297,29 +306,39 @@
                 </div>
 
                 <div className='view-summary-preview'>
-                    {record != undefined ? 
+                    {isLoading || record != undefined ? 
                     <div className='table-wrap'>
                         <table className='view-summary-table'>
                             <thead className='view-summary-thead'>
-                                <tr className='header-row'>
-                                    <th className='summary-header' style={{textAlign:'left', paddingLeft:'20px'}}>NAME</th>
-                                    <th className='summary-header'>DEGREE PROGRAM</th>
-                                    <th className='summary-header'>GWA</th>
-                                    <th className='summary-header'>LATIN HONOR</th>
-                                </tr>
+                                {
+                                    isLoading ? <></> :
+                                    <tr className='header-row'>
+                                        <th className='summary-header' style={{textAlign:'left', paddingLeft:'20px'}}>NAME</th>
+                                        <th className='summary-header'>DEGREE PROGRAM</th>
+                                        <th className='summary-header'>GWA</th>
+                                        <th className='summary-header'>LATIN HONOR</th>
+                                    </tr>
+                                }
                             </thead>
+
                             <tbody className = 'view-summary-tbody'>
-                                {record.map((rec, i) => {
-                                    return (
-                                        <tr className='view-summary-element' key = {i}>
-                                           <td className='view-summary-cell' onClick={()=> navigate('/student/'+rec.student_id)} style={{textAlign:'left', paddingLeft:'20px'}}>{rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""}
-                                            {rec.suffix ? ', ' + rec.suffix : ''}</td>
-                                            <td className='view-summary-cell' onClick={()=> navigate('/student/'+rec.student_id)} >{rec.degree_program}</td>
-                                            <td className='view-summary-cell' onClick={()=> navigate('/student/'+rec.student_id)} >{rec.gwa}</td>
-                                            <td className='view-summary-cell' onClick={()=> navigate('/student/'+rec.student_id)} >{rec.latin_honor}</td>
-                                        </tr>
-                                    );
-                                })}
+                                {
+                                    // Display Loader
+                                    isLoading ? <Row_Loader type='STUDENTS_LIST' /> :
+
+                                    // Display Data
+                                    record.map((rec, i) => {
+                                        return (
+                                            <tr className='view-summary-element' key = {i}>
+                                                <td className='view-summary-cell' onClick={()=> navigate('/student/'+rec.student_id)} style={{textAlign:'left', paddingLeft:'20px'}}>{rec.last_name}, {rec.first_name}{rec.middle_name? ', '+rec.middle_name:""}
+                                                {rec.suffix ? ', ' + rec.suffix : ''}</td>
+                                                <td className='view-summary-cell' onClick={()=> navigate('/student/'+rec.student_id)} >{rec.degree_program}</td>
+                                                <td className='view-summary-cell' onClick={()=> navigate('/student/'+rec.student_id)} >{rec.gwa}</td>
+                                                <td className='view-summary-cell' onClick={()=> navigate('/student/'+rec.student_id)} >{rec.latin_honor}</td>
+                                            </tr>
+                                        );
+                                    })
+                                }
                             </tbody>
                         </table></div>: (<div className='empty-students'>
                     <p>{message}</p>
@@ -332,6 +351,6 @@
             <Footer/>
         </div>
         );
- }
+}
 
- export default View_Summary;
+export default View_Summary;

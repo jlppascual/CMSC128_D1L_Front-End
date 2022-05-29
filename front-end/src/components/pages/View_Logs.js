@@ -2,19 +2,21 @@
  * author: Andrew
  */
 
- import React, { useState, useEffect} from 'react';
- import { useNavigate } from 'react-router-dom';
- import Header from '../components/Header';
- import Footer from '../components/Footer';
- import Menu from '../components/Menu'
- import useStore from '../hooks/authHook';
- import '../../css/view_logs.css'
+import React, { useState, useEffect} from 'react';
+import { useNavigate } from 'react-router-dom';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import Menu from '../components/Menu'
+import useStore from '../hooks/authHook';
+import useLoadStore from '../hooks/loaderHook';
+import '../../css/view_logs.css'
 import { BsSearch, BsDownload } from 'react-icons/bs';
 import { notifyError } from '../components/Popups/toastNotifUtil';
 import '../../css/toast_container.css';
 import { ToastContainer } from 'react-toastify';
+import Row_Loader from '../loaders/Row_Loader';
 
- const View_Logs=()=>{
+const View_Logs=()=>{
 
     const {REACT_APP_HOST_IP} = process.env
     const navigate = useNavigate();
@@ -29,6 +31,7 @@ import { ToastContainer } from 'react-toastify';
     const [emptyLogs, setEmptyMessage] = useState("Loading logs...");
     const [pageState, setPage] = useState(false)
     const { user, setAuth } = useStore();
+    const { isLoading, setIsLoading } = useLoadStore();
     
 
 
@@ -50,9 +53,10 @@ import { ToastContainer } from 'react-toastify';
         {label: "DELETE STUDENT", value: "Deleted%20a%20student%20record"},
     ]
 
-     useEffect(()=>{
+    useEffect(()=>{
 
         if(user.user_role === "CHAIR/HEAD"){
+            setIsLoading(true);
             fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/user/all",
                 {
                     method: "GET",
@@ -82,20 +86,22 @@ import { ToastContainer } from 'react-toastify';
                         setStudents(json.result.output)
                         setPage(!pageState)
                     }
+                    setIsLoading(false)
                 })
         }else{
             navigate('/home')
             notifyError("Must be an admin to access this page")
         }
-     },[user.user_role])
+    },[user.user_role])
 
-     //create a text file of logs
-     useEffect(()=>{
-        makeTextFile()
-     },[logs])
+    //create a text file of logs
+    useEffect(()=>{
+    makeTextFile()
+    },[logs])
 
-     useEffect(()=>{
+    useEffect(()=>{
 
+        setIsLoading(true)
         fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log",
         {
             method: "GET",
@@ -113,11 +119,13 @@ import { ToastContainer } from 'react-toastify';
 
             }
         })
-     },[pageState])
+        setIsLoading(false)
+    },[pageState])
 
 
-     useEffect(()=>{
+    useEffect(()=>{
 
+        setIsLoading(true)
         if (viewValue==="user"){
             fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log/user/"+chosenUser,
             {
@@ -171,7 +179,8 @@ import { ToastContainer } from 'react-toastify';
                 }
             })
         }
-        },[viewValue, activity, chosenUser]);
+        setIsLoading(false)
+    },[viewValue, activity, chosenUser]);
 
         const formatUsers = (users) =>{
             let user_list = []
@@ -250,6 +259,7 @@ import { ToastContainer } from 'react-toastify';
         }
 
         const handleSubmit=()=>{
+            setIsLoading(true)
             if (input != ""){
                 fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log/date/"+ input,
                 {
@@ -289,15 +299,16 @@ import { ToastContainer } from 'react-toastify';
                     }
                 })
             }
+            setIsLoading(false)
         }
 
-     const DropDown =({value,options,onChange, type})=>{
+    const DropDown =({value,options,onChange, type})=>{
         return(
             <label>
                 <select className="view-dropdown"  value={value} onChange={onChange}>
                     {type === "search"? <option value = "" disabled hidden>search by</option>: type==="view"?  <option value = "" disabled hidden>VIEW BY</option>:type==="activity"? <option value = "" disabled hidden>SELECT ACTIVITY</option>: type === "user"? <option value = "" disabled hidden>SELECT USER</option>:""}
                     {options.map((option,i)=>(
-                      <option key={i} value = {option.value}>{option.label}</option>
+                        <option key={i} value = {option.value}>{option.label}</option>
                     ))}
                 </select>
             </label>
@@ -333,43 +344,46 @@ import { ToastContainer } from 'react-toastify';
                     </div>
 
                     <div className ='view-log-preview'>
-                    {logs !==undefined ?
-                    <div className='table-wrap'>
-                        <table className='view-log-table'>
-                        <thead className='view-log-thead'>
-                            <tr className='header-row'>
-                                <th className='log-header'>USER</th>
-                                <th className='log-header'>DATE TIME</th>
-                                <th className='log-header'>ACTIVITY</th>
-                                <th className='log-header'>SUBJECT</th>
-                                <th className='log-header'>DETAILS</th>
-                            </tr>
-                        </thead>
-                        <tbody className = 'view-log-tbody'>
+                    {
+                        isLoading ? <Row_Loader type='LOGS_LIST' /> :
+                        logs !== undefined ? 
+                            <div className='table-wrap'>
+                                <table className='view-log-table'>
+                                <thead className='view-log-thead'>
+                                    <tr className='header-row'>
+                                        <th className='log-header'>USER</th>
+                                        <th className='log-header'>DATE TIME</th>
+                                        <th className='log-header'>ACTIVITY</th>
+                                        <th className='log-header'>SUBJECT</th>
+                                        <th className='log-header'>DETAILS</th>
+                                    </tr>
+                                </thead>
+                                <tbody className = 'view-log-tbody'>
 
-                                {logs.map((log, i)=>{
-                                var time_stamp = log.time_stamp.split(" ")
-                                return (
-                                <tr className='view-log-element' key={i}>
-                                {log.user_id === user.user_id? <td className='subject-cell' onClick ={()=>{navigate('/profile')}} >{log.user_name}</td>
-                                :<td className='subject-cell' onClick ={()=>{navigate('/user/'+log.user_id)}} >{log.user_name}</td>
-                                }
-                                <td className='log-cell'>{time_stamp[0]}<br /> {time_stamp[1]}</td>
-                                <td className='log-cell'>{log.activity_type}</td>
-                                {log.subject_name && log.subject_entity === "User"? <td className='subject-cell' onClick ={()=>{navigate('/user/'+log.subject_id)}}>  <span>{log.subject_name}</span></td>
-                                : log.subject_name && log.subject_entity === "Student"? <td className='subject-cell' onClick ={()=>{navigate('/student/'+log.subject_id)}}>  <span>{log.subject_name}</span></td>
-                                :
-                                <td className='subject-cell'>-</td>}
-                                <td className='log-cell'> {log.details!==null? log.details:"-"}</td>
+                                        {logs.map((log, i)=>{
+                                        var time_stamp = log.time_stamp.split(" ")
+                                        return (
+                                        <tr className='view-log-element' key={i}>
+                                        {log.user_id === user.user_id? <td className='subject-cell' onClick ={()=>{navigate('/profile')}} >{log.user_name}</td>
+                                        :<td className='subject-cell' onClick ={()=>{navigate('/user/'+log.user_id)}} >{log.user_name}</td>
+                                        }
+                                        <td className='log-cell'>{time_stamp[0]}<br /> {time_stamp[1]}</td>
+                                        <td className='log-cell'>{log.activity_type}</td>
+                                        {log.subject_name && log.subject_entity === "User"? <td className='subject-cell' onClick ={()=>{navigate('/user/'+log.subject_id)}}>  <span>{log.subject_name}</span></td>
+                                        : log.subject_name && log.subject_entity === "Student"? <td className='subject-cell' onClick ={()=>{navigate('/student/'+log.subject_id)}}>  <span>{log.subject_name}</span></td>
+                                        :
+                                        <td className='subject-cell'>-</td>}
+                                        <td className='log-cell'> {log.details!==null? log.details:"-"}</td>
 
-                                </tr>)
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
-                    :
-                    <div className='no-logs'>{emptyLogs} </div>}
-                    </div>
+                                        </tr>)
+                                        })}
+                                    </tbody>
+                                </table>
+                        </div>
+                        : <div className='no-logs'>{emptyLogs} </div>
+                        
+                    }
+                </div>
 
             </div>
             <Header/>
@@ -379,5 +393,5 @@ import { ToastContainer } from 'react-toastify';
     </div>
     )
 
- }
- export default View_Logs;
+}
+export default View_Logs;

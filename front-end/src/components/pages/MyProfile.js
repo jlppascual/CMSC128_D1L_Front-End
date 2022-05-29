@@ -4,6 +4,7 @@ import Header from '../components/Header'
 import Footer from '../components/Footer'
 import Menu from '../components/Menu'
 import useStore from '../hooks/authHook'
+import useLoadStore from '../hooks/loaderHook';
 import '../../css/profile.css'
 import USER from '../../images/dp_default.jpg'
 import {HiMail}  from 'react-icons/hi';
@@ -14,16 +15,18 @@ import '../../css/toast_container.css';
 import { Icon } from 'react-icons-kit';
 import {eyeOff} from 'react-icons-kit/feather/eyeOff';
 import {eye} from 'react-icons-kit/feather/eye';
+import Row_Loader from '../loaders/Row_Loader';
+import { Name_Placeholder, User_Detail_Placeholder } from '../loaders/Detail_Loader';
 
 const MyProfile =()=>{
 
     const {REACT_APP_HOST_IP} = process.env
     const navigate = useNavigate()
     const [pageState, setPage] = useState(false)
-    const[isToggled, setToggle] = useState(false);
-    const[showSettings, setShowSettings] = useState(false);
-    const[popType, setType] = useState("")
-    const[user_logs, setLogs] = useState([])
+    const [isToggled, setToggle] = useState(false);
+    const [showSettings, setShowSettings] = useState(false);
+    const [popType, setType] = useState("")
+    const [user_logs, setLogs] = useState([])
     const [emptyLogs, setEmptyMessage] = useState("Loading logs...");
     const [students, setStudents] = useState([]);
     const [users, setUsers] = useState([]);
@@ -38,12 +41,13 @@ const MyProfile =()=>{
 
 
     const { user, setAuth} = useStore();
+    const { isLoading, setIsLoading } = useLoadStore();
     
     const validEmail = new RegExp('^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$');
     const validNumber = new RegExp('^(09|9|639)[0-9]{9}$');
 
     useEffect(()=>{
-       
+        setIsLoading(true)
         fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/user/all",
         {
             method: "GET",
@@ -69,11 +73,11 @@ const MyProfile =()=>{
             }          
         })
 
-        
+        setIsLoading(false)
     },[user])
 
     useEffect(()=>{
-       
+        setIsLoading(true)
         fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log/user/"+ user.user_id,
         {
             method: "GET",
@@ -89,8 +93,7 @@ const MyProfile =()=>{
                 setEmptyMessage("No logs to display for this user")    
             }         
         })
-        
-        
+        setIsLoading(false)
     },[pageState])
 
     const formatLogs = (logs) => {
@@ -175,10 +178,10 @@ const MyProfile =()=>{
                             'Content-Type':'application/json'
                         },
                         body: JSON.stringify({
-                              oldPassword: old_pass,
-                              modifiedPassword: new_pass
+                            oldPassword: old_pass,
+                            modifiedPassword: new_pass
                         })
-                     }).then(response=>{return response.json()})
+                    }).then(response=>{return response.json()})
                         .then(json=>{
                             if (json.result.session.silentRefresh) {
                                 setAuth(json.result.session.user, json.result.session.silentRefresh)
@@ -377,9 +380,9 @@ const MyProfile =()=>{
         await setToggle(!isToggled);
 
         if(foo.value === 'username'){
-             setType('username');
+            setType('username');
         }else if(foo.value ==='password'){
-             setType('password');
+            setType('password');
         }else if (foo.value === 'email'){
             setType('email');
         } else if (foo.value === 'number'){
@@ -407,23 +410,23 @@ const MyProfile =()=>{
     }
 
     const handleToggle1 = () => {
-       if(type1 === 'text'){
-           setIcon1(eyeOff);
-           setType1('password'); 
-       } else {
-           setIcon1(eye);
-           setType1('text');
-       }
-   }
-
-   const handleToggle2 = () => {
-    if(type2 === 'text'){
-        setIcon2(eyeOff);
-        setType2('password'); 
-    } else {
-        setIcon2(eye);
-        setType2('text');
+        if(type1 === 'text'){
+            setIcon1(eyeOff);
+            setType1('password'); 
+        } else {
+            setIcon1(eye);
+            setType1('text');
+        }
     }
+
+    const handleToggle2 = () => {
+        if(type2 === 'text'){
+            setIcon2(eyeOff);
+            setType2('password'); 
+        } else {
+            setIcon2(eye);
+            setType2('text');
+        }
     }
 
     return(
@@ -431,13 +434,25 @@ const MyProfile =()=>{
             <div>
             <div className='body'>
             <div className='user-header'>
-                <img src = {USER} className = "user-photo" />
-                <p className='profile-title'>{user.first_name} &nbsp;{user.last_name}</p> 
-                <p className='username'>{user.username}</p>
-                <p className='user-role'>{user.user_role}</p>
+                {/* 
+                    Note: Used the default photo as the avatar while loading
+                    Replace the img src in the else clause with the image photo URL
+                */}
+                { isLoading ? <img src = {USER} className = "user-photo" /> :  <img src = {USER} className = "user-photo" />}
+                <p className='profile-title'>
+                    { isLoading ? <Name_Placeholder /> : `${user.first_name} ${user.last_name}` }
+                </p> 
+                <p className='username'>
+                    { isLoading ? <User_Detail_Placeholder width='120px' height='26px' /> : user.username}
+                </p>
+                <p className='user-role'>
+                    { isLoading ? <User_Detail_Placeholder width='100%' height='20px' /> : user.user_role }
+                </p>
                 <ul className='contact-info'>
-                    <li><HiMail size={28} className="contact-icon"/><span>{user.email}</span></li>
-                    {user.phone_number? <li style = {{paddingTop:'0px'}}><RiPhoneFill size={28} className="contact-icon"/><span>{user.phone_number}</span></li>:""}
+                    <li><HiMail size={28} className="contact-icon"/><span>
+                        { isLoading ? <User_Detail_Placeholder width='200px' height='26px' /> : user.email}
+                    </span></li>
+                    { isLoading ? <></> : user.phone_number ? <li style = {{paddingTop:'0px'}}><RiPhoneFill size={28} className="contact-icon"/><span>{user.phone_number}</span></li>:""}
                 </ul>
                 <button className ="settings-icon" onClick={()=> {handleSettings()}}><RiSettings5Line size={25} /></button>
                 {showSettings ?
@@ -457,39 +472,42 @@ const MyProfile =()=>{
             <div className ='view-log-preview' style = {{width: '60%',
                     marginLeft:'20%',
                     height: '35%',}}>
-                    {user_logs !== undefined ? 
-                    <div className='table-wrap'>
-                        <table className='view-log-table'>
-                        <thead className='view-log-thead'>
-                            <tr className='header-row'>
-                                <th className='log-header'>DATE TIME</th>
-                                <th className='log-header' >ACTIVITY</th>
-                                <th className='log-header' >SUBJECT</th>
-                                <th className='log-header' >DETAILS</th>
-                            </tr>
-                        </thead>
-                        <tbody className = 'view-log-tbody'>
-                                
-                            {user_logs.map((log, i)=>{
-                            var time_stamp = log.time_stamp.split(" ")
-                            return (
-                            <tr className='view-log-element' key={i}>
-                            <td className='log-cell' >{time_stamp[0]}<br /> {time_stamp[1]}</td>
-                            <td className='log-cell'>{log.activity_type}</td>
-                            { log.subject_entity === "User"? <td className='subject-cell' onClick ={()=>{navigate('/user/'+log.subject_id)}}>  <span>{log.subject_name}</span></td>
-                                : log.subject_entity === "Student"? <td className='subject-cell' onClick ={()=>{navigate('/student/'+log.subject_id)}}>  <span>{log.subject_name}</span></td>
-                                :
-                                <td className='subject-cell'>-</td>}
-                            <td className='log-cell'> {log.details!==null? log.details:"-"}</td>
+            {
+                isLoading ? <Row_Loader type='USER_LOGS' /> :
+                user_logs !== undefined ? 
+                <div className='table-wrap'>
+                    <table className='view-log-table'>
+                    <thead className='view-log-thead'>
+                        <tr className='header-row'>
+                            <th className='log-header'>DATE TIME</th>
+                            <th className='log-header' >ACTIVITY</th>
+                            <th className='log-header' >SUBJECT</th>
+                            <th className='log-header' >DETAILS</th>
+                        </tr>
+                    </thead>
+                    <tbody className = 'view-log-tbody'>
                             
-                            </tr>)
-                            })}
-                        </tbody>
-                    </table>
-                    </div>
-                    : 
-                    <div className='no-logs'>{emptyLogs}</div>}
-                    </div> 
+                        {user_logs.map((log, i)=>{
+                        var time_stamp = log.time_stamp.split(" ")
+                        return (
+                        <tr className='view-log-element' key={i}>
+                        <td className='log-cell' >{time_stamp[0]}<br /> {time_stamp[1]}</td>
+                        <td className='log-cell'>{log.activity_type}</td>
+                        { log.subject_entity === "User"? <td className='subject-cell' onClick ={()=>{navigate('/user/'+log.subject_id)}}>  <span>{log.subject_name}</span></td>
+                            : log.subject_entity === "Student"? <td className='subject-cell' onClick ={()=>{navigate('/student/'+log.subject_id)}}>  <span>{log.subject_name}</span></td>
+                            :
+                            <td className='subject-cell'>-</td>}
+                        <td className='log-cell'> {log.details!==null? log.details:"-"}</td>
+                        
+                        </tr>)
+                        })}
+                    </tbody>
+                </table>
+                </div>
+                :   <div className='no-logs'>{emptyLogs}</div>
+            }  
+            </div>
+            
             </div>
             {isToggled===true? <Popup type={popType}/>:""}
             <Header/>

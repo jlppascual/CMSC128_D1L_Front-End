@@ -45,7 +45,7 @@ export default function View_Users_Page (){
 
     useEffect(() =>{
         if(user.user_role==="CHAIR/HEAD"){
-            // setIsLoading(true);
+            setIsLoading(true);
             fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/user",
             {
                 method: "GET",
@@ -58,7 +58,7 @@ export default function View_Users_Page (){
                     setAuth(user,json.result.session)
                 }            
             })
-            // setIsLoading(false);
+            setIsLoading(false);
         }else{
             navigate("/home")
             notifyError("Must be an admin to access this page")
@@ -107,18 +107,18 @@ export default function View_Users_Page (){
                 })
             }
         }
-        setIsLoading(false);
+        setIsLoading(false)
     },[viewValue]);
- 
-     const handleUserInput = (e) => {
-         const value = e.target.value;
-         setInput(value);
-            if (viewValue!=="ALL" || viewValue!==""){
-            setViewValue("ALL")
-        }
-     }
- 
-     const handleSubmit = (e) => {
+
+    const handleUserInput = (e) => {
+        const value = e.target.value;
+        setInput(value);
+        if (viewValue!=="ALL" || viewValue!==""){
+        setViewValue("ALL")
+    }
+    }
+
+    const handleSubmit = (e) => {
         e.preventDefault();
     
         let url = 'http:'+REACT_APP_HOST_IP+':3001/api/0.1/user/search?name=';
@@ -179,7 +179,7 @@ export default function View_Users_Page (){
         setShowDeleteConfirmation(true);
         setToDelete(todeluser);
     }
-     const confirmDelete = async(decision,details) => {
+    const confirmDelete = async(decision,details) => {
         setIsLoading(true);
         setShowDeleteConfirmation(false)
         if(decision){
@@ -195,17 +195,17 @@ export default function View_Users_Page (){
                 })
             }).then(response =>{ return response.json()})
             .then(json=>{
-   
-               if(json.result.success){
-                    notifySuccess(json.result.message)
-                    setPage(!pageState)            
-               }
+
+            if(json.result.success){
+                notifySuccess(json.result.message)
+                setPage(!pageState)            
+            }
             })
         }
         setIsLoading(false);
-     }
- 
-     const DropDown =({value,options,onChange})=>{
+    }
+
+    const DropDown =({value,options,onChange})=>{
         return(
             <label>
                 <select className='view-user-dropdown' value={value} onChange={onChange}>
