@@ -2,9 +2,9 @@ import React, { useEffect, useState, useRef } from 'react';
 import Footer from '../components/Footer';
 import UPLB from '../../images/uplb.png';
 import Logo from '../../images/asteris-logo.webp'
-import { notifyError } from '../components/Popups/toastNotifUtil';
 import { ToastContainer } from 'react-toastify';
 import { notifySuccess } from '../components/Popups/toastNotifUtil';
+import { notifyError } from '../components/Popups/toastNotifUtil';
 import '../../css/forgotpassword.css'
 import { Icon } from 'react-icons-kit';
 import {eyeOff} from 'react-icons-kit/feather/eyeOff';
@@ -102,7 +102,10 @@ const ForgotPassword = () =>{
                 body: JSON.stringify({email: local_email})
                 
             }).then(response => {return response.json()})
-            .then(json=>{notifySuccess(json.message)})
+            .then(json=>{
+                if(json.success) notifySuccess(json.message);
+                else notifyError(json.message);
+            })
         }
     }
 

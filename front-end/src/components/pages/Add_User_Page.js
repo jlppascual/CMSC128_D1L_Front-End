@@ -37,20 +37,19 @@ const Add_User_Page=()=>{
     const readInput = async (e) =>{
         e.preventDefault();
 
-        let user_details={
-            first_name: document.getElementById("first_name").value,
-            last_name: document.getElementById("last_name").value,
-            user_role: document.getElementById("user_role").value,
-            username: document.getElementById("username").value,
-            password: document.getElementById("password").value,
-            confirm_password: document.getElementById("confirm_password").value,
-            email: document.getElementById("email").value,
-            phone_number: document.getElementById("phone_number").value,
-            display_picture: fileName,
-            user_id:user.user_id
-        };
-
-        await sendData(user_details);
+        const user_details = new FormData();
+        user_details.append("image", fileData);
+        user_details.append("first_name", document.getElementById("first_name").value);
+        user_details.append("last_name", document.getElementById("last_name").value);
+        user_details.append("user_role", document.getElementById("user_role").value);
+        user_details.append("username", document.getElementById("username").value);
+        user_details.append("password", document.getElementById("password").value);
+        user_details.append("email", document.getElementById("email").value);
+        user_details.append("phone_number", document.getElementById("phone_number").value);
+        user_details.append("display_picture", fileName);
+        user_details.append("user_id", user.user_id);
+        
+        sendData(user_details);
     }
 
     const fileChangeHandler = (e) => {
@@ -59,56 +58,40 @@ const Add_User_Page=()=>{
     };
 
     const sendData=(user_details)=>{
-        // Handle File Data from the state Before Sending
-        const pic = new FormData();
-        pic.append("image", fileData);
-
-        fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/user/photo', {
-            credentials:'include',
-            method: "POST",
-            body: pic,
-        })
-        .then((result) => {
-            console.log("File Sent Successful");
-        })
-        .catch((err) => {
-            console.log(err.message);
-        });
 
         const password_format = /^(?=.*[-_.!"'#%&,:;<>=@{}~\$\(\)\*\+\/\\\?\[\]\^\|])(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/
         const username_format = /^[A-Za-z]\w*$/
         const mail_format = /^[a-zA-Z0-9]+([.-]?[a-zA-Z0-9]+)*@[a-zA-Z]+([.-]?[a-zA-Z0-9]+)*(.[a-zA-Z]{2,3})+$/
-        const phone_format = /^\+639[0-9]{9}$/
-        if(user_details.first_name === ""){
-            notifyError("missing first name")
-        }else if(user_details.last_name === "") {
-            notifyError("missing last name")
-        } else if(user_details.password === "") {
-            notifyError("missing password")
-        } else if(user_details.user_role === "") {
-            notifyError("please select a user role")
-        } else if(user_details.user_name === "") {
-            notifyError("missing username")
-        } else if(user_details.email === "") {
-            notifyError("missing email")
-        } else if(user_details.phone_number !== "" && user_details.phone_number !== undefined) {
-            if(!user_details.phone_number.match(phone_format)){notifyError("please follow +639XXXXXXXXX format")};
-        } else if(!user_details.username.match(username_format)){
-            notifyError("username must start with a letter")
-        }else if(!user_details.email.match(mail_format)){
-            notifyError("invalid mail")
-        }else if(!user_details.password.match(password_format)){
-            notifyError("password must be at least 8 characters and contains at least 1 upper-case letter, 1 lower-case letter, and a special character");
-        }else if(user_details.password !== user_details.confirm_password){
+        const phone_format = /^\+639[0-9]{9,}$/
+        const confirm_pass = document.getElementById("confirm_password").value
+        if(user_details.get('first_name') === ""){
+            notifyError("Missing first name")
+        }else if(user_details.get('last_name') === "") {
+            notifyError("Missing last name")
+        } else if(user_details.get('password') === "") {
+            notifyError("Missing password")
+        } else if(user_details.get('user_role') === "") {
+            notifyError("Mlease select a user role")
+        } else if(user_details.get('username') === "") {
+            notifyError("Missing username")
+        } else if(user_details.get('email') === "") {
+            notifyError("Missing email")
+        } else if(user_details.get('phone_number') !== "" && user_details.phone_number !== undefined) {
+            if(!user_detailsget('phone_number').match(phone_format)){notifyError("please follow +639XXXXXXXXX format")};
+        } else if(!user_details.get('username').match(username_format)){
+            notifyError("Username must start with a letter")
+        }else if(!user_details.get('email').match(mail_format)){
+            notifyError("Invalid mail")
+        }else if(!user_details.get('password').match(password_format)){
+            notifyError("Password must be at least 8 characters and contains at least 1 upper-case letter, 1 lower-case letter, and a special character");
+        }else if(user_details.get('password') !== confirm_pass){
             notifyError("Passwords don't match!")
         } else{
             fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/user', {
                 method: 'POST',
                 credentials:'include',
-                headers:{
-                    'Content-Type':'application/json'
-                },
-                body: JSON.stringify(user_details)
+                
+                body: user_details
             }).then((response) => {return response.json()})
             .then(json =>{
                 if (json.result.session.silentRefresh) {

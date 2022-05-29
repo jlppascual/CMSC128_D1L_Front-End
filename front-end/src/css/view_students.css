@@ -52,6 +52,7 @@ option{
 .student-search-icon{
     margin: 10px;
     color: whitesmoke;
+    cursor: pointer;
 }
 
 .student-search-icon:hover{
@@ -178,15 +179,6 @@ option{
     visibility: visible;
     /* opacity: 1; */
 }
-/* 
-.warning-count{
-    color:green;
-    font-weight: bold;
-    font-size: small;
-    text-align: center; 
-    vertical-align: middle;
-    margin-right: -50px;
-} */
 
 .view-student-delete-icon{
     color: black;
@@ -221,12 +213,14 @@ option{
 }
 .general-checkbox{
     background-color: rgb(206, 206, 206);
+    cursor: pointer;
     
 }
 
 .delete-many-icon{
 
     background-color: rgb(206, 206, 206);
+    cursor:pointer;
 
 }
 
@@ -240,15 +234,8 @@ option{
     }
 
     .empty-students{
-        /* margin-top: 10%;
-        text-align: center;
-        font-weight: bold; */
         transform: scale(110%);
     }
-
-    /* .view-student-body{
-        transform: scale(105%);
-    } */
     
 }
 
