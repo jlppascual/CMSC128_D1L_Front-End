@@ -84,9 +84,9 @@ const View_Logs=()=>{
                         setStudents(json.result.output)
                         setPage(!pageState)
                     }
-                    setIsLoading(false)
                 })
-        }else{
+                setTimeout(() => setIsLoading(false), 3000)
+            }else{
             navigate('/home')
             notifyError("Must be an admin to access this page")
         }
@@ -115,8 +115,8 @@ const View_Logs=()=>{
                 setEmptyMessage(json.result.message)
 
             }
-        setIsLoading(false)
         })
+        setTimeout(() => setIsLoading(false), 3000)
      },[pageState])
 
 
@@ -141,6 +141,7 @@ const View_Logs=()=>{
                 }
             })
         }else if(viewValue==="activity"){
+            setIsLoading(true)
             fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log/activity/"+activity,
             {
                 credentials:'include'
@@ -158,6 +159,7 @@ const View_Logs=()=>{
                 }
             })
         }else{
+            setIsLoading(true)
             fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log",
             {
                 method: "GET",
@@ -176,7 +178,7 @@ const View_Logs=()=>{
                 }
             })
         }
-        setIsLoading(false)
+        setTimeout(() => setIsLoading(false), 3000)
     },[viewValue, activity, chosenUser]);
 
         const formatUsers = (users) =>{
@@ -213,7 +215,6 @@ const View_Logs=()=>{
             }
             else{
                 changeLogs(undefined)
-                setEmptyMessage("Loading logs...")
             }
         }
 
@@ -265,9 +266,9 @@ const View_Logs=()=>{
                 }).then(response => {return response.json()})
                 .then(json=>{
 
-                    // if (json.result.session.silentRefresh) {
-                    //     setAuth(json.result.session.user, json.result.session.silentRefresh)
-                    // }
+                    if (json.result.session.silentRefresh) {
+                        setAuth(json.result.session.user, json.result.session.silentRefresh)
+                    }
 
                     if(json.result.success){
                         formatLogs(json.result.output)
@@ -296,7 +297,7 @@ const View_Logs=()=>{
                     }
                 })
             }
-        setIsLoading(false)
+            setTimeout(() => setIsLoading(false), 3000)
         }
 
      const DropDown =({value,options,onChange, type})=>{

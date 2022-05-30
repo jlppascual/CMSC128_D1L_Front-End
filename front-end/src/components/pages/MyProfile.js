@@ -79,7 +79,7 @@ const MyProfile =()=>{
                 setPage(!pageState)
             }          
         })
-        setIsLoading(false)
+        setTimeout(() => setIsLoading(false), 3000)
     },[user])
 
     useEffect(()=>{
@@ -99,7 +99,7 @@ const MyProfile =()=>{
                 setEmptyMessage("No logs to display for this user")    
             }         
         })
-        setIsLoading(false)   
+        setTimeout(() => setIsLoading(false), 3000)
     },[pageState])
 
     const formatLogs = (logs) => {
@@ -359,7 +359,7 @@ const MyProfile =()=>{
             body =
             <div> 
                 <div  className='username-box'>
-                    <p>Password confirmation{toEdit === 'username'? <div className = 'pass-valid-note'>You will be logged out after confirmation</div>:''}</p>
+                    <p>Password confirmation{toEdit === 'username'? <div className = 'pass-valid-note'>You will be logged out upon confirmation</div>:''}</p>
                     
                     <input type="password" className = "setting-fields" id="pass-validation" placeholder="Password"></input><br/>
                     <div className='popup-buttons'>
@@ -433,7 +433,7 @@ const MyProfile =()=>{
     let changePassBody = 
     <div className='settings-popup-box'>
         <div className='password-box'>
-        <p className='change-popup-text'>Change Password</p>
+        <p className='change-popup-text'>Change Password <div className = 'pass-valid-note'>You will be logged out upon confirmation</div></p>
             <input type={type} className = "setting-fields" id="current-password" placeholder="Enter current password"></input><br/>
             <i onClick={handleToggle} id = "visibilityBtn" className='eyeProfile'><Icon icon = {icon} ></Icon></i>
             <input type={type1} className = "setting-fields" id="new-password" placeholder="Enter new password"></input><br/>

@@ -95,8 +95,11 @@ const View_Students =()=>{
 
     // if students exist/updated, creates an array of checkboxes with the record length
     useEffect(()=>{
+
         if(record === undefined){""}
         else setCheckedState(new Array(record.length).fill(false))
+
+
     }, [record])
 
     //handles checking of checkbox
@@ -129,7 +132,6 @@ const View_Students =()=>{
             prev_view_state.current = [viewValue];
             if (viewValue==="ALL" || viewValue===""){
                 setRecord(undefined)
-                setMessage("Loading students...")
                 fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student?orderby="+"",
                 {
                     method: "GET",
@@ -149,28 +151,31 @@ const View_Students =()=>{
                 })
             } else{
                 setRecord(undefined)
-                setMessage("Loading students...")
                 fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/degree/"+ [viewValue]+"?orderby="+"",
-            {
-                method: "GET",
-                credentials:'include'
-            })
-            .then(response => {return response.json()})
-            .then(json=>{
-                if (json.result.session.silentRefresh) {
-                    setAuth(json.result.session.user, json.result.session.silentRefresh)
-                }
-                if(json.result.success){
-                    setRecord(json.result.output)
-                }else{
-                    setRecord(undefined)
-                    setMessage(json.result.message)
-                }
-            })}
+                {
+                    method: "GET",
+                    credentials:'include'
+                })
+                .then(response => {return response.json()})
+                .then(json=>{
+                    if (json.result.session.silentRefresh) {
+                        setAuth(json.result.session.user, json.result.session.silentRefresh)
+                    }
+                    if(json.result.success){
+                        setRecord(json.result.output)
+                    }else{
+                        setRecord(undefined)
+                        setMessage(json.result.message)
+                    }
+                })
+            }
         }
-        setIsLoading(false)
+        setTimeout(() => setIsLoading(false), 3000)
     },[viewValue]);
 
+
+    // function that handles the search functionality upon clicking search button, which also
+    // checks first if the searchValue and viewValue are not in their default states
     const handleSubmit = (e) => {
         e.preventDefault();
         setIsLoading(true)
@@ -185,16 +190,14 @@ const View_Students =()=>{
 
         if(searchValue === "student_number"){
             url = 'http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/search?student_number='+input;
-            if(viewValue !== 'ALL') url = 'http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/degree/'+[viewValue]+'/search?student_number='+input;
+            if(viewValue !== 'ALL' && viewValue !== "") url = 'http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/degree/'+[viewValue]+'/search?student_number='+input;
         }
 
         if(input === "" || input === undefined){
-            setMessage("Loading students...")
-
+            setIsLoading(true)
             if (viewValue==="ALL" || viewValue===""){
                 setRecord(undefined)
-                setMessage("Loading students...")
-                fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student?orderby="+"",
+                fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student?",
                 {
                     method: "GET",
                     credentials:'include'
@@ -213,54 +216,56 @@ const View_Students =()=>{
                 })
             } else{
                 setRecord(undefined)
-                setMessage("Loading students...")
-                fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/degree/"+ [viewValue]+"?orderby="+"",
-            {
-                method: "GET",
+                setIsLoading(true)
+                fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/degree/"+ [viewValue],
+                {
+                    method: "GET",
+                    credentials:'include'
+                })
+                .then(response => {return response.json()})
+                .then(json=>{
+                    if (json.result.session.silentRefresh) {
+                        setAuth(json.result.session.user, json.result.session.silentRefresh)
+                    }
+                    if(json.result.success){
+                        setRecord(json.result.output)
+                    }else{
+                        setRecord(undefined)
+                        setMessage(json.result.message)
+                    }
+                })
+            }
+        } else {
+            setRecord(undefined)
+            setIsLoading(true)
+            fetch(url,{
                 credentials:'include'
             })
-            .then(response => {return response.json()})
-            .then(json=>{
+            .then((response) => {return response.json()})
+            .then(json => {
                 if (json.result.session.silentRefresh) {
                     setAuth(json.result.session.user, json.result.session.silentRefresh)
                 }
                 if(json.result.success){
-                    setRecord(json.result.output)
-                }else{
-                    setRecord(undefined)
+                    // Contains the list of match users
+                    if(searchValue === "student_number"){
+                        setRecord([json.result.output]);
+                    }else{
+                        setRecord(json.result.output);
+                    }
+                }
+                else{
                     setMessage(json.result.message)
                 }
             })}
-        } else {
-        setRecord(undefined)
-        setMessage("Loading results...")
-        fetch(url,{
-            credentials:'include'
-        })
-        .then((response) => {return response.json()})
-        .then(json => {
-            if (json.result.session.silentRefresh) {
-                setAuth(json.result.session.user, json.result.session.silentRefresh)
-            }
-            if(json.result.success){
-                // Contains the list of match users
-                if(searchValue === "student_number"){
-                    setRecord([json.result.output]);
-                }else{
-                    setRecord(json.result.output);
-                }
-            }
-            else{
-                setMessage(json.result.message)
-            }
-        })}
-        setIsLoading(false)
+        setTimeout(() => setIsLoading(false), 3000)
     }
 
     const selectChange=async()=>{
         await setSelectVal(!selectedValue)
     }
 
+    //updates the checkbox whenever the selectedValue changes
     useEffect(()=>{
         let updatedCheckedState = [];
 
@@ -287,23 +292,26 @@ const View_Students =()=>{
         })
 
         setStudentsDel(students);
-   
     },[selectedValue])
 
+    //monitors the change in viewValue
     const viewChange=(e)=>{
         setViewValue(e.target.value);
     }
 
+    //monitors the value of input field onChange
     const handleUserInput = (e) => {
         input = e.target.value;
     }
 
+    //function that fetches delete API upon confirmation, deleteing only a single student record
     const confirmDelete= async(decision, reason) =>{
         setShowConfirmation(false)
         setIsLoading(true)
 
         if(decision){
             const student = toDelete.student_id
+            setIsLoading(true)
             await fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/'+student+'/'+user.user_id,{
                 method: "DELETE",
                 credentials:'include',
@@ -325,9 +333,10 @@ const View_Students =()=>{
                 }
             })
         }
-    setIsLoading(false)
+        setTimeout(() => setIsLoading(false), 3000)
     }
 
+    //a function to call on the delete API that handles multiple deletion
     const confirmDeleteMany= async(decision, reason) =>{
         setShowConfirmationMany(false)
         setIsLoading(true)
@@ -362,9 +371,10 @@ const View_Students =()=>{
             changeState(!state)
             setSelectVal(false);
         }
-    setIsLoading(false)
+        setTimeout(() => setIsLoading(false), 3000)
     }
 
+    //function to monitor if the showPrompts is true, and closes it if it satisfies the conditions
     const closePrompts =async(value) => {
         setShowPrompts(value);
         if(showPrompts===true){
@@ -372,16 +382,19 @@ const View_Students =()=>{
         }
      }
 
+     // calls on the confirmation popup and passes the selected student_id to be deleted
     const onDelete=(student)=>{
         setShowConfirmation(true)
         setToDelete(student);
     }
 
+    //calls on the confirmation popup and passes a list of student_id to be deleted
     const onDeleteMany = ()=>{
         setShowConfirmationMany(true);
         setToDelete(studentsToDel);
     }
 
+    //Dropdown creator
     const DropDown =({value,options,onChange, type})=>{
         return(
             <label>
@@ -422,6 +435,7 @@ const View_Students =()=>{
                     <table className='view-student-table'>
                         <thead className='view-student-thead'>
                         {
+                            //display loader
                             isLoading? <></> :
                                 <tr className='header-row'>
                                     <th className='student-header'><input className='general-checkbox'type = 'checkbox' checked = {selectedValue} value = {selectedValue} onChange={selectChange} /><AiFillDelete onClick={()=>{onDeleteMany()}} className='delete-many-icon'/></th>
@@ -449,17 +463,18 @@ const View_Students =()=>{
                                             <td className='student-cell' onClick={()=> navigate('/student/'+rec.student_id)}>{rec.degree_program}</td>
                                             <td className='student-cell' style ={{textAlign:'right', paddingRight: '30px'}} onClick={()=>{onDelete(rec)}}><AiFillDelete className='view-student-delete-icon'/></td>
                                         </tr>                                        
-                                );
+                                    );
                                 })
                             }
                         </tbody>
                         {showConfirmation===true? <DeletePopup props={{confirmDelete: confirmDelete.bind()}} />:""}
                         {showConfirmationMany===true? <DeletePopup props={{confirmDelete: confirmDeleteMany.bind()}}/>:""}
-                    </table></div>:
-                <div className='empty-students'>
-                    <p>{message}</p>
-                    {message==="Loading students..."?"":message==="Loading results..."?"":<button onClick={()=> navigate('/student/new')}> Add Student Records</button>}
-                </div>
+                    </table></div>
+                    :<div>
+                        {message==="Loading students..."?"" :message==="Loading results..."?"":<div className='empty-students'>
+                        <p>{message}</p> <button onClick={()=> navigate('/student/new')}> Add Student Records</button>
+                        </div>}
+                    </div>
                 }
             </div>
             {showPrompts? <DeletedPrompt props={{closePrompts:closePrompts.bind(this), students:deleted_students}}/>: ""}

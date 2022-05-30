@@ -54,7 +54,7 @@ const UserProfile =()=>{
             .then(json=>{
                 setStudents(json.result.output) 
                 setPage(!pageState)  
-                setIsLoading(true);       
+                setTimeout(() => setIsLoading(false), 3000)
             })
         } else{
             navigate("/home")
@@ -84,8 +84,8 @@ const UserProfile =()=>{
                 }
                  
             })
-        setIsLoading(false)
-    },[pageState])
+            setTimeout(() => setIsLoading(false), 3000)
+        },[pageState])
 
     const formatLogs = (logs) => {
         if(logs && students && students.length > 0){

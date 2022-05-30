@@ -67,11 +67,11 @@
     // checks if name, student number or degree program is null
     const checkStudentDetails = (student_data) => {
         const studno_format = /^[0-9]{4}-[0-9]{5}$/;    // Student number can be null
-        if (!student_data.first_name && student_data.first_name == "") 
+        if (!student_data.first_name || student_data.first_name === "") 
             return ("Student not added: Missing first name"); //First name cannot be null
-        if (!student_data.last_name && student_data.last_name == "") 
+        if (!student_data.last_name || student_data.last_name === "") 
                 return ("Student not added: Missing last name"); // Last name cannot be null
-        if (!student_data.degree_program && student_data.degree_program == "")
+        if (!student_data.degree_program || student_data.degree_program === "")
                 return ("Student not added: Missing degree program"); // Degree Program cannot be null
         if(!programs.includes(student_data.degree_program))
             return ("Student not added: Invalid degree program");
@@ -83,9 +83,9 @@
       
     //Check record_data (adding student onli)
     const checkRecordDetails = (record_data) => {
-        if (record_data.gwa === "") return ("Student not added: Missing value of GWA"); // Gwa cannot be null
-        if (record_data.total_units === "") return("Student not added: Missing value of Total Units");   // Total units cannot be null   
-        if (record_data.cumulative_sum === "") return("Student not added: Missing value of Cumulative Sum"); // Cumulative sum cannot be null     
+        if (!record_data.gwa || record_data.gwa === "") return ("Student not added: Missing value of GWA"); // Gwa cannot be null
+        if (!record_data.total_units || record_data.total_units === "") return("Student not added: Missing value of Total Units");   // Total units cannot be null   
+        if (!record_data.cumulative_sum || record_data.cumulative_sum === "") return("Student not added: Missing value of Cumulative Sum"); // Cumulative sum cannot be null     
         return true
     };
 
@@ -210,7 +210,7 @@
                 let data = await parseData(result,i);
                 if(data){
                     let stud_mess =  (files[i].name+": "+checkStudentDetails(data.student_data));
-                    let rec_mess = (files[i].name+": "+checkRecordDetails(data.record_data)).toS
+                    let rec_mess = (files[i].name+": "+checkRecordDetails(data.record_data));
                     if(checkStudentDetails(data.student_data) !== true){
                         prompts.push({success: false, message: stud_mess}) 
                     }else if (checkRecordDetails(data.record_data) !==true){

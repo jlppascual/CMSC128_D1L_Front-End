@@ -66,9 +66,10 @@ const View_Student_Details =()=>{
                 record_details:json.result.output.record.record_data,
                 term_details:json.result.output.record.record_data.term_data,
                 course_details:json.result.output.record.record_data.term_data.course_data,
-                warnings:json.result.output.warnings })         
+                warnings:json.result.output.warnings })   
+            setTimeout(() => setIsLoading(false), 3000)      
         })
-    setIsLoading(false)
+    
     },[pageState])
     
     // For cancelling 
@@ -81,17 +82,18 @@ const View_Student_Details =()=>{
             middle_name: state.student_details.middle_name,
             suffix: state.student_details.suffix
         })
-        document.getElementsByName("record-cumulative")[0].innerHTML = state.record_details.cumulative_sum
-        document.getElementsByName("record-units")[0].innerHTML = state.record_details.total_units
-        document.getElementsByName("record-gwa")[0].innerHTML = state.record_details.gwa
-        let terms_count = state.term_details.length
-        for (let i = 0; i < terms_count; i++) {
-            document.getElementsByName("weights-term"+i)[0].innerHTML = state.term_details[i].total_weights
-            document.getElementsByName("units-term"+i)[0].innerHTML = state.term_details[i].no_of_units
-            let term_gpa = parseFloat((state.term_details[i].total_weights/state.term_details[i].no_of_units).toFixed(4))
-            if(isNaN(term_gpa)) term_gpa = 0
-            document.getElementsByName("gpa-term"+i)[0].innerHTML = term_gpa
+        if(!isLoading){
+            if(document.getElementsByName("record-cumulative")[0] && state.record_details.cumulative_sum) document.getElementsByName("record-cumulative")[0].innerHTML = state.record_details.cumulative_sum
+            if(document.getElementsByName("record-units")[0] && state.record_details.total_units) document.getElementsByName("record-units")[0].innerHTML = state.record_details.total_units
+            if(document.getElementsByName("record-gwa")[0] && state.record_details.gwa) document.getElementsByName("record-gwa")[0].innerHTML = state.record_details.gwa
+            let terms_count = state.term_details.length
+            for (let i = 0; i < terms_count; i++) {
+                if(document.getElementsByName("weights-term"+i)[0]) document.getElementsByName("weights-term"+i)[0].innerHTML = state.term_details[i].total_weights
+                if(document.getElementsByName("units-term"+i)[0]) document.getElementsByName("units-term"+i)[0].innerHTML = state.term_details[i].no_of_units
+                if(document.getElementsByName("gpa-term"+i)[0]) document.getElementsByName("gpa-term"+i)[0].innerHTML = state.term_details[i].gpa
         }
+    }
+        
     },[state])
 
     
@@ -117,7 +119,7 @@ const View_Student_Details =()=>{
                     notifyDelete(json.result.message)                     
                 }
             })
-        setIsLoading(false)
+        setTimeout(() => setIsLoading(false), 3000)
         }
     }
 
@@ -218,7 +220,7 @@ const View_Student_Details =()=>{
                 setPage(!pageState)
                 setHighlightedRow(-1)
             })
-        setIsLoading(false)
+        setTimeout(() => setIsLoading(false), 3000)
         }
     }
     
@@ -231,7 +233,8 @@ const View_Student_Details =()=>{
             let term_id = state.term_details[i].term_id
             let total_weights = Number(document.getElementsByName("weights-term"+i)[0].innerHTML)
             let no_of_units = document.getElementsByName("units-term"+i)[0].innerHTML
-            temp_term = {term_id,total_weights,no_of_units}
+            let gpa = Number(document.getElementsByName("gpa-term"+i)[0].innerHTML)
+            temp_term = {term_id,total_weights,no_of_units,gpa}
             terms.push(temp_term)
         }
         let cumulative_sum = document.getElementsByName("record-cumulative")[0].innerHTML;
@@ -390,7 +393,7 @@ const View_Student_Details =()=>{
                     : ""}
                 </div>:""
                 }
-
+    
                 {!state.student_details.isDeleted?
                 <i className = "back-icon" onClick={()=> navigate('/students')}><BiArrowBack size= {30} /></i>:""}
                 {!state.student_details.isDeleted? 
@@ -530,7 +533,7 @@ const View_Student_Details =()=>{
                 isLoading ? <Table_Placeholder /> :
                 state.term_details!=[]? state.term_details.map((term, i)=>{
                     let headStyle = {textAlign:'left'}	
-                    let term_gpa = parseFloat((term.total_weights/term.no_of_units).toFixed(4))	
+                    let term_gpa = Number(term.gpa)	
                     if(isNaN(term_gpa)) term_gpa = 0	
                     return <span key={i} name = {"term"+i}>	
                     <form>	

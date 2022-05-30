@@ -63,7 +63,7 @@ const handlePrint = useReactToPrint({
 });
 
 //if state changes, this function is executed
-    useEffect(()=>{
+useEffect(()=>{
     getDate();
     setRecord(undefined)
     setIsLoading(true)	
@@ -83,16 +83,18 @@ const handlePrint = useReactToPrint({
             setRecord(json.result.output)
         }else{
             setRecord(undefined)
+            setTimeout(() => setIsLoading(false), 3000)
             setMessage(json.result.message)
         }
     })
-    setIsLoading(false)	 
+    setTimeout(() => setIsLoading(false), 3000)
 },[state]);
 
 //if orderValue changes, this function is executed
 useEffect(()=>{
     getDate();
-    setIsLoading(true)	
+    setRecord(undefined)
+    setIsLoading(true)
     if(prev_order_state.current != [orderValue]){
         prev_order_state.current = [orderValue];
         if(viewValue === "ALL" || viewValue===""){
@@ -116,7 +118,7 @@ useEffect(()=>{
             })
         }else{
             setRecord(undefined)
-            setMessage("Loading students...")
+            setIsLoading(true)
             fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/summary/degree/"+ [viewValue]+"?orderby="+[orderValue],
             {
                 method: "GET",
@@ -135,7 +137,7 @@ useEffect(()=>{
             })
         }
     }
-    setIsLoading(false)	
+    setTimeout(() => setIsLoading(false), 3000)
 },[orderValue]);
 
 //if viewValue changes, this function is executed
@@ -166,24 +168,25 @@ useEffect(()=>{
             })
         } else{
             setRecord(undefined)
-            setMessage("Loading students...")
+            setIsLoading(true)
             fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/student/summary/degree/"+ [viewValue],
-        {
-            method: "GET",
-            credentials:'include'
-        })
-        .then(response =>{return response.json()})
-        .then(json=>{
-            if (json.result.session.silentRefresh) {
-                setAuth(json.result.session.user, json.result.session.silentRefresh)
-            }
-            if(json.result.success){
-                setRecord(json.result.output)
-            }else{
-                setRecord(undefined)
-                setMessage(json.result.message)
-            }
-        })}
+            {
+                method: "GET",
+                credentials:'include'
+            })
+            .then(response =>{return response.json()})
+            .then(json=>{
+                if (json.result.session.silentRefresh) {
+                    setAuth(json.result.session.user, json.result.session.silentRefresh)
+                }
+                if(json.result.success){
+                    setRecord(json.result.output)
+                }else{
+                    setRecord(undefined)
+                    setMessage(json.result.message)
+                }
+            })
+        setTimeout(() => setIsLoading(false), 3000)}
     }
 },[viewValue]);
 
@@ -213,7 +216,7 @@ const handleSubmit = (e) => {
         })
     } else {
         setRecord(undefined)
-        setMessage("Loading results...")
+        setIsLoading(true)
     fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/summary/search?name=' +input+'&&orderby='+orderValue,{
         credentials:'include'
     })
@@ -229,8 +232,9 @@ const handleSubmit = (e) => {
             setRecord(undefined)
             setMessage(json.result.message)
         }
-    })}
-    setIsLoading(false)	
+    })
+    setTimeout(() => setIsLoading(false), 3000)
+    }	
 }
 
 const getDate=()=>{
