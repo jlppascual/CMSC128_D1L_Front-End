@@ -57,7 +57,7 @@ import Users_Loader from '../loaders/Users_Loader';
                     setAuth(user,json.result.session)
                 }            
             })
-        setIsLoading(false);
+            setTimeout(() => setIsLoading(false), 3000)
         }else{
             navigate("/home")
             notifyError("Must be an admin to access this page")
@@ -107,7 +107,7 @@ import Users_Loader from '../loaders/Users_Loader';
                 })
             }
         }
-        setIsLoading(false)
+        setTimeout(() => setIsLoading(false), 3000)
     },[viewValue]);
  
      const handleUserInput = (e) => {
@@ -168,7 +168,7 @@ import Users_Loader from '../loaders/Users_Loader';
                 }
             })
         }
-        setIsLoading(false);
+        setTimeout(() => setIsLoading(false), 3000)
     }
 
      const viewChange=(e)=>{
@@ -202,7 +202,7 @@ import Users_Loader from '../loaders/Users_Loader';
                }
             })
         }
-        setIsLoading(false);
+        setTimeout(() => setIsLoading(false), 3000)
      }
  
      const DropDown =({value,options,onChange})=>{

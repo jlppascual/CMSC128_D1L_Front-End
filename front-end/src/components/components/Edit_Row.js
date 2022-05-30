@@ -114,7 +114,7 @@ const Edit_Row = ( { course, term_index,index,bg_color}) => {
                 if(t_index === term_index && c_index === index ){
                     weights = weights + Number(weight)
                     if(weight !== 0)
-                        temp_units = temp_units + Number(units)
+                        temp_units = temp_units + Number(curr_u.value)
                 }
                 else{
                     weights = weights + Number(curr_w.value)
@@ -126,10 +126,7 @@ const Edit_Row = ( { course, term_index,index,bg_color}) => {
                 curr_u = document.getElementsByName("units-"+t_index+"-"+c_index)[0]
                 curr_w = document.getElementsByName("weight-"+t_index+"-"+c_index)[0];
             }
-            let term_gpa = parseFloat((weights/term_units).toFixed(4))
-            if(term_name === "II/19/20")
-                console.log(weights, temp_units)
-                term_gpa = parseFloat((weights/temp_units).toFixed(4))
+            let term_gpa = parseFloat((weights/temp_units).toFixed(4))
             if(isNaN(term_gpa)) term_gpa = 0
             document.getElementsByName("weights-term"+t_index)[0].innerHTML = weights
             document.getElementsByName("units-term"+t_index)[0].innerHTML = term_units
