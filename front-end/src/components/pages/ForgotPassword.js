@@ -79,6 +79,9 @@ const ForgotPassword = () =>{
             .then(json=>{
                 if(json.success){
                     notifySuccess(json.message)
+                    setTimeout(()=>{
+                        navigate("/")
+                    }, 3000)
                 }else(
                     notifyError(json.message)
                 )
@@ -89,7 +92,6 @@ const ForgotPassword = () =>{
     }
     const fetchOTP=async()=>{ 
         let local_email = document.getElementById('email-field').value;
-        console.log(local_email)
         if(local_email === '' || local_email === undefined){
             notifyError("please input your email")
         }else{

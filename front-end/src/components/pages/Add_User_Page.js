@@ -173,7 +173,7 @@ const Add_User_Page=()=>{
                 <input type="text" className = "field" id="email"placeholder = "&#xf0e0; &nbsp; Email"/><br />
                 <input type="text" className = "field" id="phone_number"placeholder = "&#xf095; &nbsp;  Phone Number [+639XXXXXXXXX]"/><br />
                 <p className='prof-pic-text'>Add Profile Picture:</p>
-                <input type="file" key = {fileInputKey} className='picfield' accept=".png, .jpg, .jpeg" name="image" onChange={fileChangeHandler} />
+                <input type="file" key = {fileInputKey} className='picfield' onChange={fileChangeHandler} />
                 <div className='create-user-buttons'>
                     <input type="reset" value="Reset" className='reset-button' onClick={clearInputs}/>
                     <input type="submit" value="Confirm" className='confirm-button' onClick={readInput}/>

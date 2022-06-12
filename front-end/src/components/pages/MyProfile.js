@@ -19,7 +19,6 @@ import Row_Loader from '../loaders/Row_Loader';
 import { Name_Placeholder, User_Detail_Placeholder } from '../loaders/Detail_Loader';
 import OutsideClick from '../hooks/outsideClick'
 
-
 const MyProfile =()=>{
 
     const {REACT_APP_HOST_IP} = process.env
@@ -41,6 +40,7 @@ const MyProfile =()=>{
     const [toEdit, setToEdit] = useState('');
     const [toPassCred, setToPassCred] = useState('');
     const [passToggle, setPassToggle] = useState(false);
+    
 
     const { user, setAuth} = useStore();
     const { isLoading, setIsLoading } = useLoadStore();
@@ -131,7 +131,8 @@ const MyProfile =()=>{
         {label:"Change username", value:'username'},
         {label:"Change password", value:'password'},
         {label:"Change email", value:'email'},
-        {label:"Change mobile number", value:'number'}
+        {label:"Change mobile number", value:'number'},
+        {label:"Change profile picture", value:'picture'}
     ]
 
     const userLogout = () =>{ 
@@ -152,6 +153,8 @@ const MyProfile =()=>{
             }
         })
     }
+
+    
 
     const confirmClicked=()=>{
         if(popType ==='username'){
@@ -308,6 +311,8 @@ const MyProfile =()=>{
                 }
                 
             }
+           
+            
     }
 
     const cancelClicked=async()=>{
@@ -319,6 +324,42 @@ const MyProfile =()=>{
     }
 
     const Popup=(props)=>{
+        const [fileName, setfileName] = useState("");
+        const [fileData, setFileData] = useState();
+        const [fileInputKey, setFileInputKey] = useState(Date.now());
+
+        const fileChangeHandler = (e) => {
+            console.log(e.target.files[0].name)
+            setFileData(e.target.files[0]);
+            setfileName(e.target.files[0].name)
+        };
+
+        const changePhoto = () => {
+            const new_photo = new FormData();
+            new_photo.append("image", fileData);
+            new_photo.append("new_photo", fileName);
+            
+            fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/user/'+user.user_id+'/photo' ,{
+                method: 'PATCH', 
+                credentials:'include',
+                body: new_photo
+                }).then(response=>{return response.json()})
+                .then(json=>{
+                    if (json.result.session.silentRefresh) {
+                        setTimeout(() => {setAuth(json.result.output, json.result.session.silentRefresh)}, 3000)
+                        
+                    }
+                    if(json.result.success){
+                        
+                        setToggle(!isToggled)
+                        setTimeout(() => {notifySuccess(json.result.message)},1000)
+                        
+                        
+                    }else{
+                        notifyError(json.result.message)
+                    }})
+        }
+
         setShowSettings(false);
         let body;
         // checks what field will be edited by the user before rendering it in the body of the popup
@@ -368,6 +409,22 @@ const MyProfile =()=>{
                 </div>               
             </div>
         }
+        else if(props.type === 'picture'){
+            body =
+            <div> 
+                <div  className='username-box'>
+                    <p>Update Profile Picture</p>
+                    
+                    <input type="file" key = {fileInputKey} className='setting-fields' accept=".png, .jpg, .jpeg" name="image" onChange={(e) => fileChangeHandler(e)} />
+                    <div className='popup-buttons'>
+                        <button className="cancel" onClick={cancelClicked}>Cancel</button> <input type = "submit" value = "Confirm" className="confirm" onClick={changePhoto} />
+                    </div> 
+                    
+                </div>               
+            </div>
+        }
+        
+        
         return (
             <div className="settings-popup-box">
                 {body}
@@ -389,6 +446,9 @@ const MyProfile =()=>{
         } else if (foo.value === 'number'){
             await setToggle(!isToggled);
             setType('number');
+        } else if (foo.value === 'picture'){
+            await setToggle(!isToggled);
+            setType('picture');
         } else {
             await setToggle(!isToggled);
             setType('');
@@ -445,14 +505,20 @@ const MyProfile =()=>{
             <button className="cancel" onClick={cancelClicked}>Cancel</button><button className="confirm" onClick={confirmClicked}>Confirm</button> 
         </div>
     </div>
-
+    
+    try {
+        var display_picture = require(`../../images/user_dp/${user.display_picture}`);
+    } catch (error) {
+        var display_picture = USER;
+    }
+  
     return(
         <div>
             <div>
             <div className='body'>
             <div className='user-header'>
                 { isLoading ? <img src = {USER} className = "user-photo" /> :
-                    user.display_picture?( <img src = {require(`../../images/user_dp/${user.display_picture}`)} className = "user-photo" />)
+                    user.display_picture ?(<img src = {display_picture} className = "user-photo" />)
                     : (<img src = {USER} className = "user-photo" />)}                
                 <p className='profile-title'>
                     { isLoading ? <Name_Placeholder /> : `${user.first_name} ${user.last_name}` }

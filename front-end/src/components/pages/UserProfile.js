@@ -112,7 +112,7 @@ const UserProfile =()=>{
             <div className='body'>
             <div className='user-header'>
             { !user_profile.isDeleted?
-            <i className = "back-icon" onClick={()=> navigate('/users')} style={{top:"20px",left:"20%"}}><BiArrowBack size= {35} /></i>
+            <i className = "user-back-icon" onClick={()=> navigate('/users')} style={{top:"20px",left:"20%"}}><BiArrowBack size= {35} /></i>
             : <div className='deleted-user-watermark'>DELETED USER ACCOUNT</div>   
             }
                 {/* 
