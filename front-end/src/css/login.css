@@ -41,21 +41,11 @@ body{
     font-size: 14px;
 }
 
-/* .app-name{
-    color:#fcfff6;
-    font-family: "Segoe UI";
-    font-weight: 500;
-    font-size: 20px;
-    position:fixed;
-    right:5%;
-} */
-
 .asteris-logo-login{
     width: 140px;
     position: fixed;
     right: 5%
 }
-
 
 .login-form{
     text-align: center;

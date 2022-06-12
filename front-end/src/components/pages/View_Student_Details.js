@@ -67,9 +67,8 @@ const View_Student_Details =()=>{
                 term_details:json.result.output.record.record_data.term_data,
                 course_details:json.result.output.record.record_data.term_data.course_data,
                 warnings:json.result.output.warnings })   
-            setTimeout(() => setIsLoading(false), 3000)      
         })
-    
+        setTimeout(() => setIsLoading(false), 3000)      
     },[pageState])
     
     // For cancelling 
