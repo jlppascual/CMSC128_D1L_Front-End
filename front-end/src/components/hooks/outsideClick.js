@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 
-export default function OutsideClick(ref, showSidebar) {
+// Used to check if the clicked area when using the menu is not the menu
+export default function OutsideClick(ref) {
+  const [isClicked, setIsClicked] = useState();
   useEffect(() => {
     function handleClickOutside(event) {
       if (ref.current && !ref.current.contains(event.target)) {

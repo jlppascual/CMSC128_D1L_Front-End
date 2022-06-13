@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import '../../../css/detailspopup.css'
 
+// Pop-up that shows whenever changes are done to a student's details; asks for user to input the reason changes are done
+
 const DetailsPopup=({props})=>{
     const maxchar = 500
     const [details, setDetails] = useState("")
@@ -11,9 +13,11 @@ const DetailsPopup=({props})=>{
     document.getElementById("submit-changes-btn").disabled = true;
     document.getElementById("cancel-editing-btn").disabled = true;
 
+    //actively checks the details' character count 
     const handleDetailsChange = (e) =>{
         setDetails(e.target.value)
         setCharCount(e.target.value.length)
+         //change color and alert of typed in details based on amount of characters
         if(e.target.value.length > maxchar) setCharColor('red')
         else setCharColor('black')
         if(e.target.value.length==maxchar) setAlert("")
@@ -21,9 +25,10 @@ const DetailsPopup=({props})=>{
         
     }
 
+    //Button that waits for user choice to finalize edit or not
     const handleButton =async(choice) => {
+        //checks if description is at least 10 characters long but not exceeding 500 characters
         if(!choice) await props.confirmEdit(choice,details)
-        
         if(char_count <= maxchar ){
             if(choice && char_count >= 10){
             await props.confirmEdit(choice,details)

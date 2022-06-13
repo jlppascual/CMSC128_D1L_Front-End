@@ -2,6 +2,7 @@
     Source code description: This source code contains functions that allows the administrator user
     to add multiple users within their discretion.
 */
+
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useStore from '../hooks/authHook'
