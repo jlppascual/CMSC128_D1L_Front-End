@@ -1,3 +1,9 @@
+/*
+    Source code description: this source code contains the state of the menu sidebar found when
+    clicking the menu button in the left
+*/
+
+// import necessary packages 
 import React, { useState, useRef } from 'react';
 import { FaBars } from 'react-icons/fa';
 import  { AiOutlineClose, AiFillHome } from 'react-icons/ai'
@@ -8,9 +14,9 @@ import useStore from '../hooks/authHook'
 import OutsideClick from '../hooks/outsideClick'
 import '../../css/menu.css'
 
+// defining the main component
 class Menu extends React.Component{
     render(){
-        
         return(
             <div>
                 <Home />
@@ -21,6 +27,7 @@ class Menu extends React.Component{
     }
 }
 
+// commponent that is previewed when the sidebar is closed. Contains the icon and the home button for directing to home page
 function Home(){
     const navigate = useNavigate();
     const navHome=()=>{
@@ -34,18 +41,21 @@ function Home(){
         
     )
 }
+
+// component that defines the state of the sidebar
 function Menubar(){
-    const [ sidebar, setSidebar ] = useState(false)
+    const [ sidebar, setSidebar ] = useState(false) // hook that checks whether is sidebar is toggled or not
     const { user } = useStore();
     const user_title = user.user_role
 
+    // checks if the components outside the sidebar is clicked to close the sidebar
     const showSidebar = () => setSidebar(!sidebar);
     const boxRef = useRef(null);
     OutsideClick(boxRef,() => {
         {sidebar? showSidebar():""};
     });
  
-
+    // defines the interface of the sidebar whether it is closed or not
     return(
         <IconContext.Provider value={{ color: 'black' }}>
             <div className='menu-navbar'>

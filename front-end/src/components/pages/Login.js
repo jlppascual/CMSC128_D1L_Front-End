@@ -1,3 +1,8 @@
+/*
+    Source code description: this source code contains the component for the login page
+*/
+
+// import necessary packages
 import { useNavigate } from 'react-router-dom';
 import useStore from '../hooks/authHook';
 import UPLB from '../../images/uplb.png';
@@ -14,7 +19,7 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 
 
-// changed to function to use hooks
+// defines the main component of the page
 const Login = () => {
 
     const {REACT_APP_HOST_IP} = process.env
@@ -49,7 +54,7 @@ const Login = () => {
             username: document.getElementById('login-username').value,
             password: document.getElementById('login-password').value,
         }
-       
+        // checks the validity of user input
         const password_format = /^(?=.*[-_.!"'#%&,:;<>=@{}~\$\(\)\*\+\/\\\?\[\]\^\|])(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/
         const username_format = /^[A-Za-z]\w*$/
         if(!credentials.username.match(username_format)){
@@ -75,9 +80,11 @@ const Login = () => {
         }
     }
 
+    // used to check the state of the password visibility
     const [type, setType] = useState('password')
     const [icon, setIcon] = useState(eyeOff)
 
+    // handles the toggle of the visibility icon
     const handleToggle = () => {
         if(type === 'text'){
             setIcon(eyeOff);
@@ -88,6 +95,7 @@ const Login = () => {
         }
     }
 
+    // defines the interface of the log in page
     return(
         <div>
             <div className='login-body'>

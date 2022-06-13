@@ -1,18 +1,26 @@
+/*
+    Source code description: this source code contains the state information for the delete popup used for 
+    deleting students confirmation.
+*/
+
+// import necessary packages
 import React, { useState } from 'react';
 import '../../../css/deletepopup.css';
 import { notifyError } from './toastNotifUtil';
 
+// defining the component
 const DeletePopup=({props})=>{
-    const maxchar = 500;
-    const [char_count, setCharCount] = useState(0)
+    const maxchar = 500;                            // max character for the text field (details)
+    const [char_count, setCharCount] = useState(0)  // hook for keeping track of the character count in text field
 
+    // handles the event that the user inputs a character in the text field
     const handleDetailsChange = (e) =>{
         setCharCount(e.target.value.trim().length)
     }
 
+    // handles the event of whether the user confirms the changes or cancels
     const handleButton = async(choice) => {
         let reason = document.getElementById('deletion-details').value.trim();  // this removes trailing and leading spaces
-        // uncomment if backend logic is already implemented
         if(!choice) await props.confirmDelete(choice, reason)
         // if(!choice) await props.confirmDelete(choice)
         else {
@@ -25,9 +33,10 @@ const DeletePopup=({props})=>{
         }
     }
     
+    // rendering the deletion confirmation popup
     return(
         <div className="popup-box">
-           
+                
                 <p className='delete-text'>Are you sure you want to delete?</p>
                 <p className='format-text'>Please use this format for consistency (<b>REASON</b> : [<b>REASON FOR DELETION</b>])</p> 
 
