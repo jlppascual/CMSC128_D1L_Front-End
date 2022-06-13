@@ -1,7 +1,4 @@
-/**
- * author: Janica
- */
- import { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useStore from '../hooks/authHook'
 import React, { useState } from 'react';
