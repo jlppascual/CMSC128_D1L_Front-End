@@ -1,3 +1,8 @@
+/*
+    Source code description: This source code contains functions that allows the administrator user
+    to add multiple users within their discretion.
+*/
+
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useStore from '../hooks/authHook'
@@ -25,6 +30,10 @@ const Add_User_Page=()=>{
     const [fileData, setFileData] = useState();
     const [fileInputKey, setFileInputKey] = useState(Date.now());
 
+    /*
+        a function called upon loading the page to check if the currently logged in 
+        user's role is a CHAIR/HEAD
+    */
     useEffect(() => {
         if(user.user_role !=="CHAIR/HEAD"){
             navigate("/home")
@@ -32,6 +41,10 @@ const Add_User_Page=()=>{
         }
     },)
 
+    /*
+        a function that once called, collects the admin's inputs and sends these inputs to the back-end
+        to be processed
+    */
     const readInput = async (e) =>{
         e.preventDefault();
 
@@ -50,18 +63,26 @@ const Add_User_Page=()=>{
         sendData(user_details);
     }
 
+    /*
+        a function that handles the file uploaded for display picture
+    */
     const fileChangeHandler = (e) => {
         setFileData(e.target.files[0]);
         setfileName(e.target.files[0].name)
     };
 
+    /*
+        A function called to send user information inputted by the administrator to back-end. 
+        If necessary input fields are not satisfied, the user will not be created.
+        Phone numbers and display pictures are optional to add. 
+    */
     const sendData=(user_details)=>{
-
         const password_format = /^(?=.*[-_.!"'#%&,:;<>=@{}~\$\(\)\*\+\/\\\?\[\]\^\|])(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/
         const username_format = /^[A-Za-z]\w*$/
         const mail_format = /^[a-zA-Z0-9]+([.-]?[a-zA-Z0-9]+)*@[a-zA-Z]+([.-]?[a-zA-Z0-9]+)*(.[a-zA-Z]{2,3})+$/
         const phone_format = /^\+639[0-9]{9,}$/
         const confirm_pass = document.getElementById("confirm_password").value
+
         if(user_details.get('first_name') === ""){
             notifyError("Missing first name")
         }else if(user_details.get('last_name') === "") {
@@ -105,6 +126,7 @@ const Add_User_Page=()=>{
         }
     }
 
+    // function to clear input fields upon reset / submission
     const clearInputs=()=>{
         document.getElementById("first_name").value = ""
         document.getElementById("last_name").value = ""
@@ -117,16 +139,19 @@ const Add_User_Page=()=>{
         setFileInputKey(Date.now())
     }
 
+    //handles user role value
     const handleChange=()=>{
         setRole(document.getElementById("user_role").value);
     }
 
+    //states to handle the type of the password input field
     const [type, setType] = useState('password')
     const [icon, setIcon] = useState(eyeOff)
     const [type1, setType1] = useState('password')
     const [icon1, setIcon1] = useState(eyeOff)
 
 
+    // changes the type of an input field upon clicking the related button for password
     const handleToggle = () => {
         if(type === 'text'){
             setIcon(eyeOff);
@@ -137,6 +162,7 @@ const Add_User_Page=()=>{
         }
     }
 
+    // changes the type of an input field upon clicking the related button for confirm password
     const handleToggle1 = () => {
         if(type1 === 'text'){
             setIcon1(eyeOff);
@@ -171,6 +197,7 @@ const Add_User_Page=()=>{
                 <input type="text" className = "field" id="phone_number"placeholder = "&#xf095; &nbsp;  Phone Number [+639XXXXXXXXX]"/><br />
                 <p className='prof-pic-text'>Add Profile Picture:</p>
                 <input type="file" key = {fileInputKey} className='picfield' onChange={fileChangeHandler} />
+
                 <div className='create-user-buttons'>
                     <input type="reset" value="Reset" className='reset-button' onClick={clearInputs}/>
                     <input type="submit" value="Confirm" className='confirm-button' onClick={readInput}/>
@@ -181,7 +208,7 @@ const Add_User_Page=()=>{
             <Header />
             <ToastContainer className='toast-container' />
             <Footer/>
-    </div> 
+        </div> 
     )
 }
 

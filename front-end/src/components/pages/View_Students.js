@@ -1,3 +1,7 @@
+/*
+    Source code description: This soure code contains functions that allows the user to view, search, and delete
+    a student's file
+*/
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {BsSearch}  from 'react-icons/bs';
@@ -23,11 +27,10 @@ const View_Students =()=>{
     const [state, changeState]= useState(false);
     const [searchValue, setSearchValue] = useState("");
     const [viewValue, setViewValue] = useState("");
-    // reference: https://www.freecodecamp.org/news/how-to-work-with-multiple-checkboxes-in-react/?fbclid=IwAR0UqtIok1fIaGpvkHEmbDslOMN_DrunOE58lrdxAiTKRUmpMtTkgUaEF6g
     const [checkedState, setCheckedState] = useState([]);
-    const [studentsToDel, setStudentsDel] = useState([]);
-    const [showConfirmation, setShowConfirmation] = useState("")
-    const [showConfirmationMany, setShowConfirmationMany] = useState("")
+    const [studentsToDel, setStudentsDel] = useState([]); //array of students to be deleted
+    const [showConfirmation, setShowConfirmation] = useState("") //confirmation popup for deleting a single student
+    const [showConfirmationMany, setShowConfirmationMany] = useState("") //confirmation popup for deleting many students
     const [toDelete, setToDelete] = useState("")
     const [message, setMessage] = useState("Loading students...")
     const [selectedValue, setSelectVal] = useState(false);
@@ -47,7 +50,7 @@ const View_Students =()=>{
         {label:'BACA', value:'BACA'}, 
         {label:'BAPHLO', value:'BAPHLO'},
         {label:'BASOC', value:'BASOC'},
-        {label:'BSAGRICHEM', value:'BSAGRICHEM'},
+        {label:'BSAGCHEM', value:'BSAGCHEM'},
         {label:'BSAMAT', value:'BSAMAT'},
         {label:'BSAPHY', value:'BSAPHY'},
         {label:'BSBIO', value:'BSBIO'},
@@ -66,7 +69,7 @@ const View_Students =()=>{
     const navigate = useNavigate();     // navigation hook
 
 
-    //if state changes, this function is executed
+    //if state changes, this function is executed which shows the list of existing students
     useEffect(()=>{
         setRecord([])
         setIsLoading(true)
@@ -90,13 +93,13 @@ const View_Students =()=>{
         setTimeout(() => setIsLoading(false), 3000)
     },[state]);
 
-    // if students exist/updated, creates an array of checkboxes with the record length
+    /**
+        if student files exist/ are updated, this function is called to create an array of checkboxes 
+        with the record length
+     */
     useEffect(()=>{
-
         if(record === undefined){""}
         else setCheckedState(new Array(record.length).fill(false))
-
-
     }, [record])
 
     //handles checking of checkbox
@@ -105,9 +108,10 @@ const View_Students =()=>{
         checkedState.map((item, index)=>{
             index === position ? item === true? updatedCheckedState.push(false): updatedCheckedState.push(true): updatedCheckedState.push(item)
         })
+        //updates checkboxes if they are checked or not
+        setCheckedState(updatedCheckedState);
 
-        await setCheckedState(updatedCheckedState);
-
+        //will contain students to be deleted
         let students = []
 
         updatedCheckedState.map((item,index)=>{
@@ -122,7 +126,10 @@ const View_Students =()=>{
         setStudentsDel(students);
     }
 
-    //if viewValue changes, this function is executed
+    /*
+        if viewValue changes, this function is executed wherein students with degree programs matching the
+        selected view by value will be shown
+    */
     useEffect(()=>{
         setIsLoading(true)
         if(prev_view_state.current != [viewValue]){
@@ -171,8 +178,10 @@ const View_Students =()=>{
     },[viewValue]);
 
 
-    // function that handles the search functionality upon clicking search button, which also
-    // checks first if the searchValue and viewValue are not in their default states
+    /**
+        function that handles the search functionality upon clicking search button, which also
+        checks first if the searchValue and viewValue are not in their default states  
+    */
     const handleSubmit = (e) => {
         e.preventDefault();
         setIsLoading(true)
@@ -262,7 +271,7 @@ const View_Students =()=>{
         await setSelectVal(!selectedValue)
     }
 
-    //updates the checkbox whenever the selectedValue changes
+    //updates the checkbox and students to be deleted whenever the selectedValue changes
     useEffect(()=>{
         let updatedCheckedState = [];
 
