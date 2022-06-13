@@ -1,5 +1,7 @@
 import React from 'react';
 
+// Takes in the course data of a student from student details and lays it out per row
+// This only activates if the student details page is not editable
 const Read_Row = ({course, bg_color, border}) => {
     
     return (

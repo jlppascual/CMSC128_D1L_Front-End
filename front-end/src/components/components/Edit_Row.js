@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 
+// Turns rows of table of student details as editable input fields; only activates if student details page is set to editable
 const Edit_Row = ( { course, term_index,index,bg_color}) => {
     const [course_code, setCourse] = useState(course.course_code);
     const [grade, setGrade] = useState(course.grade);
