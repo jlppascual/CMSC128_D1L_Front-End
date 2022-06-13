@@ -1,6 +1,3 @@
-/**
- * author: Jem, Leila
- */
 import React, { useEffect, useState, useRef } from 'react';
 import useStore from '../hooks/authHook';
 import { useNavigate } from 'react-router-dom';

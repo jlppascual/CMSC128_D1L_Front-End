@@ -1,6 +1,3 @@
-/**
- * author: Jem, Thomas
- */
  import { useNavigate } from 'react-router-dom'
  import React, { useRef, useState } from 'react';
  import useStore from '../hooks/authHook'

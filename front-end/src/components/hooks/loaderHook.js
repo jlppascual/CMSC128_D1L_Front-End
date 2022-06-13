@@ -1,6 +1,3 @@
-/**
- * author: Arni
- */
 import create from 'zustand';
 
 const useLoadStore = create((set) => ({
