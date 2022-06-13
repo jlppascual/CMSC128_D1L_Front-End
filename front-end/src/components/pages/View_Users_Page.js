@@ -1,6 +1,7 @@
 /**
- * authors: Janica, Andrew
- */
+    Source code description: This source code contains functions that allows the administrator to 
+    search, view, and delete a user
+*/
 
  import React, { useEffect, useState, useRef } from 'react';
  import Menu from '../components/Menu'
@@ -42,6 +43,7 @@ import Users_Loader from '../loaders/Users_Loader';
 
     prev_view_state.current = [viewValue];
  
+    //checks if the user is an administrator
     useEffect(() =>{
         if(user.user_role==="CHAIR/HEAD"){
             setIsLoading(true);
@@ -62,10 +64,12 @@ import Users_Loader from '../loaders/Users_Loader';
             navigate("/home")
             notifyError("Must be an admin to access this page")
         }
-        
      },[pageState]);
 
-     //if viewValue changes, this function is executed
+     /*
+        if viewValue changes, this function is executed to output users who matches the filter value 
+        given by the view value dropdown
+     */
     useEffect(()=>{
         setIsLoading(true);
         if(prev_view_state.current != [viewValue]){
@@ -110,6 +114,7 @@ import Users_Loader from '../loaders/Users_Loader';
         setTimeout(() => setIsLoading(false), 3000)
     },[viewValue]);
  
+    //handles the search bar input
      const handleUserInput = (e) => {
          const value = e.target.value;
          setInput(value);
@@ -118,7 +123,8 @@ import Users_Loader from '../loaders/Users_Loader';
         }
      }
  
-     const handleSubmit = (e) => {
+    //called upon when the admin searches for a specific user 
+    const handleSubmit = (e) => {
         e.preventDefault();
     
         let url = 'http:'+REACT_APP_HOST_IP+':3001/api/0.1/user/search?name=';
@@ -171,15 +177,23 @@ import Users_Loader from '../loaders/Users_Loader';
         setTimeout(() => setIsLoading(false), 3000)
     }
 
-     const viewChange=(e)=>{
+    //handles changes in viewby dropdown
+    const viewChange=(e)=>{
         setViewValue(e.target.value);
     }
 
+    // called when the admin chooses to delete a user
     const onDelete=(todeluser)=>{
         setShowDeleteConfirmation(true);
         setToDelete(todeluser);
     }
-     const confirmDelete = async(decision,details) => {
+
+    /*
+        a function that is called upon when the admin wants to delete a user. This function accepts a 
+        boolean function containing the decision of a user to proceed with deletion , and the details of
+        deletion if a user proceeds to deleting the user
+    */
+    const confirmDelete = async(decision,details) => {
         setIsLoading(true);
         setShowDeleteConfirmation(false)
         if(decision){
@@ -205,7 +219,11 @@ import Users_Loader from '../loaders/Users_Loader';
         setTimeout(() => setIsLoading(false), 3000)
      }
  
-     const DropDown =({value,options,onChange})=>{
+    /*
+        a dropdown creator that accepts a string value it contains, an array of strings which are the options
+        to chooes from, and the function that handles the changing of values upon user selection
+    */
+    const DropDown =({value,options,onChange})=>{
         return(
             <label>
                 <select className='view-user-dropdown' value={value} onChange={onChange}>
@@ -220,66 +238,60 @@ import Users_Loader from '../loaders/Users_Loader';
 
         return(
             <div>
-                
                 <div className="view-users-body">
-                
-                <div className='top-header'>
-                <p className="title"> Accounts{users?<span> {users.length}</span>:""}</p>  
-                <hr className='users-line'/>
-
-                
-                <ul className='view-user-header'>
-                    <li><DropDown options={viewFilter} value = {viewValue} onChange={viewChange}/></li>
-                </ul>
-                
-                
-                <div className="users-search-field">
-                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
-                    <input type = "text" name = "input" placeholder = "&#xf002;  Search by name"
-                    value = {input} onChange = {handleUserInput} className = "user-search" required></input>
-                    <button onClick={handleSubmit} className = "users-search-button"><i className = "search-icon"><BsSearch /></i></button>
-                </div>
-                </div>
+                    <div className='top-header'>
+                        <p className="title"> Accounts{users?<span> {users.length}</span>:""}</p>  
+                        <hr className='users-line'/>
+                        <ul className='view-user-header'>
+                            <li><DropDown options={viewFilter} value = {viewValue} onChange={viewChange}/></li>
+                        </ul>
+                        
+                        
+                        <div className="users-search-field">
+                            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
+                            <input type = "text" name = "input" placeholder = "&#xf002;  Search by name"
+                            value = {input} onChange = {handleUserInput} className = "user-search" required></input>
+                            <button onClick={handleSubmit} className = "users-search-button"><i className = "search-icon"><BsSearch /></i></button>
+                        </div>
+                    </div>
                
-                <div className='tile-page'>
-                    {
-                        // Display Loader
-                        isLoading ? <Users_Loader /> : users != undefined? users.map((user, i) => {
-                            if (i % 2 === 0) {
-                                return <span key={i}>
-                                    <div className="user-tile" >
-                                    {!user.display_picture?
-                                        (<img src = {require(`../../images/user_dp/dp_default.jpg`)} className='user-dp' onClick={()=> navigate('/user/'+user.user_id)}/>):
-                                        (<img src = {require(`../../images/user_dp/${user.display_picture}`)} className='user-dp' onClick={()=> navigate('/user/'+user.user_id)}/>)
-                                    }
-                                    <div className='user-name' onClick={()=> navigate('/user/'+user.user_id)}>
-                                        {user.first_name} {user.last_name} <br />
-                                        <span onClick={()=> navigate('/user/'+user.user_id)}>{user.user_role}</span>
-                                    </div>
-                                        <button onClick={()=>{onDelete({user})}} className = "delete-button">Remove</button></div>
-                                </span>
-                            } else {
-                                return <span key={i}>
-                                    <div className="user-odd-tile" >
-                                    {!user.display_picture?
-                                        (<img src = {require(`../../images/user_dp/dp_default.jpg`)} className='user-dp' onClick={()=> navigate('/user/'+user.user_id)}/>):
-                                        (<img src = {require(`../../images/user_dp/${user.display_picture}`)} className='user-dp' onClick={()=> navigate('/user/'+user.user_id)}/>)
-                                    }
-                                    {/* <img src = {require(`../../images/user_dp/${user.display_picture}`)} className='user-dp' onClick={()=> navigate('/user/'+user.user_id)}/> */}
-                                    <div className='user-name' onClick={()=> navigate('/user/'+user.user_id)}>
-                                        {user.first_name} {user.last_name} <br />
-                                        <span onClick={()=> navigate('/user/'+user.user_id)}>{user.user_role}</span >
-                                    </div>
-                                    <button onClick={()=>{onDelete({user})}} className = "delete-button">Remove</button>
-                                    </div>
-                                </span>
-                            }
-                    }): <div className="no-users">
+                    <div className='tile-page'>
+                        {
+                            // Display Loader
+                            isLoading ? <Users_Loader /> : users != undefined? users.map((user, i) => {
+                                if (i % 2 === 0) {
+                                    return <span key={i}>
+                                        <div className="user-tile" >
+                                        {!user.display_picture?
+                                            (<img src = {require(`../../images/user_dp/dp_default.jpg`)} className='user-dp' onClick={()=> navigate('/user/'+user.user_id)}/>):
+                                            (<img src = {require(`../../images/user_dp/${user.display_picture}`)} className='user-dp' onClick={()=> navigate('/user/'+user.user_id)}/>)
+                                        }
+                                        <div className='user-name' onClick={()=> navigate('/user/'+user.user_id)}>
+                                            {user.first_name} {user.last_name} <br />
+                                            <span onClick={()=> navigate('/user/'+user.user_id)}>{user.user_role}</span>
+                                        </div>
+                                            <button onClick={()=>{onDelete({user})}} className = "delete-button">Remove</button></div>
+                                    </span>
+                                } else {
+                                    return <span key={i}>
+                                        <div className="user-odd-tile" >
+                                        {!user.display_picture?
+                                            (<img src = {require(`../../images/user_dp/dp_default.jpg`)} className='user-dp' onClick={()=> navigate('/user/'+user.user_id)}/>):
+                                            (<img src = {require(`../../images/user_dp/${user.display_picture}`)} className='user-dp' onClick={()=> navigate('/user/'+user.user_id)}/>)
+                                        }
+                                        <div className='user-name' onClick={()=> navigate('/user/'+user.user_id)}>
+                                            {user.first_name} {user.last_name} <br />
+                                            <span onClick={()=> navigate('/user/'+user.user_id)}>{user.user_role}</span >
+                                        </div>
+                                        <button onClick={()=>{onDelete({user})}} className = "delete-button">Remove</button>
+                                        </div>
+                                    </span>
+                                }
+                        }): <div className="no-users">
                         <p>No users found.</p>
                         <button onClick={()=> navigate('/users/new')}> Add User Account</button>
-                        </div>}
+                    </div>}
                 </div>
-                
                 {showDeleteConfirmation===true? <DeleteConfirmPopup props={{confirmDelete: confirmDelete.bind()}} />:""}</div>
             <Header />
             <Menu/>

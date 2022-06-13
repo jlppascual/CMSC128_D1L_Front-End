@@ -1,3 +1,7 @@
+/*
+    Source code description: This source code contains functionalities involved in resetting 
+    the password of a user
+*/
 import React, { useEffect, useState, useRef } from 'react';
 import Footer from '../components/Footer';
 import UPLB from '../../images/uplb.png';
@@ -24,12 +28,19 @@ const ForgotPassword = () =>{
     const [type1, setType1] = useState('password')
     const [icon1, setIcon1] = useState(eyeOff)
 
+    /*
+        A function that is called when the confirm password, password, and otp input fields
+        are changed. If all fields are properly inputted, the 'Submit' Button will be clickable.
+        If not all fields are propely inputted, the 'Submit' Button will not be clickable 
+    */
     useEffect(()=>{
         if(otp && newConfPass && newPass){setOTPClicked(true);}
         else{setOTPClicked(false);}
     },[newConfPass, newPass, otp])
 
     
+    //states to handle the type of the new password input field
+
     const handleToggle = () => {
         if(type === 'text'){
             setIcon(eyeOff);
@@ -40,6 +51,8 @@ const ForgotPassword = () =>{
         }
     }
 
+
+    //states to handle the type of the confirm password input field
     const handleToggle1 = () => {
         if(type1 === 'text'){
             setIcon1(eyeOff);
@@ -49,13 +62,16 @@ const ForgotPassword = () =>{
             setType1('text');
         }
     }
+    /*
+        A function called upon clicking 'Submit' which will send the required data for resetting
+        password to the back-end 
+    */
     const submitChange=()=>{
         const password_format = /^(?=.*[-_.!"'#%&,:;<>=@{}~\$\(\)\*\+\/\\\?\[\]\^\|])(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$/
         let local_email = document.getElementById('email-field').value;
         let new_pass = document.getElementById('newpassword-field').value
         let conf_pass = document.getElementById('confpassword-field').value
         let local_otp = document.getElementById('otp-field').value
-        console.log(new_pass, conf_pass, local_email)
 
         if(!new_pass || !conf_pass || !local_otp){
             notifyError('Please complete fields')
@@ -90,6 +106,8 @@ const ForgotPassword = () =>{
         }
         
     }
+
+    // A function that calls on a back-end function that generates an OTP for resetting password 
     const fetchOTP=async()=>{ 
         let local_email = document.getElementById('email-field').value;
         if(local_email === '' || local_email === undefined){

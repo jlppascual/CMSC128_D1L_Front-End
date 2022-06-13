@@ -1,5 +1,6 @@
-/**
- * author: Jem, Thomas
+/*
+  Source code description: This source code contains the functions used in adding student records (in CSV format) 
+  in the application.
  */
  import { useNavigate } from 'react-router-dom'
  import React, { useRef, useState } from 'react';
@@ -12,7 +13,6 @@
  import '../../css/addstudent.css'
  
  const Add_Student_Page=()=>{
-
     const {REACT_APP_HOST_IP} = process.env
     const [files, setFiles] = useState([]);
     const [results, setResults] = useState([]);
@@ -27,14 +27,13 @@
     const navigate = useNavigate();     // navigation hook
     const programs = ["BACA", "BAPHLO", "BASOC", "BSAGCHEM", "BSAMAT", "BSAPHY", "BSBIO", "BSCHEM", "BSCS", "BSMATH","BSMST", "BSSTAT"]
  
-     //https://stackoverflow.com/a/67296403
-     const setCSVFile = (e) => {
-         // Convert the FileList into an array and iterate
-         let selected_files = []
-         Array.from(e.target.files).map(file => {
-             selected_files.push(file)
-         });
-         setFiles(selected_files)
+    const setCSVFile = (e) => {
+        // Convert the FileList into an array and iterate
+        let selected_files = []
+        Array.from(e.target.files).map(file => {
+            selected_files.push(file)
+        });
+        setFiles(selected_files)
      }
 
      const getResults =async() => {
@@ -42,7 +41,6 @@
         let result = files.map(file => {
             // Define a new file reader
             let reader = new FileReader();
-    
             // Create a new promise
             return new Promise(resolve => {
                 // Resolve the promise after reading file
@@ -60,19 +58,26 @@
      const closePrompts =async(value) => {
         setShowPrompts(value);
         if(showPrompts===true){
-            setPrompts([]) //clears prompts upon closing
+            //clears prompts upon closing
+            setPrompts([])
         }
      }
 
-    // checks if name, student number or degree program is null
+    /*
+        A function used to check if a given dictionary containing the necessary
+        student details has a student number, a first name, a last name, a degree program 
+        that exists in the list of CAS Degree Programs, and a student number that follows the 
+        correct format if the student has one. If the following conditions are satisfied, the 
+        function returns true, else it returns the error
+     */
     const checkStudentDetails = (student_data) => {
-        const studno_format = /^[0-9]{4}-[0-9]{5}$/;    // Student number can be null
+        const studno_format = /^[0-9]{4}-[0-9]{5}$/;   
         if (!student_data.first_name || student_data.first_name === "") 
-            return ("Student not added: Missing first name"); //First name cannot be null
+            return ("Student not added: Missing first name");
         if (!student_data.last_name || student_data.last_name === "") 
-                return ("Student not added: Missing last name"); // Last name cannot be null
+                return ("Student not added: Missing last name");
         if (!student_data.degree_program || student_data.degree_program === "")
-                return ("Student not added: Missing degree program"); // Degree Program cannot be null
+                return ("Student not added: Missing degree program");
         if(!programs.includes(student_data.degree_program))
             return ("Student not added: Invalid degree program");
         if (!studno_format.test(student_data.student_number)) {
@@ -81,7 +86,11 @@
         return true;
     };
       
-    //Check record_data (adding student onli)
+    /**
+        A function that accepts a dictionary of record data which checks if the student record data
+        has a GWA, total units, and cumulated sum. If the following conditions are satisfied, it returns true.
+        Else, it returns the errors. 
+     */
     const checkRecordDetails = (record_data) => {
         if (!record_data.gwa || record_data.gwa === "") return ("Student not added: Missing value of GWA"); // Gwa cannot be null
         if (!record_data.total_units || record_data.total_units === "") return("Student not added: Missing value of Total Units");   // Total units cannot be null   
@@ -89,7 +98,11 @@
         return true
     };
 
-     //gets all details of a student_record
+     /**
+        A function that processes an array of strings which contains the content of an uploaded csv file.
+        This will categorize data into their respective headers. Doing so, the function will return a dictionary 
+        containing a dictionary of student details and record details to be passed to the back-end
+      */
      const getRecords = async(array) =>{
          let headers = [];
          let courses = [];
@@ -123,6 +136,7 @@
                      num_of_units.current = no_of_units; 
                      
                  }
+
                  // indicates that the course is included in a new term
                  else if (array[j][7] != ''){
                      // if a new term is found, push the previous states and courses first before renewing
@@ -177,7 +191,6 @@
                  term_data
              }
          }
-         
         setFullName(data.first_name+" "+data.last_name+ " " + data.degree_program)
         return data
      }
@@ -224,8 +237,8 @@
         
      }
  
+     //A function call that calls upon a POST API, creating a student. 
      const sendData = async(data)=>{
-
         fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student',{
             method:'POST',
             credentials:'include',
@@ -252,10 +265,13 @@
          })
      }
 
+     // A function that allows users to remove a file uploaded by a user by mistake
      const removeFile = (index)=>{
         let reducedFile = files.filter((file, fileIndex )=>{
             return fileIndex !==index;
         })
+
+        //sets the state of an array of files to be processed
         setFiles(reducedFile);
      }
  

@@ -1,3 +1,7 @@
+/**
+    Source code description: This source code contains functions that allows and aids a user in editing a student
+    record
+*/
 import React, {useState, Fragment, useEffect} from 'react'
 import { useNavigate } from 'react-router-dom'
 import useStore from '../hooks/authHook'
@@ -43,14 +47,21 @@ const View_Student_Details =()=>{
         record_details:[],
         term_details:[],        
     })
+
     const programs = ["BACA", "BAPHLO", "BASOC", "BSAGCHEM", "BSAMAT", "BSAPHY", "BSBIO", "BSCHEM", "BSCS", "BSMATH","BSMST", "BSSTAT"]
     const { user, setAuth } = useStore();
     const { isLoading, setIsLoading } = useLoadStore();
     const navigate = useNavigate();     // navigation hook
 
+    /*
+        this function is initially called upon arrival on the page. if the pageState changes, this function
+        will be called again to immediately reflect changes made on a student record
+    */
     useEffect(()=>{
         const link = window.location.href
+        //gets the id of a student from the url
         const id = link.slice(link.lastIndexOf('/')+1,link.length)
+
         setIsLoading(true)
 
         fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/student/'+id,{
@@ -71,7 +82,10 @@ const View_Student_Details =()=>{
         setTimeout(() => setIsLoading(false), 3000)      
     },[pageState])
     
-    // For cancelling 
+    /*
+        upon editing, once the user cancels the editing process, this function will set the respective 
+        information back to their initial values before the editing process was done 
+    */  
     useEffect(()=>{
         setDegree(state.student_details.degree_program);
         setStudno(state.student_details.student_number);
@@ -94,13 +108,16 @@ const View_Student_Details =()=>{
     }
         
     },[state])
-
     
     const handleDelete=(event)=>{
         event.preventDefault();
         setShowDeleteConfirmation(true)
     }
 
+    /*
+        a function called that handles the confirmation of a user in proceeding with the deletion of 
+        a student record 
+    */
     const confirmDelete = async(decision)=>{
         setShowDeleteConfirmation(false)
         if(decision){
@@ -122,12 +139,14 @@ const View_Student_Details =()=>{
         }
     }
 
+    //a function that handles warnings of a student record
     const handleWarnings = (event) => {
         event.preventDefault();
         setShowWarnings(!showWarnings)
         setHighlightedRow(-1)
     }
 
+    //a function that changes the interface of a student record to an editable student record
     const handleEdit=(event)=>{
         event.preventDefault();
         if(editable === true){
@@ -140,10 +159,15 @@ const View_Student_Details =()=>{
 
     const handleCancel=(event)=>{
         event.preventDefault();
-        setShowCancelConfirmation(true)
-        
+        setShowCancelConfirmation(true)  
     }
     
+    /*
+        a function called upon pressing the 'save changes' button wherein it validates if the following
+        changes done by the user follows the following conditions found in the code block. Once satisfied, 
+        a confirmation popup will be called to ensure the user is final with the changes.
+     
+    */
     const handleUpdate=()=>{
         const studno_format = /^[0-9]{4,}-[0-9]{5,}$/
 
@@ -164,8 +188,12 @@ const View_Student_Details =()=>{
             setNewCourses(getCourses())
             setShowEditConfirmation(true)
         }
-        
     }
+
+    /*
+        upon confirmation on the editing process, this function is called to pass the necessary changes to
+        be reflected to the back-end by calling a PATCH API 
+    */
     const confirmEdit = async(decision,details)=>{
 
         setShowEditConfirmation(false)
@@ -223,7 +251,7 @@ const View_Student_Details =()=>{
         }
     }
     
-
+    //This function is called to get the updated values inputted by the user upon editing
     const getEdits = () =>{
         let terms_count = state.term_details.length
         let terms = []
@@ -243,6 +271,7 @@ const View_Student_Details =()=>{
         return {terms,record}
     }
 
+    // a function that checks if all required fields in the editing state are filled up properly
     const isCompleteFields = () =>{
         let temp;
         if(document.getElementsByName('last_name')[0].value == "") return false;
@@ -267,6 +296,7 @@ const View_Student_Details =()=>{
         return true
     }
 
+    //a function that checks if there are changes done on the record details
     const checkChanges = () =>{
        let temp;
 
@@ -296,6 +326,7 @@ const View_Student_Details =()=>{
         return false
     }
 
+    //a function that gets the updated values of a student's subject
     const getCourses = () =>{
         let courses = [];
          const terms = state.term_details
@@ -327,7 +358,7 @@ const View_Student_Details =()=>{
             </div>
         )
     }
-    // For cancelling 
+    // a function called that sets the initial values of warnings before editing; called upon when edit is cancelled
     useEffect(()=>{
         let id_val;
         if(document.getElementById("warning-div"))
@@ -340,7 +371,6 @@ const View_Student_Details =()=>{
     },[highlightedRow])
     
     const WarningPopup=({})=>{
-        
         return(
             <div className="warning-popup-box" id = "warning-div" >
                 <h3 className='warning-header'>Record Warnings</h3>
@@ -367,8 +397,7 @@ const View_Student_Details =()=>{
                     })}
                 </div>
                 : <p>No record warnings found</p>}
-            </div>
-            
+            </div>  
         )
     }
 
