@@ -1,9 +1,10 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useRef} from 'react';
 import { useNavigate } from 'react-router-dom'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import Menu from '../components/Menu'
 import useStore from '../hooks/authHook'
+import useLoadStore from '../hooks/loaderHook';
 import '../../css/profile.css'
 import USER from '../../images/dp_default.jpg'
 import {HiMail}  from 'react-icons/hi';
@@ -14,6 +15,9 @@ import '../../css/toast_container.css';
 import { Icon } from 'react-icons-kit';
 import {eyeOff} from 'react-icons-kit/feather/eyeOff';
 import {eye} from 'react-icons-kit/feather/eye';
+import Row_Loader from '../loaders/Row_Loader';
+import { Name_Placeholder, User_Detail_Placeholder } from '../loaders/Detail_Loader';
+import OutsideClick from '../hooks/outsideClick'
 
 const MyProfile =()=>{
 
@@ -35,15 +39,22 @@ const MyProfile =()=>{
     const [icon2, setIcon2] = useState(eyeOff)
     const [toEdit, setToEdit] = useState('');
     const [toPassCred, setToPassCred] = useState('');
-
+    const [passToggle, setPassToggle] = useState(false);
+    
 
     const { user, setAuth} = useStore();
+    const { isLoading, setIsLoading } = useLoadStore();
     
     const validEmail = new RegExp('^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$');
-    const validNumber = new RegExp('^(09|9|639)[0-9]{9}$');
+    const validNumber = /^\+639[0-9]{9}$/;
+    const boxRef = useRef(null);
 
+    OutsideClick(boxRef,() => {
+        {showSettings? setShowSettings(false):""};
+    });
+    
     useEffect(()=>{
-       
+        setIsLoading(true)
         fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/user/all",
         {
             method: "GET",
@@ -68,12 +79,11 @@ const MyProfile =()=>{
                 setPage(!pageState)
             }          
         })
-
-        
+        setTimeout(() => setIsLoading(false), 3000)
     },[user])
 
     useEffect(()=>{
-       
+        setIsLoading(true)
         fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log/user/"+ user.user_id,
         {
             method: "GET",
@@ -89,8 +99,7 @@ const MyProfile =()=>{
                 setEmptyMessage("No logs to display for this user")    
             }         
         })
-        
-        
+        setTimeout(() => setIsLoading(false), 3000)
     },[pageState])
 
     const formatLogs = (logs) => {
@@ -117,14 +126,16 @@ const MyProfile =()=>{
         }
     }
     
+
     const settings_list=[
         {label:"Change username", value:'username'},
         {label:"Change password", value:'password'},
         {label:"Change email", value:'email'},
-        {label:"Change mobile number", value:'number'}
+        {label:"Change mobile number", value:'number'},
+        {label:"Change profile picture", value:'picture'}
     ]
 
-    const userLogout=()=>{ 
+    const userLogout = () =>{ 
         
         fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/auth' ,{
             method:'GET',
@@ -134,13 +145,16 @@ const MyProfile =()=>{
         .then(body => {
             if(!body.success) notifyError(body.message);
             else{
+                
                 navigate('/');
                 setTimeout(() => {
                     setAuth(null, false);
-                }, 500);
+                }, 5000);
             }
         })
     }
+
+    
 
     const confirmClicked=()=>{
         if(popType ==='username'){
@@ -184,8 +198,7 @@ const MyProfile =()=>{
                                 setAuth(json.result.session.user, json.result.session.silentRefresh)
                             }
                             if(json.result.success){
-                                setToggle(!isToggled)
-                                notifySuccess(json.result.message)
+                                setToggle(!passToggle)
                                 userLogout()
                             }else{
                                 notifyError(json.result.message)
@@ -207,10 +220,10 @@ const MyProfile =()=>{
                 }
                 
             } else if(popType==="number"){
-                let new_number = document.getElementById('new-number').value;
-                
+                let new_number = "+63"+document.getElementById('new-number').value;
+                console.log(new_number)
                 if(new_number !== ''){
-                    if (validNumber.test(new_number)){
+                    if (new_number.match(validNumber)){
                         setType('pass-validation');
                         setToEdit('number');
                         setToPassCred(new_number);
@@ -244,9 +257,11 @@ const MyProfile =()=>{
                             setToggle(!isToggled)
                             notifySuccess(json.result.message)
                         }else{
+                            if(json.result.message === 'Email address is already being used') setToggle(!isToggled)
                             notifyError(json.result.message)
                         }})
                 } else if (toEdit === 'number'){
+                    console.log(toPassCred)
                     fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/user/'+user.user_id+'/number', {
                         method: 'PATCH', 
                         credentials:'include',
@@ -266,6 +281,7 @@ const MyProfile =()=>{
                             setToggle(!isToggled)
                             notifySuccess(json.result.message)
                         }else{
+                            if(json.result.message === 'Phone number is already being used') setToggle(!isToggled)
                             notifyError(json.result.message)
                         }})
                 }else if (toEdit === 'username'){
@@ -286,23 +302,65 @@ const MyProfile =()=>{
                             }
                             if(json.result.success){
                                 setToggle(!isToggled)
-                                notifySuccess(json.result.message)
-                                userLogout()  
+                                userLogout()
                             }else{
+                                if(json.result.message === 'Username is already being used') setToggle(!isToggled)
                                 notifyError(json.result.message)
                             }
                         })
                 }
                 
             }
+           
+            
     }
 
     const cancelClicked=async()=>{
-        await setToggle(!isToggled);
+        if(isToggled) await setToggle(!isToggled);
+        else {
+            await setPassToggle(!passToggle);
+        }
         setType("");
     }
 
     const Popup=(props)=>{
+        const [fileName, setfileName] = useState("");
+        const [fileData, setFileData] = useState();
+        const [fileInputKey, setFileInputKey] = useState(Date.now());
+
+        const fileChangeHandler = (e) => {
+            console.log(e.target.files[0].name)
+            setFileData(e.target.files[0]);
+            setfileName(e.target.files[0].name)
+        };
+
+        const changePhoto = () => {
+            const new_photo = new FormData();
+            new_photo.append("image", fileData);
+            new_photo.append("new_photo", fileName);
+            
+            fetch('http://'+REACT_APP_HOST_IP+':3001/api/0.1/user/'+user.user_id+'/photo' ,{
+                method: 'PATCH', 
+                credentials:'include',
+                body: new_photo
+                }).then(response=>{return response.json()})
+                .then(json=>{
+                    if (json.result.session.silentRefresh) {
+                        setTimeout(() => {setAuth(json.result.output, json.result.session.silentRefresh)}, 3000)
+                        
+                    }
+                    if(json.result.success){
+                        
+                        setToggle(!isToggled)
+                        setTimeout(() => {notifySuccess(json.result.message)},1000)
+                        
+                        
+                    }else{
+                        notifyError(json.result.message)
+                    }})
+        }
+
+        setShowSettings(false);
         let body;
         // checks what field will be edited by the user before rendering it in the body of the popup
         if(props.type === 'username'){
@@ -315,22 +373,6 @@ const MyProfile =()=>{
                         <button className="cancel" onClick={cancelClicked}>Cancel</button> <button className="confirm" onClick={confirmClicked}>Confirm</button> 
                     </div> 
                 </div>               
-            </div>
-        } else if(props.type === 'password'){
-            body = 
-            <div>
-                <div className='password-box'>
-                <p className='change-popup-text'>Change Password</p>
-                    <input type={type} className = "setting-fields" id="current-password" placeholder="Enter current password"></input><br/>
-                    <i onClick={handleToggle} id = "visibilityBtn" className='eyeProfile'><Icon icon = {icon} ></Icon></i>
-                    <input type={type1} className = "setting-fields" id="new-password" placeholder="Enter new password"></input><br/>
-                    <i onClick={handleToggle1} id = "visibilityBtn" className='eyeProfile'><Icon icon = {icon1} ></Icon></i>
-                    <input type={type2} className = "setting-fields" id="confirm-password" placeholder="Confirm new password"></input><br/>
-                    <i onClick={handleToggle2} id = "visibilityBtn" className='eyeProfile1'><Icon icon = {icon2} ></Icon></i>
-                </div>
-                <div className='popup-buttons'>
-                    <button className="cancel" onClick={cancelClicked}>Cancel</button><button className="confirm" onClick={confirmClicked}>Confirm</button> 
-                </div>
             </div>
         } else if(props.type === 'email'){
             body =
@@ -358,14 +400,31 @@ const MyProfile =()=>{
             body =
             <div> 
                 <div  className='username-box'>
-                    <p>Please enter password</p>
-                    <input type="password" className = "setting-fields" id="pass-validation" placeholder="Enter password"></input><br/>
+                    <p>Password confirmation{toEdit === 'username'? <div className = 'pass-valid-note'>You will be logged out upon confirmation</div>:''}</p>
+                    
+                    <input type="password" className = "setting-fields" id="pass-validation" placeholder="Password"></input><br/>
                     <div className='popup-buttons'>
                         <button className="cancel" onClick={cancelClicked}>Cancel</button> <button className="confirm" onClick={confirmClicked}>Confirm</button> 
                     </div> 
                 </div>               
             </div>
         }
+        else if(props.type === 'picture'){
+            body =
+            <div> 
+                <div  className='username-box'>
+                    <p>Update Profile Picture</p>
+                    
+                    <input type="file" key = {fileInputKey} className='setting-fields' accept=".png, .jpg, .jpeg" name="image" onChange={(e) => fileChangeHandler(e)} />
+                    <div className='popup-buttons'>
+                        <button className="cancel" onClick={cancelClicked}>Cancel</button> <input type = "submit" value = "Confirm" className="confirm" onClick={changePhoto} />
+                    </div> 
+                    
+                </div>               
+            </div>
+        }
+        
+        
         return (
             <div className="settings-popup-box">
                 {body}
@@ -374,26 +433,31 @@ const MyProfile =()=>{
     }
 
     const handleChange=async(foo)=>{
-        await setToggle(!isToggled);
 
         if(foo.value === 'username'){
-             setType('username');
+            await setToggle(!isToggled);
+            setType('username');
         }else if(foo.value ==='password'){
-             setType('password');
+            await setPassToggle(!passToggle);
+            setType('password');
         }else if (foo.value === 'email'){
+            await setToggle(!isToggled);
             setType('email');
         } else if (foo.value === 'number'){
+            await setToggle(!isToggled);
             setType('number');
+        } else if (foo.value === 'picture'){
+            await setToggle(!isToggled);
+            setType('picture');
         } else {
+            await setToggle(!isToggled);
             setType('');
-        }
-            
-        
-        
+        }    
     }
 
     const handleSettings = () =>{
         setShowSettings(!showSettings)
+        console.log("true")
     }
 
     const handleToggle = () => {
@@ -426,19 +490,49 @@ const MyProfile =()=>{
     }
     }
 
+    let changePassBody = 
+    <div className='settings-popup-box'>
+        <div className='password-box'>
+        <p className='change-popup-text'>Change Password <div className = 'pass-valid-note'>You will be logged out upon confirmation</div></p>
+            <input type={type} className = "setting-fields" id="current-password" placeholder="Enter current password"></input><br/>
+            <i onClick={handleToggle} id = "visibilityBtn" className='eyeProfile'><Icon icon = {icon} ></Icon></i>
+            <input type={type1} className = "setting-fields" id="new-password" placeholder="Enter new password"></input><br/>
+            <i onClick={handleToggle1} id = "visibilityBtn" className='eyeProfile'><Icon icon = {icon1} ></Icon></i>
+            <input type={type2} className = "setting-fields" id="confirm-password" placeholder="Confirm new password"></input><br/>
+            <i onClick={handleToggle2} id = "visibilityBtn" className='eyeProfile1'><Icon icon = {icon2} ></Icon></i>
+        </div>
+        <div className='popup-buttons'>
+            <button className="cancel" onClick={cancelClicked}>Cancel</button><button className="confirm" onClick={confirmClicked}>Confirm</button> 
+        </div>
+    </div>
+    
+    try {
+        var display_picture = require(`../../images/user_dp/${user.display_picture}`);
+    } catch (error) {
+        var display_picture = USER;
+    }
+  
     return(
         <div>
             <div>
             <div className='body'>
             <div className='user-header'>
-                <img src = {USER} className = "user-photo" />
-                <p className='profile-title'>{user.first_name} &nbsp;{user.last_name}</p> 
-                <p className='username'>{user.username}</p>
-                <p className='user-role'>{user.user_role}</p>
+                { isLoading ? <img src = {USER} className = "user-photo" /> :
+                    user.display_picture ?(<img src = {display_picture} className = "user-photo" />)
+                    : (<img src = {USER} className = "user-photo" />)}                
+                <p className='profile-title'>
+                    { isLoading ? <Name_Placeholder /> : `${user.first_name} ${user.last_name}` }
+                </p>                    
+                <p className='username'>
+                    { isLoading ? <User_Detail_Placeholder width='120px' height='26px' /> : user.username}
+                </p>
+                <p className='user-role'>
+                    { isLoading ? <User_Detail_Placeholder width='100%' height='20px' /> : user.user_role }
+                </p>
                 <ul className='contact-info'>
-                    <li><HiMail size={28} className="contact-icon"/><span>{user.email}</span></li>
-                    {user.phone_number? <li style = {{paddingTop:'0px'}}><RiPhoneFill size={28} className="contact-icon"/><span>{user.phone_number}</span></li>:""}
-                </ul>
+                    <li className='user-email'><HiMail size={28} className="contact-icon"/><span> { isLoading ? <User_Detail_Placeholder width='200px' height='26px' /> : user.email}</span></li>
+                    { isLoading ? <></> : user.phone_number ? <li style = {{paddingTop:'0px'}}><RiPhoneFill size={28} className="contact-icon"/><span>{user.phone_number}</span></li>:""}                </ul>
+                <div  ref = {boxRef}>
                 <button className ="settings-icon" onClick={()=> {handleSettings()}}><RiSettings5Line size={25} /></button>
                 {showSettings ?
                     <ul className='settings-box'>
@@ -448,6 +542,7 @@ const MyProfile =()=>{
                     </ul>
                 :
                 ""}
+            </div>
                 
                 
             </div>
@@ -457,18 +552,20 @@ const MyProfile =()=>{
             <div className ='view-log-preview' style = {{width: '60%',
                     marginLeft:'20%',
                     height: '35%',}}>
-                    {user_logs !== undefined ? 
-                    <div className='table-wrap'>
-                        <table className='view-log-table'>
-                        <thead className='view-log-thead'>
-                            <tr className='header-row'>
-                                <th className='log-header'>DATE TIME</th>
-                                <th className='log-header' >ACTIVITY</th>
-                                <th className='log-header' >SUBJECT</th>
-                                <th className='log-header' >DETAILS</th>
-                            </tr>
-                        </thead>
-                        <tbody className = 'view-log-tbody'>
+                    {
+                    isLoading ? <Row_Loader type='USER_LOGS' /> :
+                        user_logs !== undefined ? 
+                        <div className='table-wrap'>
+                            <table className='view-log-table'>
+                            <thead className='view-log-thead'>
+                                <tr className='header-row'>
+                                    <th className='log-header'>DATE TIME</th>
+                                    <th className='log-header' >ACTIVITY</th>
+                                    <th className='log-header' >SUBJECT</th>
+                                    <th className='log-header' >DETAILS</th>
+                                </tr>
+                            </thead>
+                            <tbody className = 'view-log-tbody'>
                                 
                             {user_logs.map((log, i)=>{
                             var time_stamp = log.time_stamp.split(" ")
@@ -487,16 +584,15 @@ const MyProfile =()=>{
                         </tbody>
                     </table>
                     </div>
-                    : 
-                    <div className='no-logs'>{emptyLogs}</div>}
-                    </div> 
+                    : <div className='no-logs'>{emptyLogs}</div>}
+                </div> 
             </div>
             {isToggled===true? <Popup type={popType}/>:""}
+            {passToggle===true? changePassBody:''}
             <Header/>
             <Menu/>
             <Footer/>
         </div>
-
             <Header/>
             <Menu/>
             <Footer/>

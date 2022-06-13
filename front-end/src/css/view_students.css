@@ -52,6 +52,7 @@ option{
 .student-search-icon{
     margin: 10px;
     color: whitesmoke;
+    cursor: pointer;
 }
 
 .student-search-icon:hover{
@@ -66,6 +67,8 @@ option{
     border: none;
     outline: none;
     padding-left: 15px;
+    font-family: Arial, FontAwesome;
+    font-size: 14px;
 }
 
 .view-student-preview{
@@ -152,35 +155,30 @@ option{
 .student-warning-badge{
     color: red;
     float: left;
-    margin-top: 1px;
-    margin-left: 5px;
+    margin-top: 2px;
+    margin-left: 7px;
     margin-right: -130px;
 }
 
 .student-warning-badge .badge-text{
     visibility: hidden;
     width: 150px;
-    background-color: black;
-    color: #fff;
+    background-color: rgb(197, 197, 197);
+    color: rgb(0, 0, 0);
     text-align: center;
     padding: 4px 5px;
-    font-size: 10px;
+    font-size: 11px;
     border-radius: 6px;
+    margin-left: 5px;
+    font-style: italic;
+    font-weight: 500;
+    /* opacity: 0.4; */
 }
 
 .student-warning-badge:hover .badge-text{
     visibility: visible;
-    opacity: 1;
+    /* opacity: 1; */
 }
-/* 
-.warning-count{
-    color:green;
-    font-weight: bold;
-    font-size: small;
-    text-align: center; 
-    vertical-align: middle;
-    margin-right: -50px;
-} */
 
 .view-student-delete-icon{
     color: black;
@@ -193,6 +191,7 @@ option{
 .empty-students{
     margin-top: 10%;
     text-align: center;
+    font-weight: bold;
 }
 
 .empty-students button{
@@ -214,16 +213,29 @@ option{
 }
 .general-checkbox{
     background-color: rgb(206, 206, 206);
+    cursor: pointer;
     
 }
 
 .delete-many-icon{
 
     background-color: rgb(206, 206, 206);
+    cursor:pointer;
 
 }
 
 .student-checkbox{
     cursor:pointer;
+}
+
+@media screen and (min-width: 1920px) {
+    .view-student-dropdown{
+        margin-top: 40px;
+    }
+
+    .empty-students{
+        transform: scale(110%);
+    }
+    
 }
 

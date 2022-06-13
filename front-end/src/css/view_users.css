@@ -67,6 +67,7 @@
     border: none;
     outline: none;
     padding-left: 15px;
+    font-family: FontAwesome;
 }
 
 .users-search-button{
@@ -80,12 +81,12 @@
     padding-bottom: 0px;
 }
 
-.search-button:hover{
-    color: lightgray;
+.search-icon:hover{
+    color:#DE9720
 }
 
 .search-icon{
-    font-size: 25px;
+    font-size: 20px;
 }
 
 .user-tile{
@@ -199,7 +200,7 @@
     width: 55px;
     height: 55px;
     /* border-radius: 50px; */
-    border-radius: 5px;
+    border-radius: 4px;
 }
 
 
@@ -220,7 +221,7 @@
     
     .view-user-dropdown{
         font-size: 17px;
-        margin-top: 50px;
+        margin-top: 40px;
     }
     
     .user-title{

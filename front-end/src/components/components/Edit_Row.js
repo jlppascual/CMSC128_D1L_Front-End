@@ -16,7 +16,7 @@ const Edit_Row = ( { course, term_index,index,bg_color}) => {
     } 
 
     const computeCumulated =  (curr_weight) => {
-    
+        let term_name = document.getElementsByName("term-name"+term_index)[0].innerHTML
         if(isNaN(curr_weight)) curr_weight = 0
         weight = Number(curr_weight)
         setWeight(weight)
@@ -33,15 +33,16 @@ const Edit_Row = ( { course, term_index,index,bg_color}) => {
             if(isNaN(next_course.value)) next_course.value = 0
             prevCumulated = next_course.value
         }
-        let sum = Number(prevCumulated) + Number(curr_weight)
+        let sum = Number(prevCumulated);
+        if(term_name !== "II/19/20") sum= Number(prevCumulated) + Number(curr_weight)
         setCumulated(sum)
         let i = index+1
         let next= document.getElementsByName("weight-"+term_index+"-"+i)[0];
-
+        
         // Update cumulated column of the current term of this course
         while(next !== undefined){
             if(isNaN(next.value)) next.value = 0
-            sum = sum + Number(next.value)
+            if(term_name !== "II/19/20") sum = sum + Number(next.value)
             document.getElementsByName("cumulated-"+term_index+"-"+(i))[0].value = sum
             i++
             next = document.getElementsByName("weight-"+term_index+"-"+(i))[0]
@@ -55,14 +56,18 @@ const Edit_Row = ( { course, term_index,index,bg_color}) => {
         let t_index = term_index + 1
         let c_index;
         let next;
+        let term_name;
         // While there is a valid term
         while(checkTerm(t_index)){
+            term_name = document.getElementsByName("term-name"+t_index)[0].innerHTML
             c_index = 0;
             next = document.getElementsByName("weight-"+t_index+"-"+c_index)[0];
             while(next !== undefined){
                 if(isNaN(next.value)) next.value = 0
-                sum = sum + Number(next.value)
+                if(term_name !== "II/19/20") sum = sum + Number(next.value)
+                
                 document.getElementsByName("cumulated-"+t_index+"-"+c_index)[0].value = sum
+
                 c_index++
                 next = document.getElementsByName("weight-"+t_index+"-"+c_index)[0]
             }
@@ -86,7 +91,8 @@ const Edit_Row = ( { course, term_index,index,bg_color}) => {
         
         while(checkTerm(t_index)){
             let c_index = 0;
-            let units = 0;
+            let term_units = 0;
+            let temp_units = 0;
             let weights = 0;
             let term_name = document.getElementsByName("term-name"+t_index)[0].innerHTML
             
@@ -98,31 +104,37 @@ const Edit_Row = ( { course, term_index,index,bg_color}) => {
                 let curr_g = document.getElementsByName("grade-"+t_index+"-"+c_index)[0].value;
                 // Failing/ Removal/ Unsatisfied grades/ INC/ DFG -> not counted in units
                 if(!not_counted.includes(curr_g)){
-                    units = units + Number(curr_u.value)
+                    term_units = term_units + Number(curr_u.value)
                 }
                 // Included in gwa computation
-                if(term_name !== "II/19/20" && !isNaN(Number(curr_g)))
+                if(term_name !== "II/19/20" && !isNaN(Number(curr_g))){
                     units_included = units_included + Number(curr_u.value)
+                }
+                    
                 // Current row
-                if(t_index === term_index && c_index === index){
-                    weights = weights + weight
+                if(t_index === term_index && c_index === index ){
+                    weights = weights + Number(weight)
+                    if(weight !== 0)
+                        temp_units = temp_units + Number(curr_u.value)
                 }
                 else{
                     weights = weights + Number(curr_w.value)
+                    if(Number(curr_w.value) !== 0)
+                        temp_units = temp_units + Number(curr_u.value)
                 }
                 
                 c_index++
                 curr_u = document.getElementsByName("units-"+t_index+"-"+c_index)[0]
                 curr_w = document.getElementsByName("weight-"+t_index+"-"+c_index)[0];
             }
-            let term_gpa = parseFloat((weights/units).toFixed(4))
+            let term_gpa = parseFloat((weights/temp_units).toFixed(4))
             if(isNaN(term_gpa)) term_gpa = 0
             document.getElementsByName("weights-term"+t_index)[0].innerHTML = weights
-            document.getElementsByName("units-term"+t_index)[0].innerHTML = units
+            document.getElementsByName("units-term"+t_index)[0].innerHTML = term_units
             document.getElementsByName("gpa-term"+t_index)[0].innerHTML = term_gpa
             if(term_name != "II/19/20")
                 cumulative = cumulative + weights
-            total_units = total_units + units
+            total_units = total_units + term_units
             t_index++
         }
         document.getElementsByName("record-cumulative")[0].innerHTML = cumulative
@@ -196,4 +208,5 @@ const Edit_Row = ( { course, term_index,index,bg_color}) => {
         </tr>
     )
 }
+
 export default Edit_Row

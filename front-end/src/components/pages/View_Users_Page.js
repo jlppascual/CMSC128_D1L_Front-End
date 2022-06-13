@@ -1,7 +1,3 @@
-/**
- * authors: Janica, Andrew
- */
-
  import React, { useEffect, useState, useRef } from 'react';
  import Menu from '../components/Menu'
  import Header from '../components/Header';
@@ -14,9 +10,10 @@
  import { ToastContainer } from 'react-toastify';
  import { notifyError, notifySuccess } from '../components/Popups/toastNotifUtil';
  import '../../css/toast_container.css';
+ import useLoadStore from '../hooks/loaderHook';
+import Users_Loader from '../loaders/Users_Loader';
 
  export default function View_Users_Page (){
-
     const {REACT_APP_HOST_IP} = process.env
     const [users, setUsers] = useState([]);
     const [input,setInput] = useState("")
@@ -26,6 +23,8 @@
     const [toDelete, setToDelete] = useState("")
 
     const { user, setAuth } = useStore();
+    const { isLoading, setIsLoading } = useLoadStore();
+
     const navigate = useNavigate();     // navigation hook
     const prev_view_state = useRef();
 
@@ -41,6 +40,7 @@
  
     useEffect(() =>{
         if(user.user_role==="CHAIR/HEAD"){
+            setIsLoading(true);
             fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/user",
             {
                 method: "GET",
@@ -53,6 +53,7 @@
                     setAuth(user,json.result.session)
                 }            
             })
+            setTimeout(() => setIsLoading(false), 3000)
         }else{
             navigate("/home")
             notifyError("Must be an admin to access this page")
@@ -62,6 +63,7 @@
 
      //if viewValue changes, this function is executed
     useEffect(()=>{
+        setIsLoading(true);
         if(prev_view_state.current != [viewValue]){
             prev_view_state.current = [viewValue];
             if (viewValue==="ALL"||viewValue===""){
@@ -101,6 +103,7 @@
                 })
             }
         }
+        setTimeout(() => setIsLoading(false), 3000)
     },[viewValue]);
  
      const handleUserInput = (e) => {
@@ -115,7 +118,8 @@
         e.preventDefault();
     
         let url = 'http:'+REACT_APP_HOST_IP+':3001/api/0.1/user/search?name=';
-        
+
+        setIsLoading(true);
         //if a specific role is selected, url changes to view users by role
         if(viewValue === "OCS REP" || viewValue === "ACS" || viewValue === "UNIT REP" || viewValue === "MEMBER"){
             url = 'http://'+REACT_APP_HOST_IP+':3001/api/0.1/user/role/' + viewValue + '/search?name='
@@ -160,6 +164,7 @@
                 }
             })
         }
+        setTimeout(() => setIsLoading(false), 3000)
     }
 
      const viewChange=(e)=>{
@@ -171,6 +176,7 @@
         setToDelete(todeluser);
     }
      const confirmDelete = async(decision,details) => {
+        setIsLoading(true);
         setShowDeleteConfirmation(false)
         if(decision){
             let delete_id = toDelete.user.user_id
@@ -192,6 +198,7 @@
                }
             })
         }
+        setTimeout(() => setIsLoading(false), 3000)
      }
  
      const DropDown =({value,options,onChange})=>{
@@ -223,14 +230,17 @@
                 
                 
                 <div className="users-search-field">
-                    <input type = "text" name = "input" placeholder = "🔎 Search by name"
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
+                    <input type = "text" name = "input" placeholder = "&#xf002;  Search by name"
                     value = {input} onChange = {handleUserInput} className = "user-search" required></input>
                     <button onClick={handleSubmit} className = "users-search-button"><i className = "search-icon"><BsSearch /></i></button>
                 </div>
                 </div>
                
                 <div className='tile-page'>
-                    {users != undefined? users.map((user, i) => {
+                    {
+                        // Display Loader
+                        isLoading ? <Users_Loader /> : users != undefined? users.map((user, i) => {
                             if (i % 2 === 0) {
                                 return <span key={i}>
                                     <div className="user-tile" >

@@ -15,10 +15,11 @@
     top:0px;
     padding-top:0.5px ;
     background-color: white;
+    z-index: 2;
 }
 
 .back-icon{
-    position: fixed;
+    position: absolute;
     left: 16%;
     margin-top: 66px;
     cursor: pointer;
@@ -166,6 +167,7 @@
     border: 1px solid white;
     margin-top: 120px;
     margin-bottom: 0px;
+    z-index:1;
 }
 .term-summary{
     text-align: center;
@@ -293,6 +295,7 @@
     text-align: left;
     padding: 15px;
     overflow-y: scroll;
+    z-index:4;
 }
 .warning-popup-box::-webkit-scrollbar {
     width: 8px;
@@ -335,6 +338,11 @@
     padding-bottom: 28px;
     background-color: rgba(141, 20, 54, 0.1);
     border-radius: 5px;
+    cursor: pointer;
+}
+
+.warning:hover{
+    background-color: rgba(141, 20, 54, 0.3);
 }
 
 .warning h5{

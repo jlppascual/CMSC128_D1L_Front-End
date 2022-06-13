@@ -41,8 +41,9 @@ function Menubar(){
 
     const showSidebar = () => setSidebar(!sidebar);
     const boxRef = useRef(null);
-    const boxOutsideClick = OutsideClick(boxRef);
-    console.log(boxOutsideClick)
+    OutsideClick(boxRef,() => {
+        {sidebar? showSidebar():""};
+    });
  
 
     return(
@@ -86,11 +87,6 @@ function Menubar(){
                         );
                     })}</div>) : ""}              
                 </ul>
-                {(() => {
-                    if (boxOutsideClick == true) {
-                        showSidebar()
-                    }
-                })}
             </nav>
         </IconContext.Provider>
     );

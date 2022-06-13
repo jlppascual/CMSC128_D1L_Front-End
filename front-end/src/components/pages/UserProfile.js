@@ -4,7 +4,7 @@ import Header from '../components/Header'
 import Footer from '../components/Footer'
 import Menu from '../components/Menu'
 import useStore from '../hooks/authHook'
-import '../../css/profile.css'
+import useLoadStore from '../hooks/loaderHook'
 import USER from '../../images/dp_default.jpg'
 import {HiMail}  from 'react-icons/hi';
 import {RiPhoneFill}  from 'react-icons/ri';
@@ -12,12 +12,15 @@ import {BiArrowBack} from 'react-icons/bi'
 import '../../css/toast_container.css';
 import { notifyError } from '../components/Popups/toastNotifUtil';
 import { ToastContainer } from 'react-toastify';
-
+import Row_Loader from '../loaders/Row_Loader';
+import { Name_Placeholder, User_Detail_Placeholder } from '../loaders/Detail_Loader';
+import '../../css/profile.css'
 
 const UserProfile =()=>{
 
     const {REACT_APP_HOST_IP} = process.env
     const { user, setAuth } = useStore();
+    const { isLoading, setIsLoading} = useLoadStore();
     const navigate = useNavigate();     // navigation hook
     const [students, setStudents] = useState([]);
     const [user_profile, setUserProfile] = useState('')
@@ -29,7 +32,7 @@ const UserProfile =()=>{
     
     useEffect(()=>{
         if(user.user_role==="CHAIR/HEAD"){
-            
+            setIsLoading(true);
             fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/user/"+ id,
             {
                 method: "GET",
@@ -50,7 +53,8 @@ const UserProfile =()=>{
             .then(response => {return response.json()})
             .then(json=>{
                 setStudents(json.result.output) 
-                setPage(!pageState)         
+                setPage(!pageState)  
+                setTimeout(() => setIsLoading(false), 3000)
             })
         } else{
             navigate("/home")
@@ -60,7 +64,7 @@ const UserProfile =()=>{
 
 
     useEffect(()=>{
-       
+        setIsLoading(true);
         fetch("http://"+REACT_APP_HOST_IP+":3001/api/0.1/log/user/"+ id,
             {
                 method: "GET",
@@ -80,8 +84,8 @@ const UserProfile =()=>{
                 }
                  
             })
-        
-    },[pageState])
+            setTimeout(() => setIsLoading(false), 3000)
+        },[pageState])
 
     const formatLogs = (logs) => {
         if(logs && students && students.length > 0){
@@ -107,18 +111,31 @@ const UserProfile =()=>{
         <div>
             <div className='body'>
             <div className='user-header'>
-            {!user_profile.isDeleted?
-            <i className = "back-icon" onClick={()=> navigate('/users')} style={{top:"20px",left:"20%"}}><BiArrowBack size= {35} /></i>
+            { !user_profile.isDeleted?
+            <i className = "user-back-icon" onClick={()=> navigate('/users')} style={{top:"20px",left:"20%"}}><BiArrowBack size= {35} /></i>
             : <div className='deleted-user-watermark'>DELETED USER ACCOUNT</div>   
             }
-            
-                <img src = {USER} className = "user-photo" />
-                <p className='profile-title'>{user_profile.first_name} {user_profile.last_name}</p>
-                <p className='username'>{user_profile.username}</p>
-                <p className='user-role'>{user_profile.user_role}</p>
+                {/* 
+                    Note: Used the default photo as the avatar while loading
+                    Replace the img src in the else clause with the image photo URL
+                */}
+                { isLoading ? <img src = {USER} className = "user-photo" /> : user_profile.display_picture? 
+                    ( <img src = {require(`../../images/user_dp/${user_profile.display_picture}`)} className = "user-photo" />):	
+                    (<img src = {USER} className = "user-photo"/>)}
+                <p className='profile-title'>
+                    { isLoading ? <Name_Placeholder /> : `${user_profile.first_name} ${user_profile.last_name}` }
+                </p>
+                <p className='username'>
+                    { isLoading ? <User_Detail_Placeholder width='120px' height='26px' /> : user_profile.username}
+                </p>
+                <p className='user-role'>
+                    { isLoading ? <User_Detail_Placeholder width='100%' height='20px' /> : user_profile.user_role}
+                </p>
                 <ul className='contact-info'>
-                    <li><HiMail size={28} className="contact-icon"/><span>{user_profile.email}</span></li>
-                    {user_profile.phone_number? <li style = {{paddingTop:'0px'}}><RiPhoneFill size={28} className="contact-icon"/><span>{user_profile.phone_number}</span></li>:""}
+                    <li><HiMail size={28} className="contact-icon"/><span>
+                        { isLoading ? <User_Detail_Placeholder width='200px' height='26px' /> : user_profile.email}
+                    </span></li>
+                    { isLoading ? <></> : user_profile.phone_number ? <li style = {{paddingTop:'0px'}}><RiPhoneFill size={28} className="contact-icon"/><span>{user_profile.phone_number}</span></li>:""}
                 </ul>
                 
             </div>
@@ -128,7 +145,8 @@ const UserProfile =()=>{
             <div className ='view-log-preview' style = {{width: '60%',
                     marginLeft:'20%',
                     height: '40%',}}>
-                    {user_logs !== undefined ? 
+                    {isLoading ? <Row_Loader type='USER_LOGS' /> :
+                    user_logs !== undefined ? 
                     <div className='table-wrap'>
                         <table className='view-log-table'>
                         <thead className='view-log-thead'>
@@ -158,8 +176,7 @@ const UserProfile =()=>{
                             </tbody>
                         </table>
                     </div>
-                    : 
-                    <div className='no-logs'>{emptyLogs}</div>}
+                    : <div className='no-logs'>{emptyLogs}</div>}
                     </div> 
             </div>
             <Header/>
